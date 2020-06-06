@@ -568,7 +568,7 @@ class language(commands.Cog):
                                     return
             except AttributeError:
                 pass
-            if msg.channel.id in [316066233755631616] and msg.author.id == 474349369274007552:
+            if msg.channel.id in [316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297]:
                 if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;' and not msg.author.bot:
                     if check_tp(msg.content) == False:
                         score = 0

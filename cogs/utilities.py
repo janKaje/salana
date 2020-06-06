@@ -56,7 +56,7 @@ class utilities(commands.Cog):
     async def help(self, ctx, cmd=None):
         """Displays the help command. If [cmd] is given, displays the long help text for that command."""
         if cmd == None:
-            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type ",help [command]" for more information.')
+            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` for more information.')
             for x in self.client.cogs:
                 cog_info = ''
                 cog = self.client.get_cog(x)
@@ -80,7 +80,7 @@ class utilities(commands.Cog):
 
             await ctx.send(embed=command_msg)
             await ctx.send(embed=extra_msg)
-            await ctx.send(embed=cautionmsg)
+            #await ctx.send(embed=cautionmsg)
             return
         if cmd == 'hidden' and ctx.author.id == 474349369274007552:
             command_msg = discord.Embed(title='Commands', color=discord.Color.blue())
