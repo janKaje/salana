@@ -44,14 +44,14 @@ async def reload(ctx, extension):
             except:
                 pass
     else:
-        for filename in os.listdir("./salana/cogs"):
+        for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
                 client.unload_extension(f"cogs.{filename[:-3]}")
                 client.load_extension(f"cogs.{filename[:-3]}")
         await ctx.send("All extensions reloaded.")
 
 #Automatically loads all cogs in ./cogs
-for filename in os.listdir("./salana/cogs"):
+for filename in os.listdir("./cogs"):
     if filename.endswith(".py"):
         client.load_extension(f"cogs.{filename[:-3]}")
 
