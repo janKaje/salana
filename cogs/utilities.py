@@ -62,8 +62,6 @@ class utilities(commands.Cog):
                     help_channel = reaction.message.guild.get_channel(654414352354508800)
                     if join_role not in user.roles:
                         member = reaction.message.guild.get_member(user.id)
-                        print(join_role)
-                        print(member)
                         try:
                             await member.add_roles(join_role)
                         except Exception as e:
