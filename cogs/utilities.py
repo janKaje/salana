@@ -55,14 +55,20 @@ class utilities(commands.Cog):
                 msg_to_channel.add_field(name = 'People who originally reported it:', value = userlist, inline=False)
 
                 await mod_surveillance_channel.send(f':warning: New Flagged Message in {reaction.message.channel.mention} :warning:\n', embed=msg_to_channel)
-            """if str(demojize(reaction.emoji)) == ':upside-down_face:' and reaction.message.author.id == 712086611097157652:
+            if str(demojize(reaction.emoji)) == ':upside-down_face:' and reaction.message.author.id == 712086611097157652:
                 if reaction.message.channel.id == 719681821742465034:
                     join_role = reaction.message.guild.get_role(654416341775679518)
                     main_chat = reaction.message.guild.get_channel(654413515301584896)
                     help_channel = reaction.message.guild.get_channel(654414352354508800)
                     if join_role not in user.roles:
                         member = reaction.message.guild.get_member(user.id)
-                        await member.edit(roles=[join_role])
+                        print(join_role)
+                        print(member)
+                        try:
+                            await member.add_roles(join_role)
+                        except Exception as e:
+                            await self.client.get_channel(705223622981320706).send(e)
+                            return
                         await main_chat.send(f'Welcome to the server, {user.mention}! This is the main chat. You can ask any questions in {help_channel.mention}.')
                         await reaction.message.delete()
 
@@ -72,7 +78,7 @@ class utilities(commands.Cog):
             join_channel = self.client.get_channel(719681821742465034)
             rules_channel = self.client.get_channel(654413439141150751)
             await join_channel.send(f'Welcome, {member.mention}! Please read {rules_channel.mention} and react to this message with the emoji at the end to join!\n\nPlease note that if you take too long to react, the bot won\'t recognize the reaction and you\'ll have to ping the ju pala in order to join.')
-    """
+    
     #Custom Help command
     @commands.command()
     async def help(self, ctx, cmd=None):
