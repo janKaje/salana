@@ -492,9 +492,10 @@ class language(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def test(self, ctx, *, text):
-        await ctx.send(text, delete_after=3)
+        print(emoji.demojize(text))
+        await ctx.send(text)
 
-    @commands.command(aliases=["cpm"])
+    @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
         """Checks if the input text is valid in pa mu or not. It does so by first removing anything behind spoiler bars and any whitespace characters, then removing emojis, and then it runs the text through all possible syllables in pa mu."""
         if check_pamu(text):
@@ -502,7 +503,7 @@ class language(commands.Cog):
         else:
             await ctx.send(":rotating_light: Not pa mu! :rotating_light:")
 
-    @commands.command(aliases=['ctp'])
+    @commands.command(aliases=['ctp', 'cftp', 'cft'])
     async def check_for_tp(self, ctx, *, text):
         """Checks if the input text is valid in toki pona or not. For more info, type `,hc_info`."""
         if check_tp(text):
@@ -569,20 +570,23 @@ class language(commands.Cog):
             except AttributeError:
                 pass
             if msg.channel.id in [316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297]:
-                if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;' and not msg.author.bot:
-                    if check_tp(msg.content) == False:
-                        score = 0
-                        async for i in msg.channel.history(limit=10):
-                            if not check_tp_soft(i.content):
-                                score += 1
-                            if i.content == 'https://cdn.discordapp.com/attachments/316066233755631616/672822465633976345/image-6.png':
-                                score += 1
-                        if score == 10:
-                            await msg.channel.send('https://cdn.discordapp.com/attachments/316066233755631616/672822465633976345/image-6.png')
-                        elif score == 7:
-                            await msg.channel.send('*o toki pona taso a.* Seriously, please stop. Channels that begin with tpt are for toki pona only. If you\'re going to speak in a different language, move to a different channel.', delete_after=3)
-                        elif score == 3:
-                            await msg.channel.send('This is your friendly, automated reminder to only speak in toki pona here. pona la o toki pona taso lon tomo ni.', delete_after=3)
+                try:
+                    if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;' and not msg.author.bot:
+                        if check_tp(msg.content) == False:
+                            score = 0
+                            async for i in msg.channel.history(limit=10):
+                                if not check_tp_soft(i.content):
+                                    score += 1
+                                if i.content == 'https://cdn.discordapp.com/attachments/316066233755631616/672822465633976345/image-6.png':
+                                    score += 1
+                            if score == 10:
+                                await msg.channel.send('https://cdn.discordapp.com/attachments/316066233755631616/672822465633976345/image-6.png')
+                            elif score == 7:
+                                await msg.channel.send('*o toki pona taso a.* Seriously, please stop. Channels that begin with tpt are for toki pona only. If you\'re going to speak in a different language, move to a different channel.', delete_after=3)
+                            elif score == 3:
+                                await msg.channel.send('This is your friendly, automated reminder to only speak in toki pona here. pona la o toki pona taso lon tomo ni.', delete_after=3)
+                except:
+                    pass
     
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):

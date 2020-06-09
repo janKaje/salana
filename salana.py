@@ -44,24 +44,49 @@ async def reload(ctx, extension):
             except:
                 pass
     else:
-        for filename in os.listdir("./cogs"):
+        for filename in os.listdir("./salana/cogs"):
             if filename.endswith(".py"):
                 client.unload_extension(f"cogs.{filename[:-3]}")
                 client.load_extension(f"cogs.{filename[:-3]}")
         await ctx.send("All extensions reloaded.")
 
 #Automatically loads all cogs in ./cogs
-for filename in os.listdir("./cogs"):
+for filename in os.listdir("./salana/cogs"):
     if filename.endswith(".py"):
         client.load_extension(f"cogs.{filename[:-3]}")
 
 #Error messages
 @client.event
 async def on_command_error(ctx, error):
-    await ctx.send(f'ERROR! {error}')
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('You\'re missing a required argument: '+str(error.param))
+    if isinstance(error, commands.TooManyArguments):
+        await ctx.send('You input too many arguments.')
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send('Command not found.')
+    if isinstance(error, commands.NotOwner):
+        await ctx.send('You have to be the owner to excute this command.')
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send('The bot is missing the required permissions to invoke this command: '+str(error.missing_perms))
+    if isinstance(error, commands.ExtensionError):
+        await ctx.send(f'The extension {str(error.name)} raised an exception.')
+    else:
+        await ctx.send(f'ERROR! {error}')
 
 @client.event
-async def on_error(error):
-    await client.get_channel(705223622981320706).send(error)
+async def on_error(error, *args, **kwargs):
+    errorchannel = client.get_channel(705223622981320706)
+    if isinstance(error, discord.InvalidData):
+        await errorchannel.send(f'Invalid Data on {error}')
+    elif isinstance(error, discord.InvalidArgument):
+        await errorchannel.send(f'Invalid argument on {error}')
+    elif isinstance(error, discord.HTTPException):
+        await errorchannel.send(f'HTTPException: response: {error.response} | text: {error.text} | status: {error.status} | code: {error.code}')
+    elif isinstance(error, discord.Forbidden):
+        await errorchannel.send(f'Forbidden: {error}')
+    elif isinstance(error, discord.ClientException):
+        await errorchannel.send(f'Client Exception: {error}')
+    else:
+        await errorchannel.send(f'There was an error: {error} {args} {kwargs}')
 
 client.run('NzEyMDg2NjExMDk3MTU3NjUy.Xtcocw.ARQ8_3os-lNswftsp5eo4KDdPuw')

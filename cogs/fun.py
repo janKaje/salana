@@ -58,7 +58,7 @@ class fun(commands.Cog):
     
     @commands.command()
     async def aleph(self, ctx, num):
-        """Calculates the number of fractions between 0 and 1 with n being the maximum value of the denominator (excluding equivalent fractions).\n\nFor example, if n = 4, the possible fractions are 1/4, 1/3, 1/2, 2/3, and 3/4. The command will output the number of these, which in this case would be 5.\n\nThe maximum allowed value of n is 3000."""
+        """Calculates the number of fractions between 0 and 1 with n being the maximum value of the denominator (excluding equivalent fractions).\n\nFor example, if n = 4, the possible fractions are 1/4, 1/3, 1/2, 2/3, and 3/4. The command will output the number of these, which in this case would be 5.\n\nThe maximum allowed value of n is 100000."""
         if is_int(num):
             num = int(num)
             if num > 100000 and ctx.author.id != 474349369274007552:
@@ -67,13 +67,14 @@ class fun(commands.Cog):
             if num < 1:
                 await ctx.send('0 - Fractions with a denominator of 0 don\'t exist and fractions with a negative denominator don\'t fall between 0 and 1.')
                 return
-            c = r(num)
+            async with ctx.typing():
+                c = r(num)
             await ctx.send(c)
         else:
             await ctx.send('Please only enter integers.')
 
     #Sicto's command
-    @commands.command()
+    @commands.command(hidden=True)
     async def pr(self, ctx, arg1, arg2):
         """A command that only sictoabu can use. It's complicated."""
         if ctx.author.id == 573295509360476170 and is_number(arg1) and is_number(arg2):

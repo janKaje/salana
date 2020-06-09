@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import re
+from emoji import demojize
 
 def setup(client):
     client.add_cog(utilities(client))
@@ -31,26 +32,47 @@ class utilities(commands.Cog):
         """Displays the specifics on how toki pona is detected."""
         await ctx.send('Anything behind spoiler bars won\'t count towards the detection process. In addition, any word that is capitalized that still contains only the 14 toki pona letters will pass. Every other word will be examined, and if it doesn\'t match a word in a certain list, it won\'t pass. For more information, or to request a change in the program, please contact me (jan Kaje#3293).')
 
-    #Reporting feature
+    #Reporting feature and welcome feature
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if hash(reaction.emoji) == -1290594094406007237 and reaction.count == 2:
-            if reaction.message.guild.id == 654411781929959424:
-                mod_surveillance_channel = self.client.get_channel(711341612030099546)
-            elif reaction.message.guild.id == 301377942062366741:
-                mod_surveillance_channel = self.client.get_channel(596158180275519500)
-            userlist = f''
+        if not reaction.custom_emoji:
+            if str(demojize(reaction.emoji)) == ':triangular_flag:' and reaction.count == 2:
+                if reaction.message.guild.id == 654411781929959424:
+                    mod_surveillance_channel = self.client.get_channel(711341612030099546)
+                elif reaction.message.guild.id == 301377942062366741:
+                    mod_surveillance_channel = self.client.get_channel(596158180275519500)
+                userlist = f''
 
-            msg_to_channel = discord.Embed(color = discord.Color.red())
-            msg_to_channel.set_author(name = f'{reaction.message.author.display_name}, AKA {str(reaction.message.author)}', icon_url = reaction.message.author.avatar_url)
-            msg_to_channel.add_field(name = 'Message content:', value = reaction.message.content, inline=False)
-            msg_to_channel.add_field(name = 'Original', value = f'[Jump]({reaction.message.jump_url})', inline=False)
-            async for reporter in reaction.users():
-                userlist += f'{reporter.display_name}, AKA {str(reporter)}\n'
-            msg_to_channel.add_field(name = 'People who originally reported it:', value = userlist, inline=False)
+                msg_to_channel = discord.Embed(color = discord.Color.red())
+                msg_to_channel.set_author(name = f'{reaction.message.author.display_name}, AKA {str(reaction.message.author)}', icon_url = reaction.message.author.avatar_url)
+                msg_to_channel.add_field(name = 'Message content:', value = reaction.message.content, inline=False)
+                msg_to_channel.add_field(name = 'Original', value = f'[Jump]({reaction.message.jump_url})', inline=False)
+                async for reporter in reaction.users():
+                    if reporter.display_name != reporter.name:
+                        userlist += f'{reporter.display_name}, AKA {str(reporter)}\n'
+                    else:
+                        userlist += f'{str(reporter)}\n'
+                msg_to_channel.add_field(name = 'People who originally reported it:', value = userlist, inline=False)
 
-            await mod_surveillance_channel.send(f':warning: New Flagged Message in {reaction.message.channel.mention} :warning:\n', embed=msg_to_channel)
+                await mod_surveillance_channel.send(f':warning: New Flagged Message in {reaction.message.channel.mention} :warning:\n', embed=msg_to_channel)
+            """if str(demojize(reaction.emoji)) == ':upside-down_face:' and reaction.message.author.id == 712086611097157652:
+                if reaction.message.channel.id == 719681821742465034:
+                    join_role = reaction.message.guild.get_role(654416341775679518)
+                    main_chat = reaction.message.guild.get_channel(654413515301584896)
+                    help_channel = reaction.message.guild.get_channel(654414352354508800)
+                    if join_role not in user.roles:
+                        member = reaction.message.guild.get_member(user.id)
+                        await member.edit(roles=[join_role])
+                        await main_chat.send(f'Welcome to the server, {user.mention}! This is the main chat. You can ask any questions in {help_channel.mention}.')
+                        await reaction.message.delete()
 
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        if member.guild.id == 654411781929959424:
+            join_channel = self.client.get_channel(719681821742465034)
+            rules_channel = self.client.get_channel(654413439141150751)
+            await join_channel.send(f'Welcome, {member.mention}! Please read {rules_channel.mention} and react to this message with the emoji at the end to join!\n\nPlease note that if you take too long to react, the bot won\'t recognize the reaction and you\'ll have to ping the ju pala in order to join.')
+    """
     #Custom Help command
     @commands.command()
     async def help(self, ctx, cmd=None):
