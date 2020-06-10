@@ -73,13 +73,13 @@ class utilities(commands.Cog):
         if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652:
             msg = re.sub(r'\W', '', message.content)
             if msg == 'mu':
+                await message.delete()
                 join_role = message.guild.get_role(654416341775679518)
                 main_chat = message.guild.get_channel(654413515301584896)
                 help_channel = message.guild.get_channel(654414352354508800)
                 if join_role not in message.author.roles:
                     await message.author.add_roles(join_role)
                     await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions in {help_channel.mention}.')
-                    await message.delete()
 
     @commands.command(hidden=True)
     @commands.has_permissions(manage_messages=True)
@@ -132,7 +132,7 @@ class utilities(commands.Cog):
             elif ctx.guild.id == mapona_id:
                 hardcore_text = f'If you have the hardcore role, any message you send that is not in toki pona will be deleted. Exceptions are when you preface your message with an asterisk or put the non-toki pona text behind spoiler bars.'
             extra_msg.add_field(name='__HARDCORE__', value=hardcore_text, inline = False)
-            extra_msg.add_field(name='__REPORTING MESSAGES__', value='Any message that two or more people react to with :round_pushpin: will have a copy sent to a certain channel. This allows people to flag messages they think are breaking the rules so that mods can easily notice and address the issue.', inline=False)
+            extra_msg.add_field(name='__REPORTING MESSAGES__', value='Any message that two or more people react to with :triangular_flag_on_post: will have a copy sent to a certain channel. This allows people to flag messages they think are breaking the rules so that mods can easily notice and address the issue.', inline=False)
         
             await ctx.send(embed=command_msg)
             await ctx.send(embed=extra_msg)
