@@ -512,9 +512,16 @@ class language(commands.Cog):
             await ctx.send(":rotating_light: Not toki pona! :rotating_light:")
 
     @commands.command(aliases=['d', 'dict'])
-    async def dictionary(self, ctx, word):
-        """Displays the definition and etymology of a word. Entries taken from *nimi ale pona.*"""
-        await ctx.send(tp_dict[word])
+    async def dictionary(self, ctx, *words):
+        """Displays the definition and etymology of a word or words. Entries taken from *nimi ale pona.*"""
+        if len(words) == 0:
+            await ctx.send('You need to input at least one word.')
+            return
+        for i in words:
+            try:
+                await ctx.send(tp_dict[i])
+            except KeyError:
+                await ctx.send(f'{i} is not a word in my dictionary.')
     
     @commands.command()
     async def hc(self, ctx):

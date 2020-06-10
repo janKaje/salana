@@ -85,16 +85,13 @@ class utilities(commands.Cog):
     
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        try:
-            if member.guild.id == 654411781929959424:
-                log_channel = self.client.get_channel(654413820995043350)
-                log_msg = discord.Embed(color = discord.Color.red())
-                log_msg.set_author(name = str(member), icon_url = member.avatar_url)
-                log_msg.add_field(name = 'Member left', value = time.strftime('Left on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
-                await log_channel.send(embed=log_msg)
-        except Exception as e:
-            await self.client.get_channel(705223622981320706).send(e)
-
+        if member.guild.id == 654411781929959424:
+            log_channel = self.client.get_channel(654413820995043350)
+            log_msg = discord.Embed(color = discord.Color.red())
+            log_msg.set_author(name = str(member), icon_url = member.avatar_url)
+            log_msg.add_field(name = 'Member left', value = time.strftime('Left on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
+            await log_channel.send(embed=log_msg)
+            
     #Custom Help command
     @commands.command()
     async def help(self, ctx, cmd=None):
