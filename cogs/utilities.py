@@ -69,7 +69,8 @@ class utilities(commands.Cog):
     #Welcome
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.channel.id == wali_welcomechannel_id:
+        try:
+        if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652:
             msg = re.sub(r'\W', '', message)
             if msg == 'mu':
                 join_role = message.guild.get_role(654416341775679518)
@@ -79,6 +80,8 @@ class utilities(commands.Cog):
                     await message.author.add_roles(join_role)
                     await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions in {help_channel.mention}.')
                     await message.delete()
+        except Exception as e:
+            await self.client.get_channel(705223622981320706).send(e)
 
     @commands.command(hidden=True)
     @commands.is_owner()

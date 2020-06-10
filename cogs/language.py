@@ -519,6 +519,7 @@ class language(commands.Cog):
             return
         if len(words) > 10:
             await ctx.send('That\'s too many words.')
+            return
         for i in words:
             try:
                 await ctx.send(tp_dict[i])
