@@ -70,23 +70,21 @@ class utilities(commands.Cog):
     #Welcome
     @commands.Cog.listener()
     async def on_message(self, message):
-        try:
-            if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652:
-                msg = re.sub(r'\W', '', message.content)
-                if msg == 'mu':
-                    join_role = message.guild.get_role(654416341775679518)
-                    main_chat = message.guild.get_channel(654413515301584896)
-                    help_channel = message.guild.get_channel(654414352354508800)
-                    if join_role not in message.author.roles:
-                        await message.author.add_roles(join_role)
-                        await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions in {help_channel.mention}.')
-                        await message.delete()
-        except Exception as e:
-            await self.client.get_channel(705223622981320706).send(e)
+        if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652:
+            msg = re.sub(r'\W', '', message.content)
+            if msg == 'mu':
+                join_role = message.guild.get_role(654416341775679518)
+                main_chat = message.guild.get_channel(654413515301584896)
+                help_channel = message.guild.get_channel(654414352354508800)
+                if join_role not in message.author.roles:
+                    await message.author.add_roles(join_role)
+                    await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions in {help_channel.mention}.')
+                    await message.delete()
 
     @commands.command(hidden=True)
-    @commands.is_owner()
+    @commands.has_permissions(manage_messages=True)
     async def reset(self, ctx):
+        """Resets the welcome channel."""
         if ctx.channel.id == wali_welcomechannel_id:
             await ctx.channel.purge()
             await ctx.send('Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
