@@ -87,7 +87,7 @@ class utilities(commands.Cog):
         """Resets the welcome channel."""
         if ctx.channel.id == wali_welcomechannel_id:
             await ctx.channel.purge()
-            await ctx.send('Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
+            await ctx.send(f'Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules in {self.client.get_channel(654413439141150751).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
         else:
             await ctx.send('Not in the right channel.')
 
