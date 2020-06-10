@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import re
 from emoji import demojize
+import time
 
 def setup(client):
     client.add_cog(utilities(client))
@@ -75,8 +76,22 @@ class utilities(commands.Cog):
         if member.guild.id == 654411781929959424:
             join_channel = self.client.get_channel(719681821742465034)
             rules_channel = self.client.get_channel(654413439141150751)
+            log_channel = self.client.get_channel(654413820995043350)
             await join_channel.send(f'Welcome, {member.mention}! Please read {rules_channel.mention} and react to this message with the emoji at the end to join!\n\nPlease note that if you take too long to react, the bot won\'t recognize the reaction and you\'ll have to ping the ju pala in order to join.')
+            log_msg = discord.Embed(color = discord.Color.green())
+            log_msg.set_author(name = str(member), icon_url = member.avatar_url)
+            log_msg.add_field(name = 'New member joined', value = time.strftime('Joined on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
+            await log_channel.send(embed=log_msg)
     
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        if member.guild.id == 654411781929959424:
+            log_channel = self.client.get_channel(654413820995043350)
+            log_msg = discord.Embed(color = discord.Color.red())
+            log_msg.set_author(name = str(member), icon_url = member.avatar_url)
+            log_msg.add_field(name = 'Member left', value = time.strftime('Left on on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
+            await log_channel.send(embed=log_msg)
+
     #Custom Help command
     @commands.command()
     async def help(self, ctx, cmd=None):
