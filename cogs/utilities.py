@@ -80,7 +80,7 @@ class utilities(commands.Cog):
             await join_channel.send(f'Welcome, {member.mention}! Please read {rules_channel.mention} and react to this message with the emoji at the end to join!\n\nPlease note that if you take too long to react, the bot won\'t recognize the reaction and you\'ll have to ping the ju pala in order to join.')
             log_msg = discord.Embed(color = discord.Color.green())
             log_msg.set_author(name = str(member), icon_url = member.avatar_url)
-            log_msg.add_field(name = 'New member joined', value = time.strftime('Joined on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
+            log_msg.add_field(name = 'Member joined', value = time.strftime('Joined on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
             await log_channel.send(embed=log_msg)
     
     @commands.Cog.listener()
@@ -89,7 +89,7 @@ class utilities(commands.Cog):
             log_channel = self.client.get_channel(654413820995043350)
             log_msg = discord.Embed(color = discord.Color.red())
             log_msg.set_author(name = str(member), icon_url = member.avatar_url)
-            log_msg.add_field(name = 'Member left', value = time.strftime('Left on on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
+            log_msg.add_field(name = 'Member left', value = time.strftime('Left on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
             await log_channel.send(embed=log_msg)
 
     #Custom Help command
