@@ -72,7 +72,7 @@ class utilities(commands.Cog):
     async def on_message(self, message):
         try:
             if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652:
-                msg = re.sub(r'\W', '', message)
+                msg = re.sub(r'\W', '', message.content)
                 if msg == 'mu':
                     join_role = message.guild.get_role(654416341775679518)
                     main_chat = message.guild.get_channel(654413515301584896)
