@@ -491,9 +491,8 @@ class language(commands.Cog):
     #Commands
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def test(self, ctx, *, text):
-        print(emoji.demojize(text))
-        await ctx.send(text)
+    async def test(self, ctx):
+        await ctx.send('@everyone')
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
