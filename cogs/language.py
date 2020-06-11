@@ -492,7 +492,7 @@ class language(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def test(self, ctx):
-        await ctx.send('@everyone')
+        await ctx.send('@ju wi pala tu\n@ju na\n@sala')
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
