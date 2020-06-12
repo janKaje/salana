@@ -77,7 +77,9 @@ class fun(commands.Cog):
     @commands.command(hidden=True)
     async def pr(self, ctx, arg1, arg2):
         """A command that only sictoabu can use. It's complicated."""
-        if ctx.author.id == 573295509360476170 and is_number(arg1) and is_number(arg2):
+        if ctx.author.id != 573295509360476170:
+            await ctx.send("Only sictoabu can use this command.")
+        elif is_number(arg1) and is_number(arg2):
             a=float(arg1)
             b=float(arg2)
             result=a**3/b-b**a+a**b
@@ -85,10 +87,8 @@ class fun(commands.Cog):
                 await ctx.send(f"{result}")
             else:
                 await ctx.send(str(Fraction(result).limit_denominator()))
-        elif ctx.author.id == 573295509360476170:
-            await ctx.send("Please only enter numbers.")
         else:
-            await ctx.send("Only sictoabu can use this command.")
+            await ctx.send("Please only enter numbers.")
     
     #Just for fun commands
     @commands.command()

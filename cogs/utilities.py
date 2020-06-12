@@ -27,14 +27,14 @@ class utilities(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def activityupdate(self, ctx, *, activity):
-        """Changes the discord 'playing' status to the specified activity"""
+        """Changes the discord 'playing' status to the specified activity. You must be the bot owner to activate this command."""
         await self.client.change_presence(activity=discord.Game(activity))
         await ctx.send('Changed successfully.')
 
     @commands.command(hidden=True)
     @commands.is_owner()
     async def omoli(self, ctx):
-        """Kills the bot. (supposedly, with heroku it just starts right back up again)"""
+        """Kills the bot. (supposedly, with heroku it just starts right back up again) You must be the bot owner to activate this command."""
         await ctx.send('a! :dizzy_face::skull_crossbones:')
         quit()
 
@@ -99,7 +99,7 @@ class utilities(commands.Cog):
     @commands.command(hidden=True)
     @commands.has_permissions(manage_messages=True)
     async def reset(self, ctx):
-        """Resets the welcome channel."""
+        """Resets the welcome channel. You must have the manage messages permissions to activate this command."""
         if ctx.channel.id == wali_welcomechannel_id:
             await ctx.channel.purge()
             await ctx.send(f'Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules in {self.client.get_channel(654413439141150751).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
@@ -162,7 +162,7 @@ class utilities(commands.Cog):
                 cog = self.client.get_cog(x)
                 for c in cog.walk_commands():
                     if c.hidden:
-                        cog_info += f'***{c.name}*** - {c.help}\n\tRequired permissions: {c.checks}'
+                        cog_info += f'***{c.name}*** - {c.help}\n'
                 if cog_info == '':
                     continue
                 command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False)
