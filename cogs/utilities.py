@@ -83,7 +83,6 @@ class utilities(commands.Cog):
                     async for i in message.channel.history():
                         if i.author == message.author:
                             await i.delete()
-
         #elif message.channel.id == mapona_welcomechannel_id and message.author.id != 712086611097157652:
         #    if re.sub(r'\W', '', message.content) == 'toki':
         #        await message.delete()
@@ -93,6 +92,9 @@ class utilities(commands.Cog):
         #        if join_role not in message.author.roles:
         #            await message.author.add_roles(join_role)
         #            await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.')
+        #            async for i in message.channel.history():
+        #                if i.author == message.author:
+        #                    await i.delete()
 
     @commands.command(hidden=True)
     @commands.has_permissions(manage_messages=True)
@@ -160,7 +162,7 @@ class utilities(commands.Cog):
                 cog = self.client.get_cog(x)
                 for c in cog.walk_commands():
                     if c.hidden:
-                        cog_info += f'***{c.name}*** - {c.help}\n'
+                        cog_info += f'***{c.name}*** - {c.help}\n\tRequired permissions: {c.checks}'
                 if cog_info == '':
                     continue
                 command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False)
