@@ -492,7 +492,8 @@ class language(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def test(self, ctx, *, text):
-        await ctx.send(text)
+        """Don't worry about this one. Bot owner only."""
+        await ctx.send(text*2)
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
