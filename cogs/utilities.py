@@ -3,6 +3,7 @@ from discord.ext import commands
 import re
 from emoji import demojize
 import time
+from datetime import datetime
 
 mapona_id = 301377942062366741
 waliwipamu_id = 654411781929959424
@@ -33,7 +34,7 @@ class utilities(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def omoli(self, ctx):
-        """Kills the bot."""
+        """Kills the bot. (supposedly, with heroku it just starts right back up again)"""
         await ctx.send('a! :dizzy_face::skull_crossbones:')
         quit()
 
@@ -78,7 +79,20 @@ class utilities(commands.Cog):
                 help_channel = message.guild.get_channel(654414352354508800)
                 if join_role not in message.author.roles:
                     await message.author.add_roles(join_role)
-                    await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions in {help_channel.mention}.')
+                    await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.')
+                    async for i in message.channel.history():
+                        if i.author == message.author:
+                            await i.delete()
+
+        #elif message.channel.id == mapona_welcomechannel_id and message.author.id != 712086611097157652:
+        #    if re.sub(r'\W', '', message.content) == 'toki':
+        #        await message.delete()
+        #        join_role = message.guild.get_role(475389238494625812)
+        #        main_chat = message.guild.get_channel(301377942062366741)
+        #        help_channel = message.guild.get_channel(301378960468738050)
+        #        if join_role not in message.author.roles:
+        #            await message.author.add_roles(join_role)
+        #            await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.')
 
     @commands.command(hidden=True)
     @commands.has_permissions(manage_messages=True)
@@ -87,6 +101,9 @@ class utilities(commands.Cog):
         if ctx.channel.id == wali_welcomechannel_id:
             await ctx.channel.purge()
             await ctx.send(f'Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules in {self.client.get_channel(654413439141150751).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
+        #elif ctx.channel.id == mapona_welcomechannel_id:
+        #    await ctx.channel.purge(after=datetime(2020, 6, 12, hour=, minute=))
+        #    await ctx.send(f'Welcome! This is ma pona pi toki pona, a discord server for the constructed language toki pona. Read the rules in {self.client.get_channel(589550572051628049).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble or don\'t know that yet, that\'s totally fine! Just ping `@jan lawa` and `@jan pali` and we\'ll be with you to help as soon as we can.')
         else:
             await ctx.send('Not in the right channel.')
 

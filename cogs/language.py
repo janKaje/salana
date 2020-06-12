@@ -491,8 +491,8 @@ class language(commands.Cog):
     #Commands
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def test(self, ctx):
-        await ctx.send('@ju wi pala tu\n@ju na\n@sala')
+    async def test(self, ctx, *, text):
+        await ctx.send(text)
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
@@ -581,7 +581,7 @@ class language(commands.Cog):
             if msg.channel.id in [316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297]:
                 try:
                     if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;' and not msg.author.bot:
-                        if check_tp(msg.content) == False:
+                        if not check_tp_soft(msg.content):
                             score = 0
                             async for i in msg.channel.history(limit=10):
                                 if not check_tp_soft(i.content):
