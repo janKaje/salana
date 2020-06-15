@@ -60,15 +60,15 @@ for filename in os.listdir("./cogs"):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('You\'re missing a required argument: '+str(error.param))
-    if isinstance(error, commands.TooManyArguments):
+    elif isinstance(error, commands.TooManyArguments):
         await ctx.send('You input too many arguments.')
-    if isinstance(error, commands.CommandNotFound):
+    elif isinstance(error, commands.CommandNotFound):
         await ctx.send('Command not found.')
-    if isinstance(error, commands.NotOwner):
+    elif isinstance(error, commands.NotOwner):
         await ctx.send('You have to be the owner to excute this command.')
-    if isinstance(error, commands.BotMissingPermissions):
+    elif isinstance(error, commands.BotMissingPermissions):
         await ctx.send('The bot is missing the required permissions to invoke this command: '+str(error.missing_perms))
-    if isinstance(error, commands.ExtensionError):
+    elif isinstance(error, commands.ExtensionError):
         await ctx.send(f'The extension {str(error.name)} raised an exception.')
     else:
         await ctx.send(f'ERROR! {error}')
