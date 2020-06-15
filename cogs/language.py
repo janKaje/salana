@@ -443,7 +443,7 @@ def check_tp(text):
     msg_step2 = emoji.demojize(msg_step1) #Turns emojis into ascii characters
     msg_step3 = re.sub(r':[\w-]+:', '', msg_step2) #Removes now textified emojis
     msg_step4 = re.sub(r'https\S+', '', msg_step3) #Removes links
-    msg_step5 = re.sub(r'j?[A-Z][a-z]+|[\x30A0-\x30FF]+', '', msg_step4) #Removes proper names
+    msg_step5 = re.sub('j?[A-Z][a-z]+|[\x{30A0}-\x{30FF}]+', '', msg_step4) #Removes proper names
     msg_step6 = re.sub(r'[\W_0-9]', ' ', msg_step5) #Removes non-letter characters, such as punctuation
     msg_step7 = removeduplicates(msg_step6) #Removes repeated letters
     msg_step8 = re.split(r'\s+', msg_step7) #Splits the string and prepares it for analysis
@@ -467,7 +467,7 @@ def check_tp_soft(text):
     msg_step2 = emoji.demojize(msg_step1) #Turns emojis into ascii characters
     msg_step3 = re.sub(r':[\w-]+:', '', msg_step2) #Removes now textified emojis
     msg_step4 = re.sub(r'https\S+', '', msg_step3) #Removes links
-    msg_step5 = re.sub(r'j?[A-Z][a-z]+|[\x30A0-\x30FF]+', '', msg_step4) #Removes proper names
+    msg_step5 = re.sub('j?[A-Z][a-z]+|[\x{30A0}-\x{30FF}]+', '', msg_step4) #Removes proper names
     msg_step6 = re.sub(r'[\W_0-9]', ' ', msg_step5) #Removes non-letter characters, such as punctuation
     msg_step7 = removeduplicates(msg_step6) #Removes repeated letters
     msg_step8 = re.split(r'\s+', msg_step7) #Splits the string and prepares it for analysis
