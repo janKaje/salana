@@ -91,7 +91,7 @@ class utilities(commands.Cog):
                     help_channel = message.guild.get_channel(301378960468738050)
                     if join_role not in message.author.roles:
                         await message.author.add_roles(join_role)
-                        await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.')
+                        await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.\n\nkama pona, {message.author.mention} o! ni li tomo pi toki mute. sina wile sona e ijo la o toki e ona lon tomo {help_channel.mention}.')
                         async for i in message.channel.history():
                             if i.author == message.author:
                                 await i.delete()
@@ -107,7 +107,7 @@ class utilities(commands.Cog):
             await ctx.send(f'Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules in {self.client.get_channel(654413439141150751).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
         elif ctx.channel.id == mapona_welcomechannel_id:
             await ctx.channel.purge()
-            await ctx.send(f'Welcome! This is ma pona pi toki pona, a discord server for the constructed language toki pona. Read the rules in {self.client.get_channel(589550572051628049).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble with gaining entry, that\'s totally fine! Just ping `@jan lawa` and `@jan pali` and we\'ll be with you to help as soon as we can.')
+            await ctx.send(f':flag_gb: Welcome! This is ma pona pi toki pona, a discord server for the constructed language toki pona. Read the rules in {self.client.get_channel(589550572051628049).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble with gaining entry, that\'s totally fine! Just ping `@jan lawa` and `@jan pali` and we\'ll be with you to help as soon as we can.\n\n:flag_tp: kama pona a! ni li ma pona pi toki pona. kulupu ni la jan li toki pona li toki e ijo pi toki pona. o lukin e tomo {self.client.get_channel(589550572051628049).mention}.\n\nsina ken ala kama lon kulupu ale la o toki e `@jan lawa` e `@jan pali`.')
         else:
             await ctx.send('Not in the right channel.')
 
