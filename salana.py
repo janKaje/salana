@@ -74,19 +74,7 @@ async def on_command_error(ctx, error):
         await ctx.send(f'ERROR! {error}')
 
 @client.event
-async def on_error(error, *args, **kwargs):
-    errorchannel = client.get_channel(705223622981320706)
-    if isinstance(error, discord.InvalidData):
-        await errorchannel.send(f'Invalid Data on {error}')
-    elif isinstance(error, discord.InvalidArgument):
-        await errorchannel.send(f'Invalid argument on {error}')
-    elif isinstance(error, discord.HTTPException):
-        await errorchannel.send(f'HTTPException: response: {error.response} | text: {error.text} | status: {error.status} | code: {error.code}')
-    elif isinstance(error, discord.Forbidden):
-        await errorchannel.send(f'Forbidden: {error}')
-    elif isinstance(error, discord.ClientException):
-        await errorchannel.send(f'Client Exception: {error}')
-    else:
-        await errorchannel.send(f'There was an error: {error} {args} {kwargs}')
+async def on_error(event, *args, **kwargs):
+    await client.get_channel(705223622981320706).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
 
 client.run('NzEyMDg2NjExMDk3MTU3NjUy.Xtcocw.ARQ8_3os-lNswftsp5eo4KDdPuw')

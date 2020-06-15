@@ -592,9 +592,9 @@ class language(commands.Cog):
                             if score == 10:
                                 await msg.channel.send('https://cdn.discordapp.com/attachments/316066233755631616/672822465633976345/image-6.png')
                             elif score == 7:
-                                await msg.channel.send('*o toki pona taso a.* Seriously, please stop. Channels that begin with tpt are for toki pona only. If you\'re going to speak in a different language, move to a different channel.', delete_after=3)
+                                await msg.channel.send('*o toki pona taso a.* Seriously, please stop. Channels that begin with tpt are for toki pona only. If you\'re going to speak in a different language, move to a different channel.', delete_after=20)
                             elif score == 3:
-                                await msg.channel.send('This is your friendly, automated reminder to only speak in toki pona here. pona la o toki pona taso lon tomo ni.', delete_after=3)
+                                await msg.channel.send('This is your friendly, automated reminder to only speak in toki pona here. pona la o toki pona taso lon tomo ni.', delete_after=8)
                 except:
                     pass
     
