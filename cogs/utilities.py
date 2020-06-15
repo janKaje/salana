@@ -84,7 +84,7 @@ class utilities(commands.Cog):
                             if i.author == message.author:
                                 await i.delete()
             elif message.channel.id == mapona_welcomechannel_id and message.author.id != 712086611097157652:
-                if re.sub(r'\W', '', message.content) == 'toki':
+                if re.sub(r'\W', '', message.content).lower() == 'toki':
                     await message.delete()
                     join_role = message.guild.get_role(475389238494625812)
                     main_chat = message.guild.get_channel(301377942062366741)

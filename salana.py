@@ -11,7 +11,6 @@ client.remove_command('help')
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
-    await client.get_channel(705223622981320706).send(time.strftime('Began running on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
     await client.get_user(474349369274007552).send(time.strftime('Began running on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
 
 #Load, unload, reload cog commands

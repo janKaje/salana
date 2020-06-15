@@ -73,7 +73,7 @@ class fun(commands.Cog):
         else:
             await ctx.send('Please only enter integers.')
 
-    #Sicto's command
+    #pr
     @commands.command()
     async def pr(self, ctx, arg1, arg2):
         """It's complicated and honestly, kind of pointless."""
