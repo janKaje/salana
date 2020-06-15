@@ -74,12 +74,10 @@ class fun(commands.Cog):
             await ctx.send('Please only enter integers.')
 
     #Sicto's command
-    @commands.command(hidden=True)
+    @commands.command()
     async def pr(self, ctx, arg1, arg2):
-        """A command that only sictoabu can use. It's complicated."""
-        if ctx.author.id != 573295509360476170:
-            await ctx.send("Only sictoabu can use this command.")
-        elif is_number(arg1) and is_number(arg2):
+        """It's complicated and honestly, kind of pointless."""
+        if is_number(arg1) and is_number(arg2):
             a=float(arg1)
             b=float(arg2)
             result=a**3/b-b**a+a**b
