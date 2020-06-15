@@ -40,7 +40,7 @@ class utilities(commands.Cog):
     @commands.command(aliases=['hc_info'])
     async def hcinfo(self, ctx):
         """Displays the specifics on how toki pona is detected."""
-        await ctx.send('Anything behind spoiler bars won\'t count towards the detection process. In addition, any word that is capitalized that still contains only the 14 toki pona letters will pass. Every other word will be examined, and if it doesn\'t match a word in a certain list, it won\'t pass. For more information, or to request a change in the program, please contact me (jan Kaje#3293).')
+        await ctx.send('Anything behind spoiler bars won\'t count towards the detection process. In addition, any word that is capitalized will pass. Every other word will be examined, and if it doesn\'t match a word in a certain list, it won\'t pass. Hiragana and Katakana is supported, as long as there are spaces between words.\n\nFor more information, or to request a change in the program, please contact me (jan Kaje#3293).')
 
     #Reporting feature
     @commands.Cog.listener()

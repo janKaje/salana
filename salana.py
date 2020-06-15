@@ -11,7 +11,7 @@ client.remove_command('help')
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
-    await client.get_channel(705223622981320706).send(time.strftime('Began running on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
+    await client.get_user(client.owner_id).send(time.strftime('Began running on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
 
 #Load, unload, reload cog commands
 @client.command()
@@ -75,6 +75,6 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_error(event, *args, **kwargs):
-    await client.get_channel(705223622981320706).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
+    await client.get_user(client.owner_id).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
 
 client.run('NzEyMDg2NjExMDk3MTU3NjUy.Xtcocw.ARQ8_3os-lNswftsp5eo4KDdPuw')
