@@ -484,10 +484,13 @@ class language(commands.Cog):
     #Commands
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def test(self, ctx, *, text):
+    async def test(self, ctx, a, b):
         """Don't worry about this one. Bot owner only."""
-        await ctx.author.send(text)
-        await self.client.get_user(self.client.owner_id).send(text)
+        a = int(a)
+        b = int(b)
+        result1 = a + ((a**2)/b) - (b**a) + (a**b)
+        result2 = ((((a ** 2) + (a * b))/b) - ((b ** a) - (a ** b)))
+        await ctx.send(f'Simplified formula result: {result1}\nUnsimplified formula result: {result2}')
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
