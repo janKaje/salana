@@ -492,7 +492,7 @@ class language(commands.Cog):
         result1 = (a + ((a**2)/b) - (b**a) + (a**b))
         result2 = ((((a ** 2) + (a * b))/b) - ((b ** a) - (a ** b)))
         result3 = math.fsum(a, (a**2/b), -(b**a), (a**b))
-        await ctx.send(f'Simplified formula result: {result1}\nUnsimplified formula result: {result2}')
+        await ctx.send(f'Simplified formula result: {result1}\nUnsimplified formula result: {result2}\nExtra test: {result3}')
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
