@@ -11,7 +11,7 @@ def setup(client):
 tp_words = {
     '',
     'a', 'あ',
-    'kin', 'きｎ',
+    'kin', 'きん',
     'akesi', 'あけし',
     'ala', 'あら',
     'alasa', 'あらさ',
@@ -447,13 +447,6 @@ def check_tp(text):
     msg_step6 = re.sub(r'[\W_0-9]', ' ', msg_step5) #Removes non-letter characters, such as punctuation
     msg_step7 = removeduplicates(msg_step6) #Removes repeated letters
     msg_step8 = re.split(r'\s+', msg_step7) #Splits the string and prepares it for analysis
-    '''print(msg_step1)
-    print(msg_step2)
-    print(msg_step3)
-    print(msg_step4)
-    print(msg_step5)
-    print(msg_step6)
-    print(msg_step7)'''
     for dj in msg_step8:
         if dj in tp_words:
             pass
@@ -506,13 +499,13 @@ class language(commands.Cog):
 
     @commands.command(aliases=['ctp', 'cftp', 'cft'])
     async def check_for_tp(self, ctx, *, text):
-        """Checks if the input text is valid in toki pona or not. For more info, type `,hc_info`."""
+        """Checks if the input text is valid in toki pona or not.\n\nAnything behind spoiler bars won\'t count towards the detection process. In addition, any word that is capitalized will pass. Every other word will be examined, and if it doesn\'t match a word in a certain list (taken from nimi ale pona), it won\'t pass. Hiragana and Katakana is supported, as long as there are spaces between words.\n\nFor more information, or to request a change in the program, please contact me (jan Kaje#3293)."""
         if check_tp(text):
             await ctx.send("toki pona confirmed. :sleepy:")
         else:
             await ctx.send(":rotating_light: Not toki pona! :rotating_light:")
 
-    @commands.command(aliases=['d', 'dict'])
+    @commands.command(aliases=['d', 'dict', 'define'])
     async def dictionary(self, ctx, *words):
         """Displays the definition and etymology of a word or words. Entries taken from *nimi ale pona.*"""
         if len(words) == 0:

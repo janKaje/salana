@@ -37,11 +37,6 @@ class utilities(commands.Cog):
         await ctx.send('a! :dizzy_face::skull_crossbones:')
         quit()
 
-    @commands.command(aliases=['hc_info'])
-    async def hcinfo(self, ctx):
-        """Displays the specifics on how toki pona is detected."""
-        await ctx.send('Anything behind spoiler bars won\'t count towards the detection process. In addition, any word that is capitalized will pass. Every other word will be examined, and if it doesn\'t match a word in a certain list, it won\'t pass. Hiragana and Katakana is supported, as long as there are spaces between words.\n\nFor more information, or to request a change in the program, please contact me (jan Kaje#3293).')
-
     #Reporting feature
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
@@ -84,7 +79,7 @@ class utilities(commands.Cog):
                             if i.author == message.author:
                                 await i.delete()
             elif message.channel.id == mapona_welcomechannel_id and message.author.id != 712086611097157652:
-                if re.sub(r'\W', '', message.content).lower() == 'toki':
+                if re.sub(r'\W', '', message.content).lower().startswith('toki'):
                     await message.delete()
                     join_role = message.guild.get_role(475389238494625812)
                     main_chat = message.guild.get_channel(301377942062366741)
@@ -101,7 +96,7 @@ class utilities(commands.Cog):
     @commands.command(hidden=True)
     @commands.has_permissions(manage_messages=True)
     async def reset(self, ctx):
-        """Resets the welcome channel. You must have the manage messages permissions to activate this command."""
+        """Resets the welcome channel. You must have the manage messages permissions to use this command."""
         if ctx.channel.id == wali_welcomechannel_id:
             await ctx.channel.purge()
             await ctx.send(f'Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules in {self.client.get_channel(654413439141150751).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
@@ -150,7 +145,7 @@ class utilities(commands.Cog):
                 muwipamumi = self.client.get_channel(654422747090518036).mention
                 hardcore_text = f'If you have the hardcore role, any message you send that is not in pa mu will be deleted. Exceptions are when you preface your message with an asterisk or put the non-pa mu text behind spoiler bars. In addition, any message in {muwipamumi} will be scanned and possibly deleted in the same way.'
             elif ctx.guild.id == mapona_id:
-                hardcore_text = f'If you have the hardcore role, any message you send that is not in toki pona will be deleted. Exceptions are when you preface your message with an asterisk or put the non-toki pona text behind spoiler bars.'
+                hardcore_text = f'If you have the hardcore role, any message you send that is not in toki pona will be deleted. Exceptions are when you preface your message with an asterisk. Checks for toki pona the same way that ,ctp does.'
             extra_msg.add_field(name='__HARDCORE__', value=hardcore_text, inline = False)
             extra_msg.add_field(name='__REPORTING MESSAGES__', value='Any message that two or more people react to with :triangular_flag_on_post: will have a copy sent to a certain channel. This allows people to flag messages they think are breaking the rules so that mods can easily notice and address the issue.', inline=False)
         

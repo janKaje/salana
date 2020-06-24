@@ -76,11 +76,11 @@ class fun(commands.Cog):
     #pr
     @commands.command()
     async def pr(self, ctx, arg1, arg2):
-        """It's complicated and honestly, kind of pointless."""
+        """Calculates the perlition of two numbers."""
         if is_number(arg1) and is_number(arg2):
             a=float(arg1)
             b=float(arg2)
-            result=a**3/b-b**a+a**b
+            result=a+a**2/b-b**a+a**b
             if isinstance(result, int):
                 await ctx.send(f"{result}")
             else:
