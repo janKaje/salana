@@ -126,7 +126,7 @@ class utilities(commands.Cog):
             await log_channel.send(embed=log_msg)
 
     #Custom Help command
-    @commands.command()
+    @commands.command(aliases=['h'])
     async def help(self, ctx, cmd=None):
         """Displays the help command. If [cmd] is given, displays the long help text for that command."""
         if cmd == None:
