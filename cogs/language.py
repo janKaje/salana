@@ -457,7 +457,7 @@ tpt_dict = {
     "lawa": '**mi lawa e ona.** mi kama e ni: ona li pali.\nuta mi en lukin mi li lon lawa mi.\nlawa jan li wan sijelo li pilin li toki insa.\njan lawa li toki e ijo sama ni: “jan ale li ken pali e ijo ni li ken ala pali e ijo ante. mi pali e ike tawa jan ike. mi pana e pona tawa jan pona.”\nijo lawa li suli mute li ken pali e ijo mute.',
     "len": "**mi len e ona kepeken ijo.** mi pana e ijo ni lon poka ale ona.\njan li pali e len kepeken linja mute. jan li ken len e sijelo kepeken len. sijelo li lon insa len la ona li seli.",
     "lete": "lete li lon la telo li kama kiwen.\nijo lete li seli ala.",
-    "li": "**ona li moku li moli.** ona li moku. ona li moli.",
+    "li": "**sina moku li moli.** sina moku. sina moli.",
     "lili": "ijo lili li suli ala.\nijo lili li ijo pi mute ala.\ntenpo pini suli la jan lili li lon ala. taso tenpo pini lili la mama ona li lon e ona.",
     "linja": "linja mute li lon selo soweli li lon lawa jan mute.\njan li pali e linja kepeken nasin ni: ona li kama jo e linja mute li tawa e kulupu linja sama ni: pini wan taso pi kulupu linja li sike.\nmi jo e pini linja wan la sina jo e pini linja ante la mi tawa weka tan sina la mi ken ala tawa weka e pini linja mi la linja ni li lukin sama ijo linja.",
     "lipu": "wan ale pi selo sinpin lipu li lon poka pi selo monsi lipu. jan li pali e lipu kepeken nasin ni: ona li wan e wan kasi lili mute e telo seli.\nlipu li jo e lipu mute e nimi mute.",
@@ -667,7 +667,7 @@ class language(commands.Cog):
 
     @commands.command(aliases=['k', 'kpnn'])
     async def kon_pi_nimi_ni(self, ctx, *words):
-        "sina toki e ni la mi toki e kon pi nimi pi toki sina. jan Kaje li kama e toki ni tan *lipu nimi pi toki pona taso.* ona li ante lili e toki ona.\n\nni li jo ala e nimi ale pona. sina wile e kon pi nimi pi pu ala la sina o pali e ona o pana e ona tawa jan Kaje."
+        "sina toki e ni la mi toki e kon pi nimi pi toki sina. jan Kaje li kama e toki ni tan *lipu nimi pi toki pona taso.* ona li ante lili e toki ona.\nni li jo ala e nimi ale pona. sina wile e kon pi nimi pi pu ala la sina o pali e ona o pana e ona tawa jan Kaje."
         if len(words) == 0:
             await ctx.send('o toki e nimi a.')
             return
