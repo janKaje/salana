@@ -710,7 +710,7 @@ class language(commands.Cog):
             img = Image.new('RGB', size, color=bg)
             await ctx.send('image created')
             draw = ImageDraw.Draw(img)
-            draw.text((border, border), text, fill=fg, font=font)
+            draw.text((0, 0), text, fill=fg, font=font)
             await ctx.send('text drawn')
             img.save(str(ctx.author.id)+'.png')
             await ctx.send('image saved')
