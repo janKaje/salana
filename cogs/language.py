@@ -703,7 +703,7 @@ class language(commands.Cog):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             border = int(border)
-            font = ImageFont.truetype(font=r'.\spfonts\linja-pona-4.2.otf', size=fontsize)
+            font = ImageFont.truetype(font=r'./spfonts/linja-pona-4.2.otf', size=fontsize)
             size = font.getsize(text)
             for i in size:
                 i = i + 2*border 
@@ -711,8 +711,12 @@ class language(commands.Cog):
             draw = ImageDraw.Draw(img)
             draw.text((0+border, 0+border), text, fill=fg, font=font)
             await ctx.send(img)
-        except Exception as e:
-            await ctx.send(e)
+        except:
+            try:
+                font = ImageFont.truetype(font=r'linja-pona-4.2.otf', size=fontsize)
+                await ctx.send('second one worked')
+            except Exception as e:
+                await ctx.send(e)
 
     #On message: hardcore, tpt moderation
     @commands.Cog.listener()
