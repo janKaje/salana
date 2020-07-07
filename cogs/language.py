@@ -711,11 +711,11 @@ class language(commands.Cog):
             img = Image.new('RGB', size, color=bg)
             draw = ImageDraw.Draw(img)
             draw.text((border, border), text, fill=fg, font=font)
-            img.save('/app/sp/'+ctx.author.id+'.png')
-            img2 = open('/app/sp/'+ctx.author.id+'.png', 'r')
+            img.save('/app/sp/'+str(ctx.author.id)+'.png')
+            img2 = open('/app/sp/'+str(ctx.author.id)+'.png', 'r')
             await ctx.send(file=img2)
             img2.close()
-            os.remove('/app/sp/'+ctx.author.id+'.png')
+            os.remove('/app/sp/'+str(ctx.author.id)+'.png')
         except Exception as e:
             await ctx.send(e)
 
