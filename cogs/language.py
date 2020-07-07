@@ -704,7 +704,7 @@ class language(commands.Cog):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             await ctx.send('initiating...')
-            font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf')
+            font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', fontsize=20)
             await ctx.send('font loaded')
             size = font.getsize(text)
             img = Image.new('RGB', size, color=bg)
