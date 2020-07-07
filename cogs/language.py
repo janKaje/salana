@@ -700,15 +700,44 @@ class language(commands.Cog):
             await ctx.send("Hardcore role given.")
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
-    async def sitelen(self, ctx, *, text, bg='white', fg='black'):
+    async def sitelen(self, ctx, *, text):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             async with ctx.channel.typing():
-                font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=32)
+                #search for fg
+                fg_search = re.search(r'(fg=\w+)', text)
+                if fg_search:
+                    fg = fg_search.group(0)[3:]
+                    text = re.sub(r' fg=\w+|fg=\w+ ', '', text)
+                else:
+                    fg = 'black'
+                #search for bg
+                bg_search = re.search(r'(bg=\w+)', text)
+                if bg_search:
+                    bg = fg_search.group(0)[3:]
+                    text = re.sub(r' bg=\w+|bg=\w+ ', '', text)
+                else:
+                    bg = 'white'
+                #search for borderwidth
+                border_search = re.search(r'(border=\w+)', text)
+                if border_search:
+                    border = int(border_search.group(0)[7:])
+                    text = re.sub(r' border=\w+|border=\w+ ', '', text)
+                else:
+                    border = 4
+                #search for font size
+                size_search = re.search(r'(size=\w+)', text)
+                if size_search:
+                    fontsize = size_search.group(0)[5:]
+                    text = re.sub(r' size=\w+|size=\w+ ', '', text)
+                else:
+                    fontsize = 32
+                font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize)
                 size = font.getsize_multiline(text)
-                img = Image.new('RGB', size, color=bg)
+                finalsize = (size[0]+2*border, size[1]+2*border)
+                img = Image.new('RGB', finalsize, color=bg)
                 draw = ImageDraw.Draw(img)
-                draw.text((0, 0), text, fill=fg, font=font)
+                draw.text((border, border), text, fill=fg, font=font)
                 img.save(str(ctx.author.id)+'.png')
             await ctx.send(file=discord.File(open(str(ctx.author.id)+'.png', 'rb')))
             os.remove(str(ctx.author.id)+'.png')
