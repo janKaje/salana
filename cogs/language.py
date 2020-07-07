@@ -704,15 +704,18 @@ class language(commands.Cog):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             border = int(border)
-            await ctx.send(os.path.dirname(os.path.abspath(__file__))+'/spfonts/linja-pona-4.2.otf')
-            font = ImageFont.truetype(font=os.path.dirname(os.path.abspath(__file__))+'/spfonts/linja-pona-4.2.otf')
+            font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf')
             size = font.getsize(text)
             for i in size:
                 i = i + 2*border
             img = Image.new('RGB', size, color=bg)
             draw = ImageDraw.Draw(img)
             draw.text((border, border), text, fill=fg, font=font)
-            await ctx.send(img)
+            img.save('/app/sp/'+ctx.author.id+'.png')
+            img2 = open('/app/sp/'+ctx.author.id+'.png', 'r')
+            await ctx.send(file=img2)
+            img2.close()
+            os.remove('/app/sp/'+ctx.author.id+'.png')
         except Exception as e:
             await ctx.send(e)
 
