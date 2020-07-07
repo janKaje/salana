@@ -704,6 +704,7 @@ class language(commands.Cog):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             border = int(border)
+            await ctx.send(os.path.dirname(os.path.abspath(__file__))+'\\spfonts\\linja-pona-4.2.otf')
             font = ImageFont.truetype(font=os.path.dirname(os.path.abspath(__file__))+'\\spfonts\\linja-pona-4.2.otf')
             size = font.getsize(text)
             for i in size:
