@@ -703,22 +703,15 @@ class language(commands.Cog):
     async def sitelen(self, ctx, *, text, bg='white', fg='black'):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
-            await ctx.send('initiating...')
-            font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=20)
-            await ctx.send('font loaded')
-            size = font.getsize(text)
-            img = Image.new('RGB', size, color=bg)
-            await ctx.send('image created')
-            draw = ImageDraw.Draw(img)
-            draw.text((0, 0), text, fill=fg, font=font)
-            await ctx.send('text drawn')
-            img.save(str(ctx.author.id)+'.png')
-            await ctx.send('image saved')
-            img2 = open(str(ctx.author.id)+'.png', 'rb')
-            await ctx.send(file=discord.File(img2))
-            img2.close()
+            async with ctx.channel.typing():
+                font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=32)
+                size = font.getsize_multiline(text)
+                img = Image.new('RGB', size, color=bg)
+                draw = ImageDraw.Draw(img)
+                draw.text((0, 0), text, fill=fg, font=font)
+                img.save(str(ctx.author.id)+'.png')
+            await ctx.send(file=discord.File(open(str(ctx.author.id)+'.png', 'rb')))
             os.remove(str(ctx.author.id)+'.png')
-            await ctx.send('image closed and deleted')
         except Exception as e:
             await ctx.send(e)
 
