@@ -712,8 +712,8 @@ class language(commands.Cog):
             draw = ImageDraw.Draw(img)
             draw.text((border, border), text, fill=fg, font=font)
             img.save('/app/sp/'+str(ctx.author.id)+'.png')
-            img2 = open('/app/sp/'+str(ctx.author.id)+'.png', 'r')
-            await ctx.send(file=img2)
+            img2 = open('/app/sp/'+str(ctx.author.id)+'.png', 'rb')
+            await ctx.send(file=discord.File(img2))
             img2.close()
             os.remove('/app/sp/'+str(ctx.author.id)+'.png')
         except Exception as e:
