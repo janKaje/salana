@@ -700,16 +700,13 @@ class language(commands.Cog):
             await ctx.send("Hardcore role given.")
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
-    async def sitelen(self, ctx, *, text, border=4, bg='white', fg='black'):
+    async def sitelen(self, ctx, *, text, bg='white', fg='black'):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             await ctx.send('initiating...')
-            border = int(border)
             font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf')
             await ctx.send('font loaded')
             size = font.getsize(text)
-            for i in size:
-                i = i + 2*border
             img = Image.new('RGB', size, color=bg)
             await ctx.send('image created')
             draw = ImageDraw.Draw(img)
