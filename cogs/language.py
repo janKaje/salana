@@ -737,6 +737,9 @@ class language(commands.Cog):
                 font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize)
                 size = font.getsize_multiline(text)
                 finalsize = (size[0]+2*border, size[1]+2*border)
+                if finalsize[0]*finalsize[1] > 100000:
+                    await ctx.send('too big!')
+                    return
                 img = Image.new('RGB', finalsize, color=bg)
                 draw = ImageDraw.Draw(img)
                 draw.text((border, border), text, fill=fg, font=font)
