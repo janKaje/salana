@@ -703,19 +703,25 @@ class language(commands.Cog):
     async def sitelen(self, ctx, *, text, border=4, bg='white', fg='black'):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
+            await ctx.send('initiating..')
             border = int(border)
             font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf')
+            await ctx.send('font loaded')
             size = font.getsize(text)
             for i in size:
                 i = i + 2*border
             img = Image.new('RGB', size, color=bg)
+            await ctx.send('image created')
             draw = ImageDraw.Draw(img)
             draw.text((border, border), text, fill=fg, font=font)
+            await ctx.send('text drawn')
             img.save('/app/sp/'+str(ctx.author.id)+'.png')
+            await ctx.send('image saved')
             img2 = open('/app/sp/'+str(ctx.author.id)+'.png', 'rb')
             await ctx.send(file=discord.File(img2))
             img2.close()
             os.remove('/app/sp/'+str(ctx.author.id)+'.png')
+            await ctx.send('image closed and deleted')
         except Exception as e:
             await ctx.send(e)
 
