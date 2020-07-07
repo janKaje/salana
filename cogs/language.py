@@ -545,7 +545,7 @@ tpt_dict = {
 def check_pamu(text):
     msg_step1 = re.sub(r'\|\|[^\|]+\|\||\s', '', text)
     msg_step2 = emoji.demojize(msg_step1)
-    msg_step3 = re.sub(r':\w+:', '', msg_step2)
+    msg_step3 = re.sub(r':[^ ]+:', '', msg_step2)
     msg_step4 = re.sub('([mnptksljw][uia])', '', msg_step3)
     if msg_step4 == '':
         return True
@@ -705,31 +705,31 @@ class language(commands.Cog):
         try:
             async with ctx.channel.typing():
                 #search for fg
-                fg_search = re.search(r'(fg=\w+)', text)
+                fg_search = re.search(r'(fg=[^ ]+)', text)
                 if fg_search:
                     fg = fg_search.group(0)[3:]
-                    text = re.sub(r' fg=\w+|fg=\w+ ', '', text)
+                    text = re.sub(r' fg=[^ ]+|fg=[^ ]+ ', '', text)
                 else:
                     fg = 'black'
                 #search for bg
-                bg_search = re.search(r'(bg=\w+)', text)
+                bg_search = re.search(r'(bg=[^ ]+)', text)
                 if bg_search:
-                    bg = fg_search.group(0)[3:]
-                    text = re.sub(r' bg=\w+|bg=\w+ ', '', text)
+                    bg = bg_search.group(0)[3:]
+                    text = re.sub(r' bg=[^ ]+|bg=[^ ]+ ', '', text)
                 else:
                     bg = 'white'
-                #search for borderwidth
-                border_search = re.search(r'(border=\w+)', text)
+                #search for border width
+                border_search = re.search(r'(border=[^ ]+)', text)
                 if border_search:
-                    border = int(border_search.group(0)[7:])
-                    text = re.sub(r' border=\w+|border=\w+ ', '', text)
+                    border = border_search.group(0)[7:]
+                    text = re.sub(r' border=[^ ]+|border=[^ ]+ ', '', text)
                 else:
-                    border = 4
+                    border = 3
                 #search for font size
-                size_search = re.search(r'(size=\w+)', text)
+                size_search = re.search(r'(size=[^ ]+)', text)
                 if size_search:
                     fontsize = size_search.group(0)[5:]
-                    text = re.sub(r' size=\w+|size=\w+ ', '', text)
+                    text = re.sub(r' size=[^ ]+|size=[^ ]+ ', '', text)
                 else:
                     fontsize = 32
                 font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize)
