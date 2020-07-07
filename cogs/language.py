@@ -698,12 +698,12 @@ class language(commands.Cog):
             await ctx.author.add_roles(role)
             await ctx.send("Hardcore role given.")
 
-    @commands.command(aliases=['s'])
-    async def sitelen(self, ctx, *, text, border='4', fg='black', bg='white',fontsize=20):
+    @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
+    async def sitelen(self, ctx, *, text, border='4', fg='black', bg='white', fontsize=20):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             border = int(border)
-            font = ImageFont.truetype(font=r'.\spfonts\linja-pona-4.2.otf', size=fontsize)
+            font = ImageFont.truetype(font=r'\salana\spfonts\linja-pona-4.2.otf', size=fontsize)
             size = font.getsize(text)
             for i in size:
                 i = i + 2*border 
