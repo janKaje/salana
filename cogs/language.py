@@ -6,6 +6,7 @@ import string
 import time
 import math
 from PIL import Image, ImageDraw, ImageFont
+import os
     
 def setup(client):
     client.add_cog(language(client))
@@ -699,11 +700,11 @@ class language(commands.Cog):
             await ctx.send("Hardcore role given.")
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
-    async def sitelen(self, ctx, *, text, border='4', fg='black', bg='white', fontsize=20):
+    async def sitelen(self, ctx, *, text, border=4, bg='white', fg='black'):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             border = int(border)
-            font = ImageFont.truetype(font='./spfonts/linja-pona-4.2.otf')
+            font = ImageFont.truetype(font=os.path.dirname(os.path.abspath(__file__))+'\\spfonts\\linja-pona-4.2.otf')
             size = font.getsize(text)
             for i in size:
                 i = i + 2*border
