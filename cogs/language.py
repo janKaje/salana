@@ -703,7 +703,7 @@ class language(commands.Cog):
         """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
         try:
             border = int(border)
-            font = ImageFont.truetype(font=r'.\spfonts\\linja-pona-4.2.otf', size=fontsize)
+            font = ImageFont.truetype(font='.\spfonts\\linja-pona-4.2.otf', size=fontsize)
             size = font.getsize(text)
             for i in size:
                 i = i + 2*border 
