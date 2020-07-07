@@ -733,7 +733,7 @@ class language(commands.Cog):
                 else:
                     fontsize = 32
                 border = int(border)
-                size = int(size)
+                fontsize = int(fontsize)
                 font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize)
                 size = font.getsize_multiline(text)
                 finalsize = (size[0]+2*border, size[1]+2*border)
