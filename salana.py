@@ -11,7 +11,6 @@ client.remove_command('help')
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
-    await client.get_user(474349369274007552).send(time.strftime('Began running on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
 
 #Load, unload, reload cog commands
 @client.command()
@@ -63,7 +62,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.TooManyArguments):
         await ctx.send('You input too many arguments.')
     elif isinstance(error, commands.CommandNotFound):
-        await ctx.send('Command not found.')
+        pass
     elif isinstance(error, commands.NotOwner):
         await ctx.send('You have to be the owner to excute this command.')
     elif isinstance(error, commands.BotMissingPermissions):
