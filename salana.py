@@ -3,10 +3,12 @@ from discord.ext import commands, tasks
 import os
 import time
 import math
+from boto.s3.connection import S3Connection
 
 #Initialize
 client = commands.Bot(command_prefix = ',')
 client.remove_command('help')
+TOKEN = S3Connection(os.environ['TOKEN'])
 
 #On_ready command
 @client.event
