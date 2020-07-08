@@ -82,4 +82,4 @@ async def on_error(event, *args, **kwargs):
     await client.get_user(client.owner_id).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
 
 #runs bot
-client.run('NzEyMDg2NjExMDk3MTU3NjUy.Xtcocw.ARQ8_3os-lNswftsp5eo4KDdPuw')
+client.run(TOKEN)
