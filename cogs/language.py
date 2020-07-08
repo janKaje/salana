@@ -86,6 +86,7 @@ tp_words = {
     'noka', 'のか',
     'o', 'お',
     'olin', 'おりん',
+    'omekapo'
     'ona', 'おな',
     'open', 'おぺん',
     'pakala', 'ぱから',
@@ -701,7 +702,7 @@ class language(commands.Cog):
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
-        """Displays the given text in sitelen pona. Currently only supports linja pona 4.2"""
+        """Displays the given text in sitelen pona. You can use border=[number] to define border width, """
         try:
             async with ctx.channel.typing():
                 #search for fg

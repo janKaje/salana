@@ -4,6 +4,7 @@ import os
 import time
 import math
 
+#Initialize
 client = commands.Bot(command_prefix = ',')
 client.remove_command('help')
 
@@ -31,17 +32,21 @@ async def unload(ctx, extension):
 @commands.is_owner()
 async def reload(ctx, extension):
     """Reloads a specified extension, or all of them."""
+    #if input is not 'all', reloads a specified extention
     if str(extension) != 'all':
         try:
             client.unload_extension(f"cogs.{extension}")
             client.load_extension(f"cogs.{extension}")
             await ctx.send("Reloaded successfully.")
+        #if extension is already loaded
         except:
             try:
                 client.load_extension(f'cogs.{extension}')
                 await ctx.send("Reloaded successfully.")
             except:
+                #something else happened
                 pass
+    #if input is 'all', reloads all extensions.
     else:
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
@@ -49,7 +54,7 @@ async def reload(ctx, extension):
                 client.load_extension(f"cogs.{filename[:-3]}")
         await ctx.send("All extensions reloaded.")
 
-#Automatically loads all cogs in ./cogs
+#Automatically loads all cogs in ./cogs on startup
 for filename in os.listdir("./cogs"):
     if filename.endswith(".py"):
         client.load_extension(f"cogs.{filename[:-3]}")
@@ -76,4 +81,5 @@ async def on_command_error(ctx, error):
 async def on_error(event, *args, **kwargs):
     await client.get_user(client.owner_id).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
 
+#runs bot
 client.run('NzEyMDg2NjExMDk3MTU3NjUy.Xtcocw.ARQ8_3os-lNswftsp5eo4KDdPuw')
