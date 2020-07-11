@@ -94,7 +94,7 @@ class fun(commands.Cog):
         """A simple ping command. Returns the latency of the bot in milliseconds."""
         await ctx.send(f'Pong! {round(self.client.latency * 1000)}ms')
 
-    @commands.command(aliases=["8ball"])
+    @commands.command(aliases=["8ball", '8'])
     async def _8ball(self, ctx):
         """Roll me and I'll decide your fate."""
         responses = ["It is certain.",

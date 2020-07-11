@@ -698,7 +698,7 @@ class language(commands.Cog):
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
-        """Displays the given text in sitelen pona. You can use border=[number] to define border width, """
+        """Displays the given text in sitelen pona. You can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color."""
         try:
             async with ctx.channel.typing():
                 #search for fg

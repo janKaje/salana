@@ -186,3 +186,10 @@ class utilities(commands.Cog):
                 alia = re.sub(r', \Z', '', alia)
                 helpmsg.set_footer(text=alia)
             await ctx.send(embed=helpmsg)
+    
+    #Link to github
+    @commands.command()
+    async def github(self, ctx):
+        embed = discord.Embed()
+        embed.add_field(name=discord.Embed.Empty, value=f'[Github link](https://github.com/janKaje/salana)')
+        await ctx.send(embed=embed)
