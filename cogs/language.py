@@ -965,38 +965,50 @@ class language(commands.Cog):
                 fg_search = re.search(r'(fg=[^ ]+)', text)
                 if fg_search:
                     fg = fg_search.group(0)[3:]
-                    text = re.sub(r' fg=[^ ]+|fg=[^ ]+ ', '', text)
+                    text = re.sub(r' fg=[^ ]+|fg=[^ ]+ |fg=[^ ]+', '', text)
                 else:
                     fg = 'black'
                 #search for bg
                 bg_search = re.search(r'(bg=[^ ]+)', text)
                 if bg_search:
                     bg = bg_search.group(0)[3:]
-                    text = re.sub(r' bg=[^ ]+|bg=[^ ]+ ', '', text)
+                    text = re.sub(r' bg=[^ ]+|bg=[^ ]+ |bg=[^ ]+', '', text)
                 else:
                     bg = 'white'
                 #search for border width
                 border_search = re.search(r'(border=[^ ]+)', text)
                 if border_search:
                     border = border_search.group(0)[7:]
-                    text = re.sub(r' border=[^ ]+|border=[^ ]+ ', '', text)
+                    text = re.sub(r' border=[^ ]+|border=[^ ]+ |border=[^ ]+', '', text)
                 else:
                     border = 3
                 #search for font size
                 size_search = re.search(r'(size=[^ ]+)', text)
                 if size_search:
                     fontsize = size_search.group(0)[5:]
-                    text = re.sub(r' size=[^ ]+|size=[^ ]+ ', '', text)
+                    text = re.sub(r' size=[^ ]+|size=[^ ]+ |size=[^ ]+', '', text)
                 else:
                     fontsize = 48
+                #search for broken
+                size_search = re.search('=broken', text)
+                if size_search:
+                    broken = True
+                    text = re.sub(' =broken|=broken |=broken', '', text)
+                else:
+                    broken = False
                 #integerifies the integers
                 border = int(border)
                 fontsize = int(fontsize)
                 font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize) #loads font
                 #replace with single-character equivalents
-                for i in sorted(linja_pona_substitutions, key=len, reverse=True):
-                    if i in text:
-                        text = re.sub(i, linja_pona_substitutions[i], text)
+                if broken:
+                    for i in linja_pona_substitutions:
+                        if i in text:
+                            text = re.sub(i, linja_pona_substitutions[i], text)
+                else:
+                    for i in sorted(linja_pona_substitutions, key=len, reverse=True):
+                        if i in text:
+                            text = re.sub(i, linja_pona_substitutions[i], text)
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, size[1]+2*border) #adds border to size
                 if finalsize[0]*finalsize[1] > 1000000:
