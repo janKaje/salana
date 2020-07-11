@@ -4,7 +4,7 @@ import re
 import emoji
 import string
 import time
-import math
+from math import ceil
 from PIL import Image, ImageDraw, ImageFont
 import os
 import random
@@ -929,7 +929,7 @@ class language(commands.Cog):
 
     @commands.command(aliases=['k', 'kpnn'])
     async def kon_pi_nimi_ni(self, ctx, *words):
-        "sina toki e ni la mi toki e kon pi nimi pi toki sina. jan Kaje li kama e toki ni tan *lipu nimi pi toki pona taso.* ona li ante lili e toki ona.\nni li jo ala e nimi ale pona. sina wile e kon pi nimi pi pu ala la sina o pali e ona o pana e ona tawa jan Kaje."
+        "sina toki e ni la mi toki e kon pi nimi pi toki sina. jan Kaje li kama e toki ni tan *lipu nimi pi toki pona taso.* ona li ante lili e toki ona.\nni li jo ala e nimi ale pona. sina wile e kon pi nimi pi pu ala la sina o pali e ona o pana e ona tawa jan Kaje lon lipu GitHub."
         if len(words) == 0:
             await ctx.send('o toki e nimi a.')
             return
@@ -961,7 +961,7 @@ class language(commands.Cog):
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
-        """Displays the given text in sitelen pona.\n\nYou can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color.\n\nThere's also an older, buggier version of the renderer that was brought back by popular demand. ¯\\_(ツ)_/¯\n\nTo use it, insert =broken into your text."""
+        """Displays the given text in sitelen pona.\n\nYou can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color.\n\nThere's also an older, buggier version of the renderer that was brought back by popular demand. ¯\\_(ツ)_/¯ To use it, insert =broken into your text."""
         try:
             async with ctx.channel.typing():
                 #search for fg
@@ -1002,7 +1002,7 @@ class language(commands.Cog):
                 #integerifies the integers
                 border = int(border)
                 fontsize = int(fontsize)
-                font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize) #loads font
+                font = ImageFont.truetype(font='/app/linja-pona-4.2.otf', size=fontsize) #loads font
                 #replace with single-character equivalents
                 if broken:
                     for i in linja_pona_substitutions:
@@ -1022,7 +1022,7 @@ class language(commands.Cog):
                 draw.text((border, border), text, fill=fg, font=font) #draws text
                 img.save(str(ctx.author.id)+'.png') #saves image
             await ctx.send(file=discord.File(open(str(ctx.author.id)+'.png', 'rb')))
-            os.remove(str(ctx.author.id)+'.png')
+            os.remove(str(ctx.author.id)+'.png') #deletes image
         except Exception as e:
             await ctx.send(e)
 
@@ -1043,6 +1043,7 @@ class language(commands.Cog):
         if len(found) == 0:
             await ctx.send('No results found.')
             return
+        #if it's short enough, does it in one message
         if len(found) < 6:
             embed = discord.Embed(title=f'{len(found)} result(s) found', color=discord.Color.teal())
             for i in found:
@@ -1053,7 +1054,8 @@ class language(commands.Cog):
             foundtouse = dict(list(found.items())[:5])
             for i in foundtouse:
                 embed.add_field(name=i, value=foundtouse[i][(len(i)+9):], inline=False)
-            nonce = random.randint(1, 1000000)
+            nonce = random.randint(1, 1000000) #attaches random int to message so that it can be recalled later
+            #adds info to dictionary so that it can be retrieved later
             self.searchembednonces[f'page:{nonce}'] = 1
             self.searchembednonces[f'dict:{nonce}'] = found
             self.searchembednonces[f'user:{nonce}'] = ctx.author.id
@@ -1094,7 +1096,7 @@ class language(commands.Cog):
         #changes page
         page += pagefb
         #if reached the end or beginning, end the function
-        if page == 0 or page > math.ceil(len(found)/5):
+        if page == 0 or page > ceil(len(found)/5):
             return
         #sets range for embed to display
         back, front = page*5, page*5-4
@@ -1115,48 +1117,49 @@ class language(commands.Cog):
             await msg.add_reaction(emoji.emojize(':right_arrow:'))
             return
         #else, do hardcore
-        if msg.guild.id == 654411781929959424:
+        if msg.guild.id == 654411781929959424: #wali wi pa mu
             try:
                 role = msg.guild.get_role(706257334682386582)
-                if role in msg.author.roles:
-                    if msg.content[0] not in ',*' and msg.content[:2] != 't!':
+                if role in msg.author.roles: #checks for hardcore role in user's roles
+                    if msg.content[0] not in ',*' and msg.content[:2] != 't!': #if starts with bot command prefix or *, ignores
                         if check_pamu(msg.content) == False:                            
                             try:
                                 await msg.delete()
                             except discord.errors.NotFound:
                                 return
-                elif msg.channel.id == 654422747090518036:
+                elif msg.channel.id == 654422747090518036: #checks if message is in the pa mu only channel
                     if check_pamu(msg.content) == False:
                         try:
                             await msg.delete()
                         except discord.errors.NotFound:
                             return
-            except AttributeError:
-                if msg.channel.id == 654422747090518036:
+            except AttributeError: #this is for those that use pluralkit, which sends messages for them with a webhook, which doesn't have roles. it raises an exception when you try to look at its roles.
+                if msg.channel.id == 654422747090518036: #still checks for pa mu only channel
                     if check_pamu(msg.content) == False:
                         try:
                             await msg.delete()
                         except discord.errors.NotFound:
                             return
-        elif msg.guild.id == 301377942062366741:
+        elif msg.guild.id == 301377942062366741: #ma pona
             try:
                 role = msg.guild.get_role(712083555131326464)
-                if role in msg.author.roles:
-                    if msg.channel.id in [301377942062366741, 375591429608570881, 340307145373253642, 545467374254555137]:
-                        if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;':
+                if role in msg.author.roles: #checks for hardocre role in user's roles
+                    if msg.channel.id in [301377942062366741, 375591429608570881, 340307145373253642, 545467374254555137]: #checks if message was sent in the channels that will delete the message
+                        if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;': #if starts with bot command prefix or *, ignores
                             if check_tp(msg.content) == False:
                                 try:
                                     await msg.delete()
                                 except discord.errors.NotFound:
                                     return
-            except AttributeError:
+            except AttributeError: #same as AttributeError handling shown above
                 pass
-            #and tpt moderation
-            if msg.channel.id in [316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297]:
+            #tpt moderation
+            if msg.channel.id in [316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297]: #channel ids for tpt channels
                 try:
-                    if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;' and not msg.author.bot:
-                        if not check_tp_soft(msg.content):
+                    if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;' and not msg.author.bot: #if starts with bot command prefix or *, ignores
+                        if not check_tp_soft(msg.content): #initial check for non-tp
                             score = 0
+                            #iterates through previous ten messages. if 3, 7, or 10 don't pass check_tp_soft, sends a message
                             async for i in msg.channel.history(limit=10):
                                 if not check_tp_soft(i.content):
                                     score += 1
@@ -1171,6 +1174,7 @@ class language(commands.Cog):
                 except:
                     pass
     
+    #in essence, the same as the above function, but without tpt moderation thing (since edited messages are covered when it iterates through last 10 messages)
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         if after.guild.id == 654411781929959424:

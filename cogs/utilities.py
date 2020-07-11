@@ -4,6 +4,7 @@ import re
 from emoji import demojize
 import time
 
+#some variables to help keep track of ids
 mapona_id = 301377942062366741
 waliwipamu_id = 654411781929959424
 wali_welcomechannel_id = 719681821742465034
@@ -11,7 +12,6 @@ mapona_welcomechannel_id = 722087129559072788
 wali_surveillance_id = 711341612030099546
 mapona_surveillance_id = 596158180275519500
 wali_logchannel_id = 654413820995043350
-jankaje_id = 474349369274007552
 
 def setup(client):
     client.add_cog(utilities(client))
@@ -33,25 +33,27 @@ class utilities(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def omoli(self, ctx):
-        """Kills the bot. (supposedly, with heroku it just starts right back up again) You must be the bot owner to activate this command."""
+        """Kills the bot. (supposedly. with heroku it just starts right back up again.) You must be the bot owner to activate this command."""
         await ctx.send('a! :dizzy_face::skull_crossbones:')
         quit()
 
     #Reporting feature
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if not reaction.custom_emoji:
-            if str(demojize(reaction.emoji)) == ':triangular_flag:' and reaction.count == 2:
+        if not reaction.custom_emoji: #only goes to the rest of the function if it's a unicode emoji
+            if str(demojize(reaction.emoji)) == ':triangular_flag:' and reaction.count == 2: #checks for the right number and type of reactions
                 if reaction.message.guild.id == waliwipamu_id:
                     mod_surveillance_channel = self.client.get_channel(wali_surveillance_id)
                 elif reaction.message.guild.id == mapona_id:
                     mod_surveillance_channel = self.client.get_channel(mapona_surveillance_id)
-                userlist = f''
+                userlist = ''
 
+                #embed creation
                 msg_to_channel = discord.Embed(color = discord.Color.red())
-                msg_to_channel.set_author(name = f'{reaction.message.author.display_name}, AKA {str(reaction.message.author)}', icon_url = reaction.message.author.avatar_url)
-                msg_to_channel.add_field(name = 'Message content:', value = reaction.message.content, inline=False)
-                msg_to_channel.add_field(name = 'Original', value = f'[Jump]({reaction.message.jump_url})', inline=False)
+                msg_to_channel.set_author(name = f'{reaction.message.author.display_name}, AKA {str(reaction.message.author)}', icon_url = reaction.message.author.avatar_url) #sets author to person who's message is being reported
+                msg_to_channel.add_field(name = 'Message content:', value = reaction.message.content, inline=False) #adds copy of message content
+                msg_to_channel.add_field(name = 'Original', value = f'[Jump]({reaction.message.jump_url})', inline=False) #adds url to jump to
+                #iterates through reporters, adding their names to the embed
                 async for reporter in reaction.users():
                     if reporter.display_name != reporter.name:
                         userlist += f'{reporter.display_name}, AKA {str(reporter)}\n'
@@ -59,39 +61,39 @@ class utilities(commands.Cog):
                         userlist += f'{str(reporter)}\n'
                 msg_to_channel.add_field(name = 'People who originally reported it:', value = userlist, inline=False)
 
+                #sends embed and tells channel it's been reported
                 await mod_surveillance_channel.send(f':warning: New Flagged Message in {reaction.message.channel.mention} :warning:\n', embed=msg_to_channel)
-                await reaction.message.channel.send('Message successfully reported.', delete_after=2)
+                await reaction.message.channel.send('Message successfully reported.', delete_after=6)
 
     #Welcome
     @commands.Cog.listener()
     async def on_message(self, message):
-        try:
-            if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652:
-                if re.sub(r'\W', '', message.content) == 'mu':
-                    await message.delete()
-                    join_role = message.guild.get_role(654416341775679518)
-                    main_chat = message.guild.get_channel(654413515301584896)
-                    help_channel = message.guild.get_channel(654414352354508800)
-                    if join_role not in message.author.roles:
-                        await message.author.add_roles(join_role)
-                        await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.')
-                        async for i in message.channel.history():
-                            if i.author == message.author:
-                                await i.delete()
-            elif message.channel.id == mapona_welcomechannel_id and message.author.id != 712086611097157652:
-                if re.sub(r'\W', '', message.content).lower().startswith('toki'):
-                    await message.delete()
-                    join_role = message.guild.get_role(475389238494625812)
-                    main_chat = message.guild.get_channel(301377942062366741)
-                    help_channel = message.guild.get_channel(301378960468738050)
-                    if join_role not in message.author.roles:
-                        await message.author.add_roles(join_role)
-                        await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.\n\nkama pona, {message.author.mention} o! ni li tomo pi toki mute. sina wile sona e ijo la o toki e ona lon tomo {help_channel.mention}.')
-                        async for i in message.channel.history():
-                            if i.author == message.author:
-                                await i.delete()
-        except Exception as e:
-            await self.client.get_channel(705223622981320706).send(f'On_message error in Utilities: {e}')
+        if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652: #if in the wali wi pa mu welcome channel and the message wasn't sent by the bot
+            #if the message they send is the key, deletes their message(s), gives them the entry role, and introduces them.
+            if re.sub(r'\W', '', message.content).startswith('mu'):
+                await message.delete()
+                join_role = message.guild.get_role(654416341775679518)
+                main_chat = message.guild.get_channel(654413515301584896)
+                help_channel = message.guild.get_channel(654414352354508800)
+                if join_role not in message.author.roles:
+                    await message.author.add_roles(join_role)
+                    await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.')
+                    async for i in message.channel.history():
+                        if i.author == message.author:
+                            await i.delete()
+        elif message.channel.id == mapona_welcomechannel_id and message.author.id != 712086611097157652: #if in the ma pona welcome channel and the message wasn't sent by the bot
+            #same as above
+            if re.sub(r'\W', '', message.content).lower().startswith('toki'):
+                await message.delete()
+                join_role = message.guild.get_role(475389238494625812)
+                main_chat = message.guild.get_channel(301377942062366741)
+                help_channel = message.guild.get_channel(301378960468738050)
+                if join_role not in message.author.roles:
+                    await message.author.add_roles(join_role)
+                    await main_chat.send(f'Welcome to the server, {message.author.mention}! This is the main chat. You can ask any questions about the language in {help_channel.mention}.\n\nkama pona, {message.author.mention} o! ni li tomo pi toki mute. sina wile sona e ijo la o toki e ona lon tomo {help_channel.mention}.')
+                    async for i in message.channel.history():
+                        if i.author == message.author:
+                            await i.delete()
 
     @commands.command(hidden=True)
     @commands.has_permissions(manage_messages=True)
@@ -106,7 +108,7 @@ class utilities(commands.Cog):
         else:
             await ctx.send('Not in the right channel.')
 
-    #Join/leave logging
+    #Join/leave logging for wali wi pa mu
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.guild.id == waliwipamu_id:
@@ -129,17 +131,21 @@ class utilities(commands.Cog):
     @commands.command(aliases=['h'])
     async def help(self, ctx, cmd=None):
         """Displays the help command. If [cmd] is given, displays the long help text for that command."""
+        #displays all commands if cmd is not given
         if cmd == None:
             command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,h [command]` for more information.')
+            #iterates through cogs
             for x in self.client.cogs:
                 cog_info = ''
                 cog = self.client.get_cog(x)
+                #iterates through commands of the cog, adding their names to cog_info
                 for c in cog.walk_commands():
                     if not c.hidden:
                         cog_info += f'***{c.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info)
-                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False)
+                cog_info = re.sub(r'  \-  \Z', '', cog_info) #trims end off, if there is one
+                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False) #adds cog and commands to embed
         
+            #message to explain features
             extra_msg = discord.Embed(title='Features', color=discord.Color.blue())
             if ctx.guild.id == waliwipamu_id:
                 muwipamumi = self.client.get_channel(654422747090518036).mention
@@ -152,36 +158,47 @@ class utilities(commands.Cog):
             await ctx.send(embed=command_msg)
             await ctx.send(embed=extra_msg)
             return
+        #if 'hidden' is specified, shows all the hidden ones and their info
         if cmd == 'hidden':
             command_msg = discord.Embed(title='Commands', color=discord.Color.blue())
+            #iterates through cogs
             for x in self.client.cogs:
                 cog_info = ''
                 cog = self.client.get_cog(x)
+                #iterates through commands, checking if they're hidden and adding them
                 for c in cog.walk_commands():
                     if c.hidden:
-                        cog_info += f'***{c.name}*** - {c.help}\n'
+                        cog_info += f'***{c.name}*** - {c.help}\n\n'
+                #if nothing found, exit this cog and check the next one
                 if cog_info == '':
                     continue
-                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False)
+                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False) #add info to embed
             await ctx.send(embed=command_msg)
+        #for when a certain command is specified
         else:
             comd = ''
             alia = 'Aliases: '
+            #iterates through cogs
             for x in self.client.cogs:
                 cog = self.client.get_cog(x)
+                #iterates through cog's commands
                 for c in cog.walk_commands():
-                    if c.name == cmd or cmd in c.aliases:
+                    if c.name == cmd or cmd in c.aliases: #if search term matches command or any of the aliases
                         if not c.hidden:
-                            title = f'{c.name}'
-                            comd = f'{c.help}'
+                            title = f'{c.name}' #adds name
+                            comd = f'{c.help}' #adds help
+                            #adds aliases
                             for a in c.aliases:
                                 alia += f'{a}, '
+                            #adds parameters
                             for b in c.clean_params:
                                 title += f' <{b}>'
+            #if the command wasn't found
             if comd == '':
                 await ctx.send('That command was not found.')
                 return
-            helpmsg = discord.Embed(title=title, color=discord.Color.blue(), description=comd)
+            helpmsg = discord.Embed(title=title, color=discord.Color.blue(), description=comd) #creates embed
+            #if the command has aliases, add them to the footer
             if not alia == 'Aliases: ':
                 alia = re.sub(r', \Z', '', alia)
                 helpmsg.set_footer(text=alia)
