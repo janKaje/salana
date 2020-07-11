@@ -130,7 +130,7 @@ class utilities(commands.Cog):
     #Custom Help command
     @commands.command(aliases=['h'])
     async def help(self, ctx, cmd=None):
-        """Displays the help command. If [cmd] is given, displays the long help text for that command."""
+        """Displays the help command. If <cmd> is given, displays the long help text for that command."""
         #displays all commands if cmd is not given
         if cmd == None:
             command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,h [command]` for more information.')
@@ -151,7 +151,8 @@ class utilities(commands.Cog):
                 muwipamumi = self.client.get_channel(654422747090518036).mention
                 hardcore_text = f'If you have the hardcore role, any message you send that is not in pa mu will be deleted. Exceptions are when you preface your message with an asterisk or put the non-pa mu text behind spoiler bars. In addition, any message in {muwipamumi} will be scanned and possibly deleted in the same way.'
             elif ctx.guild.id == mapona_id:
-                hardcore_text = f'If you have the hardcore role, any message you send that is not in toki pona will be deleted. Exceptions are when you preface your message with an asterisk. Checks for toki pona the same way that ,ctp does.'
+                mentions = f'{self.client.get_channel(301377942062366741).mention}, {self.client.get_channel(375591429608570881).mention}, {self.client.get_channel(340307145373253642).mention}, or {self.client.get_channel(545467374254555137).mention}'
+                hardcore_text = f'If you have the hardcore role, any message you send in {mentions} that is not in toki pona will be deleted. Exceptions are when you preface your message with an asterisk. Checks for toki pona the same way that ,ctp does.'
             extra_msg.add_field(name='__HARDCORE__', value=hardcore_text, inline = False)
             extra_msg.add_field(name='__REPORTING MESSAGES__', value='Any message that two or more people react to with :triangular_flag_on_post: will have a copy sent to a certain channel. This allows people to flag messages they think are breaking the rules so that mods can easily notice and address the issue.', inline=False)
         

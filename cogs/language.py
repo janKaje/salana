@@ -1027,8 +1027,9 @@ class language(commands.Cog):
             await ctx.send(e)
 
     #Dictionary search
-    @commands.command(aliases=['?'])
+    @commands.command(aliases=['?', 'find', 'f'])
     async def search(self, ctx, *, term):
+        '''Searches through *nimi ale pona* for the specified term. Ignores case.\n\nYou can insert "tpt" into the term to search through the edited version of *lipu nimi pi toki pona taso.*'''
         #if tpt is specified, searches the toki pona taso dictionary
         if 'tpt' in term:
             searchdict = tpt_dict
