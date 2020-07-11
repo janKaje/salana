@@ -993,6 +993,10 @@ class language(commands.Cog):
                 border = int(border)
                 fontsize = int(fontsize)
                 font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize) #loads font
+                #replace with single-character equivalents
+                for i in linja_pona_substitutions:
+                    if i in text:
+                        text = re.sub(i, linja_pona_substitutions[i], text)
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, size[1]+2*border) #adds border to size
                 if finalsize[0]*finalsize[1] > 1000000:
@@ -1000,14 +1004,10 @@ class language(commands.Cog):
                     return
                 img = Image.new('RGB', finalsize, color=bg) #new image
                 draw = ImageDraw.Draw(img)
-                #replace with single-character equivalents
-                for i in linja_pona_substitutions:
-                    if i in text:
-                        text = re.sub(i, linja_pona_substitutions[i], text)
                 draw.text((border, border), text, fill=fg, font=font) #draws text
                 img.save(str(ctx.author.id)+'_'+text[:15].replace(' ', '_')+'.png') #saves image
             await ctx.send(file=discord.File(open(str(ctx.author.id)+'_'+text[:15].replace(' ', '_')+'.png', 'rb')))
-            os.remove(str(ctx.author.id)+'.png')
+            os.remove(str(ctx.author.id)+'_'+text[:10].replace(' ', '_')+'.png')
         except Exception as e:
             await ctx.send(e)
 
