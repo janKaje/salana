@@ -86,7 +86,7 @@ tp_words = {
     'noka', 'のか',
     'o', 'お',
     'olin', 'おりん',
-    'omekapo'
+    'omekapo',
     'ona', 'おな',
     'open', 'おぺん',
     'pakala', 'ぱから',
@@ -224,7 +224,7 @@ tp_dict = {
     'alasa': '***alasa*** – *~pu~* to hunt, forage | *~alt. usage~* (pv.) try to {see ***lukin***}\n\t← Acadian French *à la chasse* ‘hunting’ ← French *chasser* ‘to hunt’',
     'ale': '***ale*** – *~pu~* all; abundant, countless, bountiful, every, plentiful; abundance, everything, life, universe; one hundred | *~alt. usage~* twenty; 100; 120\n\t← Dutch *alle* ‘all’',
     'ali': '***ali*** – *~pu~* all; abundant, countless, bountiful, every, plentiful; abundance, everything, life, universe; one hundred | *~alt. usage~* twenty; 100; 120\n\t← Dutch *alle* ‘all’',
-    'alu': r'***alu*** – *~post-pu~* (between the main sentence and the context phrase) {see ***la***}\n\t← toki pona \**al* (*la* reversed)',
+    'alu': '***alu*** – *~post-pu~* (between the main sentence and the context phrase) {see ***la***}\n\t← toki pona \\**al* (*la* reversed)',
     'anpa': '***anpa*** – *~pu~* bowing down, downward, humble, lowly, dependent\n\t← Acadian French *en bas* ‘below’',
     'ante': '***ante*** – *~pu~* different, altered changed, other\n\t← Dutch *ander* ‘other, different’',
     'anu': '***anu*** – *~pu~* or | *~alt. usage~* choose, decide\n\t← Georgian ან *an* ‘or’',
@@ -365,7 +365,7 @@ tp_dict = {
     'pona': '***pona*** – *~pu~* good, positive, useful; friendly, peaceful; simple\n\t← Esperanto *bona* ‘good’',
     'powe': '***powe*** – *~pre-pu~* unreal, false, untrue, pretend, deceive, trickster\n\t←? French *faux* ‘false’',
     'pu': '***pu*** – *~pu~* interacting with the official Toki Pona book\n\t←? Mandarin 樸 *pǔ* ‘unworked wood; inherent quality; simple’ & English *book*',
-    'sama': r'***sama*** – *~pu~* same, similar; each other; sibling, peer, fellow; as, like\n\t← Finnish *sama* ‘same’ (← PG \**samaz* ‘same, alike’) & Esperanto *sama* ‘same’ (← English *same*)',
+    'sama': '***sama*** – *~pu~* same, similar; each other; sibling, peer, fellow; as, like\n\t← Finnish *sama* ‘same’ (← PG \\**samaz* ‘same, alike’) & Esperanto *sama* ‘same’ (← English *same*)',
     'samu': '***samu*** – *~post-pu, humorous, w.o.g. Sonja~* wanting to create new words\n\t← jan Samu, a user who attempted to propose a new word',
     'san': '***san*** – *~post-pu~* three {particularly in senary base; see ***tuli***} | *~post-pu~* the digit ‘3’\n\t← Japanese 三 *san* ‘three’ | Cantonese 三/叁 *sāam* ‘three’',
     'se': '***se*** – *~post-pu~* the digit ‘4’\n\t← Cantonese 四/肆 *sei* ‘four’',
@@ -614,12 +614,7 @@ class language(commands.Cog):
     @commands.is_owner()
     async def test(self, ctx, a, b):
         """Don't worry about this one. Bot owner only."""
-        a = int(a)
-        b = int(b)
-        result1 = (a + ((a**2)/b) - (b**a) + (a**b))
-        result2 = ((((a ** 2) + (a * b))/b) - ((b ** a) - (a ** b)))
-        result3 = math.fsum([a, (a**2/b), -(b**a), (a**b)])
-        await ctx.send(f'Simplified formula result: {result1}\nUnsimplified formula result: {result2}\nExtra test: {result3}')
+        await ctx.send(str(os.environ))
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
@@ -738,13 +733,13 @@ class language(commands.Cog):
                 font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize)
                 size = font.getsize_multiline(text)
                 finalsize = (size[0]+2*border, size[1]+2*border)
-                if finalsize[0]*finalsize[1] > 100000:
+                if finalsize[0]*finalsize[1] > 1000000:
                     await ctx.send('too big!')
                     return
                 img = Image.new('RGB', finalsize, color=bg)
                 draw = ImageDraw.Draw(img)
                 draw.text((border, border), text, fill=fg, font=font)
-                img.save(str(ctx.author.id)+'.png')
+                img.save(str(ctx.author.id)+'_'+text[:10].replace(' ', '_')+'.png')
             await ctx.send(file=discord.File(open(str(ctx.author.id)+'.png', 'rb')))
             os.remove(str(ctx.author.id)+'.png')
         except Exception as e:
