@@ -544,15 +544,16 @@ tpt_dict = {
 }
 
 def check_pamu(text):
-    msg_step1 = re.sub(r'\|\|[^\|]+\|\||\s', '', text)
-    msg_step2 = emoji.demojize(msg_step1)
-    msg_step3 = re.sub(r':[^ ]+:', '', msg_step2)
-    msg_step4 = re.sub('([mnptksljw][uia])', '', msg_step3)
+    msg_step1 = re.sub(r'\|\|[^\|]+\|\||\s', '', text) #removes between spoiler tags and whitespace characters
+    msg_step2 = emoji.demojize(msg_step1) #textifies emojis
+    msg_step3 = re.sub(r':[^ ]+:', '', msg_step2) #deletes emojis
+    msg_step4 = re.sub('([mnptksljw][uia])', '', msg_step3) #deletes all possible syllables
     if msg_step4 == '':
         return True
     else:
         return False
 
+#I actually just stole this from stackoverflow, i have an idea of how it works but im not entirely sure
 def removeduplicates(s):
     n = len(s)
     if (n < 2):
@@ -635,7 +636,7 @@ class language(commands.Cog):
     @commands.command(aliases=['d', 'dict', 'define'])
     async def dictionary(self, ctx, *words):
         """Displays the definition and etymology of a word or words. Entries taken from *nimi ale pona* and *lipu nimi pi toki pona taso.*\n\nEntries were edited in both cases. For *nimi ale pona*, the only revisions were formatting. For *lipu nimi pi toki pona taso*, several grammatical corrections and stylistic changes were made."""
-        if ctx.channel.id in {316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297}:
+        if ctx.channel.id in {316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297}: #if in tpt channels, sends it in toki pona
             if len(words) == 0:
                 await ctx.send('o toki e nimi a.')
                 return
@@ -684,9 +685,9 @@ class language(commands.Cog):
     @commands.command()
     async def hc(self, ctx):
         """Gives/takes the hardcore role. See the Features section of `,help` for more info."""
-        if ctx.guild.id == 654411781929959424:
+        if ctx.guild.id == 654411781929959424: #wali wi pa mu
             role = ctx.guild.get_role(706257334682386582)
-        elif ctx.guild.id == 301377942062366741:
+        elif ctx.guild.id == 301377942062366741: #ma pona
             role = ctx.guild.get_role(712083555131326464)
         if role in ctx.author.roles:
             await ctx.author.remove_roles(role)
@@ -728,18 +729,19 @@ class language(commands.Cog):
                     text = re.sub(r' size=[^ ]+|size=[^ ]+ ', '', text)
                 else:
                     fontsize = 32
+                #integerifies the integers
                 border = int(border)
                 fontsize = int(fontsize)
-                font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize)
-                size = font.getsize_multiline(text)
-                finalsize = (size[0]+2*border, size[1]+2*border)
+                font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize) #loads font
+                size = font.getsize_multiline(text) #calculates size
+                finalsize = (size[0]+2*border, size[1]+2*border) #adds border to size
                 if finalsize[0]*finalsize[1] > 1000000:
                     await ctx.send('too big!')
                     return
-                img = Image.new('RGB', finalsize, color=bg)
+                img = Image.new('RGB', finalsize, color=bg) #new image
                 draw = ImageDraw.Draw(img)
-                draw.text((border, border), text, fill=fg, font=font)
-                img.save(str(ctx.author.id)+'_'+text[:10].replace(' ', '_')+'.png')
+                draw.text((border, border), text, fill=fg, font=font) #draws text
+                img.save(str(ctx.author.id)+'_'+text[:10].replace(' ', '_')+'.png') #saves image
             await ctx.send(file=discord.File(open(str(ctx.author.id)+'.png', 'rb')))
             os.remove(str(ctx.author.id)+'.png')
         except Exception as e:

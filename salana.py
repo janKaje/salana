@@ -7,7 +7,7 @@ import math
 #Initialize
 client = commands.Bot(command_prefix = ',')
 client.remove_command('help')
-TOKEN = 'NzEyMDg2NjExMDk3MTU3NjUy.XwUT3g.Y_ChxDIMCe9KN3YYuF7nXm7BLLg'
+TOKEN = os.environ['TOKEN']
 
 #On_ready command
 @client.event
