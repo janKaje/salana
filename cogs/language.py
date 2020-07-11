@@ -988,13 +988,13 @@ class language(commands.Cog):
                     fontsize = size_search.group(0)[5:]
                     text = re.sub(r' size=[^ ]+|size=[^ ]+ ', '', text)
                 else:
-                    fontsize = 32
+                    fontsize = 48
                 #integerifies the integers
                 border = int(border)
                 fontsize = int(fontsize)
                 font = ImageFont.truetype(font='/app/spfonts/linja-pona-4.2.otf', size=fontsize) #loads font
                 #replace with single-character equivalents
-                for i in linja_pona_substitutions:
+                for i in sorted(linja_pona_substitutions, key=len, reverse=True):
                     if i in text:
                         text = re.sub(i, linja_pona_substitutions[i], text)
                 size = font.getsize_multiline(text) #calculates size
@@ -1005,9 +1005,9 @@ class language(commands.Cog):
                 img = Image.new('RGB', finalsize, color=bg) #new image
                 draw = ImageDraw.Draw(img)
                 draw.text((border, border), text, fill=fg, font=font) #draws text
-                img.save(str(ctx.author.id)+'_'+text[:15].replace(' ', '_')+'.png') #saves image
-            await ctx.send(file=discord.File(open(str(ctx.author.id)+'_'+text[:15].replace(' ', '_')+'.png', 'rb')))
-            os.remove(str(ctx.author.id)+'_'+text[:10].replace(' ', '_')+'.png')
+                img.save(str(ctx.author.id)+'.png') #saves image
+            await ctx.send(file=discord.File(open(str(ctx.author.id)+'.png', 'rb')))
+            os.remove(str(ctx.author.id)+'.png')
         except Exception as e:
             await ctx.send(e)
 
