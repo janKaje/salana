@@ -958,7 +958,7 @@ class language(commands.Cog):
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
-        """Displays the given text in sitelen pona. You can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color."""
+        """Displays the given text in sitelen pona.\n\nYou can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color.\n\nThere's also an older, buggier version of the renderer that was brought back by popular demand. ¯\\_(ツ)_/¯\n\nTo use it, insert =broken into your text."""
         try:
             async with ctx.channel.typing():
                 #search for fg
@@ -981,7 +981,7 @@ class language(commands.Cog):
                     border = border_search.group(0)[7:]
                     text = re.sub(r' border=[^ ]+|border=[^ ]+ |border=[^ ]+', '', text)
                 else:
-                    border = 3
+                    border = 5
                 #search for font size
                 size_search = re.search(r'(size=[^ ]+)', text)
                 if size_search:
@@ -1010,7 +1010,7 @@ class language(commands.Cog):
                         if i in text:
                             text = re.sub(i, linja_pona_substitutions[i], text)
                 size = font.getsize_multiline(text) #calculates size
-                finalsize = (size[0]+2*border, size[1]+2*border) #adds border to size
+                finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
                 if finalsize[0]*finalsize[1] > 1000000:
                     await ctx.send('too big!')
                     return
