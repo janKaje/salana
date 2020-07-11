@@ -1005,8 +1005,8 @@ class language(commands.Cog):
                     if i in text:
                         text = re.sub(i, linja_pona_substitutions[i], text)
                 draw.text((border, border), text, fill=fg, font=font) #draws text
-                img.save(str(ctx.author.id)+'_'+text[:10].replace(' ', '_')+'.png') #saves image
-            await ctx.send(file=discord.File(open(str(ctx.author.id)+'.png', 'rb')))
+                img.save(str(ctx.author.id)+'_'+text[:15].replace(' ', '_')+'.png') #saves image
+            await ctx.send(file=discord.File(open(str(ctx.author.id)+'_'+text[:15].replace(' ', '_')+'.png', 'rb')))
             os.remove(str(ctx.author.id)+'.png')
         except Exception as e:
             await ctx.send(e)
