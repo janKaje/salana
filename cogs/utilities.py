@@ -190,6 +190,7 @@ class utilities(commands.Cog):
     #Link to github
     @commands.command()
     async def github(self, ctx):
-        embed = discord.Embed()
-        embed.add_field(name=discord.Embed.Empty, value=f'[Github link](https://github.com/janKaje/salana)')
+        '''Links to the github page for this bot.'''
+        embed = discord.Embed(color=discord.Color.gold())
+        embed.add_field(name='', value=f'[Github link](https://github.com/janKaje/salana)')
         await ctx.send(embed=embed)
