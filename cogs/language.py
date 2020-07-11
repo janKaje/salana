@@ -7,6 +7,7 @@ import time
 import math
 from PIL import Image, ImageDraw, ImageFont
 import os
+import random
     
 def setup(client):
     client.add_cog(language(client))
@@ -869,13 +870,15 @@ class language(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.searchembednonces = dict()
 
     #Commands
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def test(self, ctx, a, b):
+    async def test(self, ctx, *, a):
         """Don't worry about this one. Bot owner only."""
-        await ctx.send(str(os.environ))
+        await ctx.send(emoji.demojize(a))
+        print(emoji.demojize(a))
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
@@ -1023,9 +1026,95 @@ class language(commands.Cog):
         except Exception as e:
             await ctx.send(e)
 
-    #On message: hardcore, tpt moderation
+    #Dictionary search
+    @commands.command(aliases=['?'])
+    async def search(self, ctx, *, term):
+        #if tpt is specified, searches the toki pona taso dictionary
+        if 'tpt' in term:
+            searchdict = tpt_dict
+            term = re.sub(' tpt|tpt |tpt', '', term)
+        else:
+            searchdict = tp_dict
+        found = dict() #new dictionary for found items
+        #searches for matches and adds them to found
+        for k, v in searchdict.items():
+            if re.search(term, v, flags=re.I):
+                found[k] = v
+        if len(found) == 0:
+            await ctx.send('No results found.')
+            return
+        if len(found) < 6:
+            embed = discord.Embed(title=f'{len(found)} result(s) found', color=discord.Color.teal())
+            for i in found:
+                embed.add_field(name=i, value=found[i][(len(i)+9):], inline=False)
+            await ctx.send(embed=embed)
+        else:
+            embed = discord.Embed(title=f'{len(found)} result(s) found', description='Displaying results 1-5', color=discord.Color.teal())
+            foundtouse = dict(list(found.items())[:5])
+            for i in foundtouse:
+                embed.add_field(name=i, value=foundtouse[i][(len(i)+9):], inline=False)
+            nonce = random.randint(1, 1000000)
+            self.searchembednonces[f'page:{nonce}'] = 1
+            self.searchembednonces[f'dict:{nonce}'] = found
+            self.searchembednonces[f'user:{nonce}'] = ctx.author.id
+            await ctx.send(embed=embed, nonce=nonce)
+
+    #pass reaction add and remove to parser
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        await self.reactionparse(reaction, user)
+
+    @commands.Cog.listener()
+    async def on_reaction_remove(self, reaction, user):
+        await self.reactionparse(reaction, user)
+
+    #interpret reaction add/delete
+    async def reactionparse(self, reaction, user):
+        nonce = reaction.message.nonce
+        #checks if message nonce is in list. if not, ends the function
+        try:
+            check_user_id = self.searchembednonces[f'user:{nonce}']
+        except:
+            return
+        #if reaction adder isn't the person who sent the search command, ends the function
+        if check_user_id != user.id:
+            return
+        #if reaction is right_arrow, go forward
+        if emoji.demojize(reaction.emoji) == ':right_arrow:':
+            pagefb = 1
+        #if left_arrow, go back
+        elif emoji.demojize(reaction.emoji) == ':left_arrow:':
+            pagefb = -1
+        #if other emoji, ends the function
+        else:
+            return
+        #gets dictionary and page no.
+        found = self.searchembednonces[f'dict:{nonce}']
+        page = self.searchembednonces[f'page:{nonce}']
+        #changes page
+        page += pagefb
+        #if reached the end or beginning, end the function
+        if page == 0 or page > math.ceil(len(found)/5):
+            return
+        #sets range for embed to display
+        back, front = page*5, page*5-4
+        embed = discord.Embed(title=f'{len(found)} result(s) found', description=f'Displaying results {front}-{back}', color=discord.Color.teal())
+        #makes dictionary just for range to use in embed
+        foundtouse = dict(list(found.items())[(front-1):back])
+        for i in foundtouse:
+            embed.add_field(name=i, value=foundtouse[i][(len(i)+9):], inline=False)
+        self.searchembednonces[f'page:{nonce}'] = page
+        await reaction.message.edit(embed=embed)
+
+    #On message: hardcore, tpt moderation, emoji adding
     @commands.Cog.listener()
     async def on_message(self, msg):
+        #if a search command return, add emojis
+        if f'page:{msg.nonce}' in self.searchembednonces:
+            await msg.add_reaction(emoji.emojize(':left_arrow:'))
+            await msg.add_reaction(emoji.emojize(':right_arrow:'))
+            return
+        #else, do hardcore
         if msg.guild.id == 654411781929959424:
             try:
                 role = msg.guild.get_role(706257334682386582)
@@ -1062,6 +1151,7 @@ class language(commands.Cog):
                                     return
             except AttributeError:
                 pass
+            #and tpt moderation
             if msg.channel.id in [316063418253705229, 716768435081576448, 716768463791718490, 716768500659781642, 716768537729040387, 716768591864791100, 716768624085303297]:
                 try:
                     if msg.content[0] not in ',*=.!' and msg.content[:2] not in 't!x/;;' and msg.content[:3] != 'pk;' and not msg.author.bot:

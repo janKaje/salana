@@ -7,12 +7,17 @@ import math
 #Initialize
 client = commands.Bot(command_prefix = ',')
 client.remove_command('help')
-TOKEN = os.environ['TOKEN']
+#if bot is running on heroku, get config key. if not, get local file with token.
+if os.path.dirname(os.path.abspath(__file__)).startswith('/app'):
+    TOKEN = os.environ['TOKEN']
+else:
+    TOKEN = open('C:\\hello\\token.txt', mode='r').read()
 
 #On_ready command
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
+    print('ready')
 
 #Load, unload, reload cog commands
 @client.command()
