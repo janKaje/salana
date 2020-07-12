@@ -120,7 +120,7 @@ class fun(commands.Cog):
         value = 10**(random.random()*12) #gets value
         highscore_raw = open('/app/value.txt').read()
         highscore_user = re.sub(r':\d*', '', highscore_raw, flags=re.DOTALL)
-        highscore_value = int(re.sub('[^:]*:', '', highscore_raw, flags=re.DOTALL))
+        highscore_value = int(re.sub('[^:]*:|\n', '', highscore_raw, flags=re.DOTALL))
         if value > highscore_value:
             embed = discord.Embed(color=discord.Color.blurple(), title='Congratulations!! :partying_face:', description='You beat the high score!')
             embed.add_field(name='Old high score:', value=f'{highscore_user} got {highscore_value}')
