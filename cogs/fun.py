@@ -129,4 +129,5 @@ class fun(commands.Cog):
         else:
             embed = discord.Embed(color=discord.Color.lighter_grey(), title='Value:', description=str(value))
             embed.set_footer(text='You did not beat the high score.')
+            embed.add_field(name='Current high score:', value=f'{highscore_user} got {highscore_value}')
         await ctx.send(embed=embed)
