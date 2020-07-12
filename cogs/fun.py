@@ -117,11 +117,10 @@ class fun(commands.Cog):
     @commands.command(aliases=['rand'])
     async def random(self, ctx):
         '''Gives a random number from one to a trillion. Keeps track of high score.'''
-        value = 10**(random.random()*12) #gets value
-        highscore_raw = open('/app/value.txt').read()
-        highscore_raw = highscore_raw[:-1]
-        highscore_user = re.sub(r':\d*', '', highscore_raw, flags=re.DOTALL)
-        highscore_value = float(re.sub('[^:]*:', '', highscore_raw, flags=re.DOTALL))
+        value = math.floor(10**(random.random()*12))
+        highscore_raw = open('/app/value.txt').read()[:-1]
+        highscore_user = re.sub(r':[\d\.]*', '', highscore_raw, flags=re.DOTALL)
+        highscore_value = int(re.sub('[^:]*:', '', highscore_raw, flags=re.DOTALL))
         if value > highscore_value:
             embed = discord.Embed(color=discord.Color.blurple(), title='Congratulations!! :partying_face:', description='You beat the high score!')
             embed.add_field(name='Old high score:', value=f'{highscore_user} got {highscore_value}')
