@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import re
-import emoji
+from emoji import demojize, emojize
 import string
 import time
 from math import ceil
@@ -673,6 +673,7 @@ linja_pona_substitutions = {
 	"-ala": "\uF103",
 	"-akesi": "\uF102",
 	"-a": "\uF101",
+    "-tonsi": "\uF228",
 	"pake": "\uE696",
 	"oko": "\uE695",
 	"namako": "\uE694",
@@ -800,13 +801,14 @@ linja_pona_substitutions = {
 	"alasa": "\uE603",
 	"ala": "\uE602",
 	"akesi": "\uE601",
-	"a": "\uE600"
+	"a": "\uE600",
+    "tonsi": "\uE697"
 }
 
 
 def check_pamu(text):
     msg_step1 = re.sub(r'\|\|[^\|]+\|\||\s', '', text) #removes between spoiler tags and whitespace characters
-    msg_step2 = emoji.demojize(msg_step1) #textifies emojis
+    msg_step2 = demojize(msg_step1) #textifies emojis
     msg_step3 = re.sub(r':[^ ]+:', '', msg_step2) #deletes emojis
     msg_step4 = re.sub('([mnptksljw][uia])', '', msg_step3) #deletes all possible syllables
     if msg_step4 == '':
@@ -830,7 +832,7 @@ def removeduplicates(s):
 
 def check_tp(text):
     msg_step1 = re.sub(r'\|\|[^\|]+\|\|', '', text, flags=re.S) #Removes things behind spoiler bars
-    msg_step2 = emoji.demojize(msg_step1) #Turns emojis into ascii characters
+    msg_step2 = demojize(msg_step1) #Turns emojis into ascii characters
     msg_step3 = re.sub(r':[\w-]+:', '', msg_step2) #Removes now textified emojis
     msg_step4 = re.sub(r'https\S+', '', msg_step3) #Removes links
     msg_step5 = re.sub('j?[A-Z][a-z]+|[゠-ヿ]+', '', msg_step4) #Removes proper names
@@ -847,7 +849,7 @@ def check_tp(text):
 def check_tp_soft(text):
     score = 0
     msg_step1 = re.sub(r'\|\|[^\|]+\|\|', '', text, flags=re.S) #Removes things behind spoiler bars
-    msg_step2 = emoji.demojize(msg_step1) #Turns emojis into ascii characters
+    msg_step2 = demojize(msg_step1) #Turns emojis into ascii characters
     msg_step3 = re.sub(r':[\w-]+:', '', msg_step2) #Removes now textified emojis
     msg_step4 = re.sub(r'https\S+', '', msg_step3) #Removes links
     msg_step5 = re.sub('j?[A-Z][a-z]+|[゠-ヿ]+', '', msg_step4) #Removes proper names
@@ -877,8 +879,8 @@ class language(commands.Cog):
     @commands.is_owner()
     async def test(self, ctx, *, a):
         """Don't worry about this one. Bot owner only."""
-        await ctx.send(emoji.demojize(a))
-        print(emoji.demojize(a))
+        await ctx.send(demojize(a))
+        print(demojize(a))
 
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
@@ -1002,7 +1004,8 @@ class language(commands.Cog):
                 #integerifies the integers
                 border = int(border)
                 fontsize = int(fontsize)
-                font = ImageFont.truetype(font='/app/linja-pona-4.2.otf', size=fontsize) #loads font
+                #loads font
+                font = ImageFont.truetype(font=os.path.dirname(os.path.abspath(__file__))[:-4]+'linja-pona-modified.otf', size=fontsize)
                 #replace with single-character equivalents
                 if broken:
                     for i in linja_pona_substitutions:
@@ -1083,10 +1086,10 @@ class language(commands.Cog):
         if check_user_id != user.id:
             return
         #if reaction is right_arrow, go forward
-        if emoji.demojize(reaction.emoji) == ':right_arrow:':
+        if demojize(reaction.emoji) == ':right_arrow:':
             pagefb = 1
         #if left_arrow, go back
-        elif emoji.demojize(reaction.emoji) == ':left_arrow:':
+        elif demojize(reaction.emoji) == ':left_arrow:':
             pagefb = -1
         #if other emoji, ends the function
         else:
@@ -1100,7 +1103,8 @@ class language(commands.Cog):
         if page == 0 or page > ceil(len(found)/5):
             return
         #sets range for embed to display
-        back, front = page*5, page*5-4
+        front = page*5-4
+        back = page*5 if page*5 <= len(found) else len(found)
         embed = discord.Embed(title=f'{len(found)} result(s) found', description=f'Displaying results {front}-{back}', color=discord.Color.teal())
         #makes dictionary just for range to use in embed
         foundtouse = dict(list(found.items())[(front-1):back])
@@ -1114,8 +1118,8 @@ class language(commands.Cog):
     async def on_message(self, msg):
         #if a search command return, add emojis
         if f'page:{msg.nonce}' in self.searchembednonces:
-            await msg.add_reaction(emoji.emojize(':left_arrow:'))
-            await msg.add_reaction(emoji.emojize(':right_arrow:'))
+            await msg.add_reaction(emojize(':left_arrow:'))
+            await msg.add_reaction(emojize(':right_arrow:'))
             return
         #else, do hardcore
         if msg.guild.id == 654411781929959424: #wali wi pa mu

@@ -7,6 +7,7 @@ import functools
 from functools import reduce
 from functools import lru_cache
 import re
+import os
     
 def setup(client):
     client.add_cog(fun(client))
@@ -42,6 +43,7 @@ class fun(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.dir_path = os.path.dirname(os.path.abspath(__file__))[:-4]
     
     #yes I am aware that this is just the Farey series at a number minus 2, but I'm keeping it. I developed this before I knew that the Farey series had been explored, so I'm proud of my accomplishments and don't want to remove this. 
     @commands.command()
@@ -115,17 +117,18 @@ class fun(commands.Cog):
         await ctx.send(f"I'd give {item} a {rate_value}/10")
 
     @commands.command(aliases=['rand'])
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def random(self, ctx):
         '''Gives a random number from one to a trillion. Keeps track of high score.'''
         value = math.floor(10**(random.random()*12))
-        highscore_raw = open('/app/value.txt').read()[:-1]
+        highscore_raw = open(self.dir_path+'highscore.txt').read()[:-1]
         highscore_user = re.sub(r':[\d\.]*', '', highscore_raw, flags=re.DOTALL)
         highscore_value = int(re.sub('[^:]*:', '', highscore_raw, flags=re.DOTALL))
         if value > highscore_value:
             embed = discord.Embed(color=discord.Color.blurple(), title='Congratulations!! :partying_face:', description='You beat the high score!')
             embed.add_field(name='Old high score:', value=f'{highscore_user} got {highscore_value}')
             embed.add_field(name='New high score:', value=f'{str(ctx.author)} got {value}')
-            print(f'{str(ctx.author)}:{value}', file=open('/app/value.txt', mode='w'))
+            print(f'{str(ctx.author)}:{value}', file=open(self.dir_path+'highscore.txt', mode='w'))
         else:
             embed = discord.Embed(color=discord.Color.lighter_grey(), title='Value:', description=str(value))
             embed.set_footer(text='You did not beat the high score.')

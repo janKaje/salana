@@ -7,11 +7,19 @@ import math
 #Initialize
 client = commands.Bot(command_prefix = ',')
 client.remove_command('help')
+dir_path = os.path.dirname(os.path.abspath(__file__))
+
 #if bot is running on heroku, get config key. if not, get local file with token.
-if os.path.dirname(os.path.abspath(__file__)).startswith('/app'):
+if dir_path.startswith('/app'):
     TOKEN = os.environ['TOKEN']
 else:
-    TOKEN = open('C:\\hello\\token.txt', mode='r').read()
+    TOKEN = open(dir_path+'/token.txt', mode='r').read()
+
+try:
+    open(dir_path+'/highscore.txt')
+except:
+    open(dir_path+'/highscore.txt', mode='x')
+    print('first lol:1\n', file=open(dir_path+'/highscore.txt', mode='w'))
 
 #On_ready command
 @client.event
@@ -85,6 +93,8 @@ async def on_command_error(ctx, error):
         await ctx.send('The bot is missing the required permissions to invoke this command: '+str(error.missing_perms))
     elif isinstance(error, commands.ExtensionError):
         await ctx.send(f'The extension {str(error.name)} raised an exception.')
+    elif isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(f'That command is on cooldown. Try again in {error.retry_after} seconds.')
     else:
         await ctx.send(f'ERROR! {error}')
 

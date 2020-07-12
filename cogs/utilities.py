@@ -22,6 +22,7 @@ class utilities(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.questions = []
     
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -36,6 +37,136 @@ class utilities(commands.Cog):
         """Kills the bot. (supposedly. with heroku it just starts right back up again.) You must be the bot owner to activate this command."""
         await ctx.send('a! :dizzy_face::skull_crossbones:')
         quit()
+
+    @commands.command(hidden=True)
+    @commands.has_permissions(manage_messages=True)
+    async def reset(self, ctx):
+        """Resets the welcome channel. You must have the manage messages permissions to use this command."""
+        if ctx.channel.id == wali_welcomechannel_id:
+            await ctx.channel.purge()
+            await ctx.send(f'Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules in {self.client.get_channel(654413439141150751).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
+        elif ctx.channel.id == mapona_welcomechannel_id:
+            await ctx.channel.purge()
+            await ctx.send(f':flag_gb: Welcome! This is ma pona pi toki pona, a discord server for the constructed language toki pona. Read the rules in {self.client.get_channel(589550572051628049).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re still having trouble with gaining entry after reading the rules, that\'s totally fine! Just ping `@jan lawa` and `@jan pali` and we\'ll be with you to help as soon as we can.\n\n<:flag_tp:448287759266742272> kama pona a! ni li ma pona pi toki pona. kulupu ni la jan li toki pona li toki e ijo pi toki pona. o lukin e tomo {self.client.get_channel(589550572051628049).mention}. kama lon kulupu ale la o toki e nimi "toki" lon tomo ni.\n\nsina ken ala kama lon kulupu ale la o toki e `@jan lawa` e `@jan pali`.')
+        else:
+            await ctx.send('Not in the right channel.')
+
+    #Custom Help command
+    @commands.command(aliases=['h'])
+    async def help(self, ctx, cmd=None):
+        """Displays the help command. If <cmd> is given, displays the long help text for that command."""
+        #displays all commands if cmd is not given
+        if cmd == None:
+            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,h [command]` for more information.')
+            #iterates through cogs
+            for x in self.client.cogs:
+                cog_info = ''
+                cog = self.client.get_cog(x)
+                #iterates through commands of the cog, adding their names to cog_info
+                for c in cog.walk_commands():
+                    if not c.hidden:
+                        cog_info += f'***{c.name}***  -  '
+                cog_info = re.sub(r'  \-  \Z', '', cog_info) #trims end off, if there is one
+                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False) #adds cog and commands to embed
+        
+            #message to explain features
+            extra_msg = discord.Embed(title='Features', color=discord.Color.blue())
+            if ctx.guild.id == waliwipamu_id:
+                muwipamumi = self.client.get_channel(654422747090518036).mention
+                hardcore_text = f'If you have the hardcore role, any message you send that is not in pa mu will be deleted. Exceptions are when you preface your message with an asterisk or put the non-pa mu text behind spoiler bars. In addition, any message in {muwipamumi} will be scanned and possibly deleted in the same way.'
+            elif ctx.guild.id == mapona_id:
+                mentions = f'{self.client.get_channel(301377942062366741).mention}, {self.client.get_channel(375591429608570881).mention}, {self.client.get_channel(340307145373253642).mention}, or {self.client.get_channel(545467374254555137).mention}'
+                hardcore_text = f'If you have the hardcore role, any message you send in {mentions} that is not in toki pona will be deleted. Exceptions are when you preface your message with an asterisk. Checks for toki pona the same way that ,ctp does.'
+            extra_msg.add_field(name='__HARDCORE__', value=hardcore_text, inline = False)
+            extra_msg.add_field(name='__REPORTING MESSAGES__', value='Any message that two or more people react to with :triangular_flag_on_post: will have a copy sent to a certain channel. This allows people to flag messages they think are breaking the rules so that mods can easily notice and address the issue.', inline=False)
+            extra_msg.add_field(name='__QUESTION LOGGING__', value='ilo Salana has a way to record and keep track of questions people ask. To log your question, simply type `,q <question>` and it\'ll add it to its log. Type `,q a` to mark your last question as answered.', inline = False)
+
+            await ctx.send(embed=command_msg)
+            await ctx.send(embed=extra_msg)
+            return
+        #if 'hidden' is specified, shows all the hidden ones and their info
+        if cmd == 'hidden':
+            command_msg = discord.Embed(title='Commands', color=discord.Color.blue())
+            #iterates through cogs
+            for x in self.client.cogs:
+                cog_info = ''
+                cog = self.client.get_cog(x)
+                #iterates through commands, checking if they're hidden and adding them
+                for c in cog.walk_commands():
+                    if c.hidden:
+                        cog_info += f'***{c.name}*** - {c.help}\n\n'
+                #if nothing found, exit this cog and check the next one
+                if cog_info == '':
+                    continue
+                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False) #add info to embed
+            await ctx.send(embed=command_msg)
+        #for when a certain command is specified
+        else:
+            comd = ''
+            alia = 'Aliases: '
+            #iterates through cogs
+            for x in self.client.cogs:
+                cog = self.client.get_cog(x)
+                #iterates through cog's commands
+                for c in cog.walk_commands():
+                    if c.name == cmd or cmd in c.aliases: #if search term matches command or any of the aliases
+                        if not c.hidden:
+                            title = f'{c.name}' #adds name
+                            comd = f'{c.help}' #adds help
+                            #adds aliases
+                            for a in c.aliases:
+                                alia += f'{a}, '
+                            #adds parameters
+                            for b in c.clean_params:
+                                title += f' <{b}>'
+            #if the command wasn't found
+            if comd == '':
+                await ctx.send('That command was not found.')
+                return
+            helpmsg = discord.Embed(title=title, color=discord.Color.blue(), description=comd) #creates embed
+            #if the command has aliases, add them to the footer
+            if not alia == 'Aliases: ':
+                alia = re.sub(r', \Z', '', alia)
+                helpmsg.set_footer(text=alia)
+            await ctx.send(embed=helpmsg)
+    
+    #Link to github
+    @commands.command()
+    async def github(self, ctx):
+        '''Links to the github page for this bot.'''
+        embed = discord.Embed(color=discord.Color.gold())
+        embed.add_field(name='Link to my Github', value=f'[Click Here](https://github.com/janKaje/salana)')
+        await ctx.send(embed=embed)
+      
+    #question module
+    @commands.command(aliases=['q'])
+    async def question(self, ctx, *, question):
+        '''A command to register questions. Use `,q <question>` to ask a question. `,q a` will mark your last question as answered. `,q list` will list the currently open questions.'''
+        if question == 'list':
+            if len(self.questions) == 0:
+                await ctx.send('No currently open questions.')
+                return
+            emb = discord.Embed(color=discord.Color.dark_green(), title='List of open questions:')
+            for i in self.questions:
+                emb.add_field(name=f'Question #{self.questions.index(i)+1}:',
+                              value=f'By {i[2].mention} in {i[3].channel.mention}\n'
+                                    f'{i[3].content}\n'
+                                    f'[Jump URL]({i[3].jump_url})', inline=False)
+            await ctx.send(embed=emb)
+        elif question == 'a':
+            setwithauthor = list(reversed([i for i in self.questions if i[2] == ctx.author]))
+            if setwithauthor != []:
+                lastq = setwithauthor[0]
+                self.questions.remove(lastq)
+                await ctx.message.add_reaction('\u2705')
+            else:
+                await ctx.send('You have no open questions.')
+        else:
+            q_info = {1: question, 2: ctx.author, 3: ctx.message}
+            self.questions.append(q_info)
+            await ctx.message.add_reaction('\u2705')
+            if len(self.questions) > 10:
+                del self.questions[0]
 
     #Reporting feature
     @commands.Cog.listener()
@@ -95,19 +226,6 @@ class utilities(commands.Cog):
                         if i.author == message.author:
                             await i.delete()
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(manage_messages=True)
-    async def reset(self, ctx):
-        """Resets the welcome channel. You must have the manage messages permissions to use this command."""
-        if ctx.channel.id == wali_welcomechannel_id:
-            await ctx.channel.purge()
-            await ctx.send(f'Welcome! This is wali wi pa mu, a discord server for the constructed language pa mu. Read the rules in {self.client.get_channel(654413439141150751).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re having trouble, ping `@ju pala` and we\'ll be with you to help as soon as we can.')
-        elif ctx.channel.id == mapona_welcomechannel_id:
-            await ctx.channel.purge()
-            await ctx.send(f':flag_gb: Welcome! This is ma pona pi toki pona, a discord server for the constructed language toki pona. Read the rules in {self.client.get_channel(589550572051628049).mention} and it\'ll tell you what you need to do to gain access to the server.\n\nIf you\'re still having trouble with gaining entry after reading the rules, that\'s totally fine! Just ping `@jan lawa` and `@jan pali` and we\'ll be with you to help as soon as we can.\n\n<:flag_tp:448287759266742272> kama pona a! ni li ma pona pi toki pona. kulupu ni la jan li toki pona li toki e ijo pi toki pona. o lukin e tomo {self.client.get_channel(589550572051628049).mention}. kama lon kulupu ale la o toki e nimi "toki" lon tomo ni.\n\nsina ken ala kama lon kulupu ale la o toki e `@jan lawa` e `@jan pali`.')
-        else:
-            await ctx.send('Not in the right channel.')
-
     #Join/leave logging for wali wi pa mu
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -126,89 +244,3 @@ class utilities(commands.Cog):
             log_msg.set_author(name = str(member), icon_url = member.avatar_url)
             log_msg.add_field(name = 'Member left', value = time.strftime('Left on %A, %d %B %Y, %H:%M:%S UTC', time.gmtime()))
             await log_channel.send(embed=log_msg)
-
-    #Custom Help command
-    @commands.command(aliases=['h'])
-    async def help(self, ctx, cmd=None):
-        """Displays the help command. If <cmd> is given, displays the long help text for that command."""
-        #displays all commands if cmd is not given
-        if cmd == None:
-            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,h [command]` for more information.')
-            #iterates through cogs
-            for x in self.client.cogs:
-                cog_info = ''
-                cog = self.client.get_cog(x)
-                #iterates through commands of the cog, adding their names to cog_info
-                for c in cog.walk_commands():
-                    if not c.hidden:
-                        cog_info += f'***{c.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info) #trims end off, if there is one
-                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False) #adds cog and commands to embed
-        
-            #message to explain features
-            extra_msg = discord.Embed(title='Features', color=discord.Color.blue())
-            if ctx.guild.id == waliwipamu_id:
-                muwipamumi = self.client.get_channel(654422747090518036).mention
-                hardcore_text = f'If you have the hardcore role, any message you send that is not in pa mu will be deleted. Exceptions are when you preface your message with an asterisk or put the non-pa mu text behind spoiler bars. In addition, any message in {muwipamumi} will be scanned and possibly deleted in the same way.'
-            elif ctx.guild.id == mapona_id:
-                mentions = f'{self.client.get_channel(301377942062366741).mention}, {self.client.get_channel(375591429608570881).mention}, {self.client.get_channel(340307145373253642).mention}, or {self.client.get_channel(545467374254555137).mention}'
-                hardcore_text = f'If you have the hardcore role, any message you send in {mentions} that is not in toki pona will be deleted. Exceptions are when you preface your message with an asterisk. Checks for toki pona the same way that ,ctp does.'
-            extra_msg.add_field(name='__HARDCORE__', value=hardcore_text, inline = False)
-            extra_msg.add_field(name='__REPORTING MESSAGES__', value='Any message that two or more people react to with :triangular_flag_on_post: will have a copy sent to a certain channel. This allows people to flag messages they think are breaking the rules so that mods can easily notice and address the issue.', inline=False)
-        
-            await ctx.send(embed=command_msg)
-            await ctx.send(embed=extra_msg)
-            return
-        #if 'hidden' is specified, shows all the hidden ones and their info
-        if cmd == 'hidden':
-            command_msg = discord.Embed(title='Commands', color=discord.Color.blue())
-            #iterates through cogs
-            for x in self.client.cogs:
-                cog_info = ''
-                cog = self.client.get_cog(x)
-                #iterates through commands, checking if they're hidden and adding them
-                for c in cog.walk_commands():
-                    if c.hidden:
-                        cog_info += f'***{c.name}*** - {c.help}\n\n'
-                #if nothing found, exit this cog and check the next one
-                if cog_info == '':
-                    continue
-                command_msg.add_field(name = f'__{cog.__doc__}__', value = cog_info, inline = False) #add info to embed
-            await ctx.send(embed=command_msg)
-        #for when a certain command is specified
-        else:
-            comd = ''
-            alia = 'Aliases: '
-            #iterates through cogs
-            for x in self.client.cogs:
-                cog = self.client.get_cog(x)
-                #iterates through cog's commands
-                for c in cog.walk_commands():
-                    if c.name == cmd or cmd in c.aliases: #if search term matches command or any of the aliases
-                        if not c.hidden:
-                            title = f'{c.name}' #adds name
-                            comd = f'{c.help}' #adds help
-                            #adds aliases
-                            for a in c.aliases:
-                                alia += f'{a}, '
-                            #adds parameters
-                            for b in c.clean_params:
-                                title += f' <{b}>'
-            #if the command wasn't found
-            if comd == '':
-                await ctx.send('That command was not found.')
-                return
-            helpmsg = discord.Embed(title=title, color=discord.Color.blue(), description=comd) #creates embed
-            #if the command has aliases, add them to the footer
-            if not alia == 'Aliases: ':
-                alia = re.sub(r', \Z', '', alia)
-                helpmsg.set_footer(text=alia)
-            await ctx.send(embed=helpmsg)
-    
-    #Link to github
-    @commands.command()
-    async def github(self, ctx):
-        '''Links to the github page for this bot.'''
-        embed = discord.Embed(color=discord.Color.gold())
-        embed.add_field(name='Link to my Github', value=f'[Click Here](https://github.com/janKaje/salana)')
-        await ctx.send(embed=embed)
