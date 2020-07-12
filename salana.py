@@ -90,7 +90,7 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_error(event, *args, **kwargs):
-    await client.get_user(client.owner_id).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
+    await client.get_user(474349369274007552).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
 
 #runs bot
 client.run(TOKEN)

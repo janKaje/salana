@@ -6,6 +6,7 @@ import random
 import functools
 from functools import reduce
 from functools import lru_cache
+import re
     
 def setup(client):
     client.add_cog(fun(client))
@@ -112,3 +113,20 @@ class fun(commands.Cog):
         """I'll rate whatever you tell me to."""
         rate_value = int(str(hash(item))[1:2])+1 #gets the second digit of the input's hash and adds one
         await ctx.send(f"I'd give {item} a {rate_value}/10")
+
+    @commands.command(aliases=['rand'])
+    async def random(self, ctx):
+        '''Gives a random number from one to a trillion. Keeps track of high score.'''
+        value = 10**(random.random()*12) #gets value
+        highscore_raw = open('/app/value.txt').read()
+        highscore_user = re.sub(r':\d*', '', highscore_raw, flags=re.DOTALL)
+        highscore_value = int(re.sub('[^:]*:', '', highscore_raw, flags=re.DOTALL))
+        if value > highscore_value:
+            embed = discord.Embed(color=discord.Color.blurple(), title='Congratulations!! :partying_face:', description='You beat the high score!')
+            embed.add_field(name='Old high score:', value=f'{highscore_user} got {highscore_value}')
+            embed.add_field(name='New high score:', value=f'{str(ctx.author)} got {value}')
+            print(f'{str(ctx.author)}:{value}', file=open('/app/value.txt', mode='w'))
+        else:
+            embed = discord.Embed(color=discord.Color.lighter_grey(), title='Value:', description=str(value))
+            embed.set_footer(text='You did not beat the high score.')
+        await ctx.send(embed=embed)
