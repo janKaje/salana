@@ -3,6 +3,7 @@ from discord.ext import commands
 import re
 from emoji import demojize
 import time
+import os
 
 #some variables to help keep track of ids
 mapona_id = 301377942062366741
@@ -23,6 +24,12 @@ class utilities(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.questions = []
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def test(self, ctx, *, a):
+        """Don't worry about this one. Bot owner only."""
+        await ctx.send(os.path.dirname(os.path.abspath(__file__)))
     
     @commands.command(hidden=True)
     @commands.is_owner()

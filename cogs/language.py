@@ -875,13 +875,6 @@ class language(commands.Cog):
         self.searchembednonces = dict()
 
     #Commands
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def test(self, ctx, *, a):
-        """Don't worry about this one. Bot owner only."""
-        await ctx.send(demojize(a))
-        print(demojize(a))
-
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
     async def check_for_pamu(self, ctx, *, text):
         """Checks if the input text is valid in pa mu or not. It does so by first removing anything behind spoiler bars and any whitespace characters, then removing emojis, and then it runs the text through all possible syllables in pa mu."""
