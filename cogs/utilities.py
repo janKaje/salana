@@ -4,6 +4,7 @@ import re
 from emoji import demojize
 import time
 import os
+import datetime as dt
 
 #some variables to help keep track of ids
 mapona_id = 301377942062366741
@@ -144,36 +145,80 @@ class utilities(commands.Cog):
         embed = discord.Embed(color=discord.Color.gold())
         embed.add_field(name='Link to my Github', value=f'[Click Here](https://github.com/janKaje/salana)')
         await ctx.send(embed=embed)
-      
+
+    async def add_question(self, question, ctx):
+        q_info = {'question': question, 'author': ctx.author, 'message': ctx.message}
+        self.questions.append(q_info)
+        await ctx.message.add_reaction('\u2705')
+        #questions asked over 24 hours ago are deleted
+        for i in self.questions:
+            if dt.datetime.utcnow() - i["message"].created_at > dt.timedelta(days=1):
+                del i
+        #if the list is too long, deletes the least recent one
+        if len(self.questions) > 10:
+            del self.questions[0]
+
     #question module
     @commands.command(aliases=['q'])
     async def question(self, ctx, *, question):
         '''A command to register questions. Use `,q <question>` to ask a question. `,q a` will mark your last question as answered. `,q list` will list the currently open questions.'''
+        #lists open questions
         if question == 'list':
             if len(self.questions) == 0:
                 await ctx.send('No currently open questions.')
                 return
             emb = discord.Embed(color=discord.Color.dark_green(), title='List of open questions:')
             for i in self.questions:
+                #if question was asked more than a day ago, deletes
+                if dt.datetime.utcnow() - i["message"].created_at > dt.timedelta(days=1):
+                    del i
+                    continue
+                #else, adds field
                 emb.add_field(name=f'Question #{self.questions.index(i)+1}:',
-                              value=f'By {i[2].mention} in {i[3].channel.mention}\n'
-                                    f'{i[3].content}\n'
-                                    f'[Jump URL]({i[3].jump_url})', inline=False)
+                              value=f'By {i["author"].mention} in {i["message"].channel.mention}\n'
+                                    f'{i["question"]}\n'
+                                    f'[Jump URL]({i["message"].jump_url})', inline=False)
             await ctx.send(embed=emb)
         elif question == 'a':
-            setwithauthor = list(reversed([i for i in self.questions if i[2] == ctx.author]))
+            #gets all the questions that the author asked in reverse order
+            setwithauthor = list(reversed([i for i in self.questions if i["author"] == ctx.author]))
             if setwithauthor != []:
                 lastq = setwithauthor[0]
                 self.questions.remove(lastq)
                 await ctx.message.add_reaction('\u2705')
+                #deleted successfully
             else:
                 await ctx.send('You have no open questions.')
-        else:
-            q_info = {1: question, 2: ctx.author, 3: ctx.message}
-            self.questions.append(q_info)
+        elif question.startswith('a '):
+            try:
+                index = int(question[2:])
+            #if not followed by an integer, interprets it as a question
+            except:
+                await self.add_question(question, ctx)
+                return
+            #if author is not equal to the asker of specified question
+            if self.questions[(index-1)]["author"] != ctx.author:
+                await ctx.send('You didn\'t send that question.')
+                return
+            #else, removes
+            self.questions.remove(self.questions[index-1])
             await ctx.message.add_reaction('\u2705')
-            if len(self.questions) > 10:
-                del self.questions[0]
+        elif question.startswith('delete '):
+            try:
+                index = int(question[7:])
+            #if not followed by an integer, interprets as a question
+            except:
+                self.add_question(question, ctx)
+                return
+            #checks for the manage_messages permission in that channel
+            if not ctx.channel.permissions_for(ctx.author).manage_messages:
+                await ctx.send('You don\'t have the right permissions to delete other\'s questions.')
+                return
+            #else, removes
+            self.questions.remove(self.questions[index-1])
+            await ctx.send('Deleted successfully.')
+        else:
+            await self.add_question(question, ctx)
 
     #Reporting feature
     @commands.Cog.listener()
