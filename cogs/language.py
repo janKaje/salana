@@ -998,7 +998,7 @@ class language(commands.Cog):
                 border = int(border)
                 fontsize = int(fontsize)
                 #loads font
-                font = ImageFont.truetype(font=os.path.dirname(os.path.abspath(__file__))[:-4]+'linja-pona-modified.otf', size=fontsize)
+                font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
                 #replace with single-character equivalents
                 if broken:
                     for i in linja_pona_substitutions:

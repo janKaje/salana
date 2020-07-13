@@ -3,3 +3,4 @@ cogs/__pycache__
 highscore.txt
 token.txt
 test.py
+*.png
