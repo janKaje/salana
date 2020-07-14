@@ -5,6 +5,7 @@ from emoji import demojize
 import time
 import os
 import datetime as dt
+import requests
 
 #some variables to help keep track of ids
 mapona_id = 301377942062366741
@@ -25,13 +26,21 @@ class utilities(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.questions = []
-    
+
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def test(self, ctx, *, a):
+    async def test(self, ctx, *, message):
         """Don't worry about this one. Bot owner only."""
-        await ctx.send(os.path.dirname(os.path.abspath(__file__)))
-    
+        avatar = ctx.author.avatar_url
+        username = ctx.author.display_name
+        webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
+        webhook.send(message, avatar_url=avatar, username=username)
+        os.environ['TEST'] = 'this is a test'
+        await ctx.send(os.environ['TEST'])
+        await ctx.send(os.environ['number'])
+        os.environ['number'] += 1
+        await ctx.send(os.environ['number'])
+
     @commands.command(hidden=True)
     @commands.is_owner()
     async def activityupdate(self, ctx, *, activity):

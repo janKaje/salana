@@ -857,6 +857,8 @@ def check_tp_soft(text):
     msg_step7 = removeduplicates(msg_step6) #Removes repeated letters
     msg_step8 = re.split(r'\s+', msg_step7) #Splits the string and prepares it for analysis
     for dj in msg_step8:
+        if dj == dj.upper():
+            dj = dj.lower()
         if dj in tp_words:
             score += 1
         else:
@@ -905,9 +907,9 @@ class language(commands.Cog):
                 try:
                     await ctx.send(tpt_dict[i])
                 except KeyError:
-                    if i in tp_words:
-                        await ctx.send(f'mi pakala, toki pona la mi sona taso e nimi pu. ni la mi ken ala toki e kon pi nimi "{i}".')
-                    else:
+                    try:
+                        await ctx.send(f'||{tp_dict[i]}||')
+                    except KeyError:
                         await ctx.send(f'mi sona ala e nimi "{i}".')
         else:
             if len(words) == 0:

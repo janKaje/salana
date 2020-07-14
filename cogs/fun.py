@@ -113,14 +113,20 @@ class fun(commands.Cog):
     @commands.command()
     async def rate(self, ctx, *, item):
         """I'll rate whatever you tell me to."""
-        rate_value = int(str(hash(item))[1:2])+1 #gets the second digit of the input's hash and adds one
+        rate_value = random.randint(0, 11).seed(item)
         await ctx.send(f"I'd give {item} a {rate_value}/10")
 
     @commands.command(aliases=['rand'])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def random(self, ctx):
-        '''Gives a random number from one to a trillion. Keeps track of high score.'''
-        value = math.floor(10**(random.random()*12))
+        '''Gives a random number. Keeps track of high score.'''
+        value = str(random.randint(0, 9))
+        while True:
+            if random.choice([True, False]):
+                value += str(random.randint(0, 9))
+            else:
+                value = int(value)
+                break
         highscore_raw = open(self.dir_path+'highscore.txt').read()[:-1]
         highscore_user = re.sub(r':[\d\.]*', '', highscore_raw, flags=re.DOTALL)
         highscore_value = int(re.sub('[^:]*:', '', highscore_raw, flags=re.DOTALL))
