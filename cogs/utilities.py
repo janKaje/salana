@@ -35,7 +35,8 @@ class utilities(commands.Cog):
         username = ctx.author.display_name
         webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
         webhook.send(message, avatar_url=avatar, username=username)
-        os.environ['TEST'] = 'this is a test'
+        await ctx.send(os.environ['TEST'])
+        os.environ['TEST'] += ' bottom text'
         await ctx.send(os.environ['TEST'])
         await ctx.send(os.environ['number'])
         os.environ['number'] += 1
