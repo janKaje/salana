@@ -9,6 +9,7 @@ from functools import lru_cache
 import re
 import os
 import requests
+from datetime import datetime as dt
     
 def setup(client):
     client.add_cog(fun(client))
@@ -138,6 +139,7 @@ class fun(commands.Cog):
             embed.add_field(name='New high score:', value=f'{str(ctx.author)} got {value}')
             data = '{"rand_highscore_user": "'+str(ctx.author)+'", "rand_highscore_value": "'+str(value)+'"}'
             requests.patch(self.url, data=data, auth=(os.environ['usern'], os.environ['apitoken']), headers=self.headers)
+            await ctx.send(dt.utcnow())
         else:
             embed = discord.Embed(color=discord.Color.lighter_grey(), title='Value:', description=str(value))
             embed.set_footer(text='You did not beat the high score.')

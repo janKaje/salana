@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 import os
 import time
 import math
+from datetime import datetime as dt
 
 #Initialize
 client = commands.Bot(command_prefix = ',')
@@ -25,7 +26,7 @@ except:
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
-    print('ready')
+    await client.get_channel(316066233755631616).send(dt.utcnow())
 
 #Load, unload, reload cog commands
 @client.command()
