@@ -876,6 +876,7 @@ class language(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.searchembednonces = dict()
+        self.udspc = dict() #short for 'user defautl sitelen pona colors'
 
     #Commands
     @commands.command(aliases=['cpm', 'cfpm', 'cfp'])
@@ -957,12 +958,14 @@ class language(commands.Cog):
             await ctx.author.add_roles(role)
             await ctx.send("Hardcore role given.")
 
-    async def sitelen_replacements(self, text):
+    async def sitelen_replacements(self, text, author):
         #search for fg
         fg_search = re.search(r'(fg=[^ ]+)', text)
         if fg_search:
             fg = fg_search.group(0)[3:]
             text = re.sub(r' fg=[^ ]+|fg=[^ ]+ |fg=[^ ]+', '', text)
+        elif author in self.udspc:
+            fg = self.udspc[author]['fg']
         else:
             fg = 'black'
         #search for bg
@@ -970,6 +973,8 @@ class language(commands.Cog):
         if bg_search:
             bg = bg_search.group(0)[3:]
             text = re.sub(r' bg=[^ ]+|bg=[^ ]+ |bg=[^ ]+', '', text)
+        elif author in self.udspc:
+            bg = self.udspc[author]['bg']
         else:
             bg = 'white'
         #search for border width
@@ -1012,12 +1017,12 @@ class language(commands.Cog):
         """Displays the given text in sitelen pona.\n\nYou can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color.\n\nThere's also an older, buggier version of the renderer that was brought back by popular demand. ¯\\_(ツ)_/¯ To use it, insert =broken into your text."""
         try:
             async with ctx.channel.typing():
-                text, fg, bg, border, fontsize = await self.sitelen_replacements(text)
+                text, fg, bg, border, fontsize = await self.sitelen_replacements(text, ctx.author)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
-                if finalsize[0]*finalsize[1] > 6000000:
+                if finalsize[0]*finalsize[1] > 1000000:
                     await ctx.send('too big!')
                     return
                 img = Image.new('RGB', finalsize, color=bg) #new image
@@ -1064,6 +1069,11 @@ class language(commands.Cog):
             self.searchembednonces[f'dict:{nonce}'] = found
             self.searchembednonces[f'user:{nonce}'] = ctx.author.id
             await ctx.send(embed=embed, nonce=nonce)
+    
+    @commands.command()
+    async def colors(self, ctx, fg, bg):
+        self.udspc[ctx.author] = {'fg': fg, 'bg': bg}
+        await ctx.send('updated successfully.')
 
     #pass reaction add and remove to parser
     @commands.Cog.listener()
@@ -1136,7 +1146,7 @@ class language(commands.Cog):
                     text = re.sub('u=.+', '', text, flags=re.DOTALL)
                 else:
                     username = msg.author.display_name
-                text, fg, bg, border, fontsize = await self.sitelen_replacements(text)
+                text, fg, bg, border, fontsize = await self.sitelen_replacements(text, msg.author)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
                 if re.search(r'[a-zA-Z]', text):
@@ -1148,7 +1158,7 @@ class language(commands.Cog):
                     return
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
-                if finalsize[0]*finalsize[1] > 6000000:
+                if finalsize[0]*finalsize[1] > 1000000:
                     await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
                     await msg.author.send(msg.content)
                     return
@@ -1158,8 +1168,11 @@ class language(commands.Cog):
                 img.save(str(msg.author.id)+'.png') #saves image
                 webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
                 avatar = msg.author.avatar_url
-                files = msg.attachments
+                files = []
                 files.append(discord.File(open(str(msg.author.id)+'.png', 'rb')))
+                for i in msg.attachments:
+                    r = await i.to_file()
+                    files.append(r)
                 webhook.send(files=files, avatar_url=avatar, username=username)
                 os.remove(str(msg.author.id)+'.png') #deletes image
                 return

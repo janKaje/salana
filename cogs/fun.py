@@ -119,7 +119,7 @@ class fun(commands.Cog):
         await ctx.send(f"I'd give {item} a {rate_value}/10")
 
     @commands.command(aliases=['rand'])
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 30, commands.BucketType.user)
     async def random(self, ctx):
         '''Gives a random number. Keeps track of high score.'''
         value = ''
