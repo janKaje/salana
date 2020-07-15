@@ -1000,7 +1000,7 @@ class language(commands.Cog):
             broken = False
         #integerifies the integers
         border = int(border)
-        fontsize = int(fontsize)
+        fontsize = abs(int(fontsize))
         #replace with single-character equivalents
         if broken:
             for i in linja_pona_substitutions:
@@ -1072,6 +1072,7 @@ class language(commands.Cog):
     
     @commands.command()
     async def colors(self, ctx, fg, bg):
+        '''Sets user-specific default color scheme for sitelen pona generation.'''
         self.udspc[ctx.author] = {'fg': fg, 'bg': bg}
         await ctx.send('updated successfully.')
 
@@ -1137,6 +1138,13 @@ class language(commands.Cog):
             elif msg.author.bot:
                 await msg.delete()
                 return
+            files = []
+            for i in msg.attachments:
+                r = await i.to_file()
+                files.append(r)
+            if len(files) > 10:
+                await msg.author.send('You added too many files to your message. Please try again.')
+                return
             await msg.delete()
             try:
                 text = msg.content
@@ -1149,32 +1157,32 @@ class language(commands.Cog):
                 text, fg, bg, border, fontsize = await self.sitelen_replacements(text, msg.author)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
-                if re.search(r'[a-zA-Z]', text):
+                if re.search(r'[a-zA-Z1-9]', text):
                     await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again. Here is the message, in case it was long:')
                     await msg.author.send(msg.content)
                     return
-                if text == '':
-                    await msg.author.send('The message you sent turned out to be empty. Please try again.')
-                    return
-                size = font.getsize_multiline(text) #calculates size
-                finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
-                if finalsize[0]*finalsize[1] > 1000000:
-                    await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
-                    await msg.author.send(msg.content)
-                    return
-                img = Image.new('RGB', finalsize, color=bg) #new image
-                draw = ImageDraw.Draw(img)
-                draw.text((border, border), text, fill=fg, font=font) #draws text
-                img.save(str(msg.author.id)+'.png') #saves image
-                webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
-                avatar = msg.author.avatar_url
-                files = []
-                files.append(discord.File(open(str(msg.author.id)+'.png', 'rb')))
-                for i in msg.attachments:
-                    r = await i.to_file()
-                    files.append(r)
+                if text != '':
+                    size = font.getsize_multiline(text) #calculates size
+                    finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
+                    if finalsize[0]*finalsize[1] > 1000000:
+                        await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
+                        await msg.author.send(msg.content)
+                        return
+                    img = Image.new('RGB', finalsize, color=bg) #new image
+                    draw = ImageDraw.Draw(img)
+                    draw.text((border, border), text, fill=fg, font=font) #draws text
+                    img.save(str(msg.author.id)+'.png') #saves image
+                    webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
+                    avatar = msg.author.avatar_url
+                    files.append(discord.File(open(str(msg.author.id)+'.png', 'rb')))
                 webhook.send(files=files, avatar_url=avatar, username=username)
-                os.remove(str(msg.author.id)+'.png') #deletes image
+                if text != '':
+                    os.remove(str(msg.author.id)+'.png') #deletes image
+                try:
+                    open(str(msg.author.id)+'.png', 'r')
+                    await self.client.get_user(474349369274007552).send('file did not delete')
+                except:
+                    pass
                 return
             except Exception as e:
                 try:
