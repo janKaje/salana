@@ -1158,7 +1158,9 @@ class language(commands.Cog):
                 img.save(str(msg.author.id)+'.png') #saves image
                 webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
                 avatar = msg.author.avatar_url
-                webhook.send(file=discord.File(open(str(msg.author.id)+'.png', 'rb')), avatar_url=avatar, username=username)
+                files = msg.attachments
+                files.append(discord.File(open(str(msg.author.id)+'.png', 'rb')))
+                webhook.send(files=files, avatar_url=avatar, username=username)
                 os.remove(str(msg.author.id)+'.png') #deletes image
                 return
             except Exception as e:
@@ -1234,6 +1236,8 @@ class language(commands.Cog):
     #in essence, the same as the above function, but without tpt moderation thing (since edited messages are covered when it iterates through last 10 messages)
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        if isinstance(before.channel, discord.DMChannel):
+            return
         if after.guild.id == 654411781929959424:
             try:
                 role = after.guild.get_role(706257334682386582)
