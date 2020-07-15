@@ -1130,7 +1130,9 @@ class language(commands.Cog):
                 u_search = re.search(r'(u=[^ ]+)', text)
                 if u_search:
                     username = f'{u_search.group(0)[2:]} ({msg.author.display_name})'
+                    await msg.author.send(text)
                     text = re.sub(r' u=[^ ]+|u=[^ ]+ |u=[^ ]+', '', text)
+                    await msg.author.send(text)
                 else:
                     username = msg.author.display_name
                 text, fg, bg, border, fontsize = await self.sitelen_replacements(msg.content)
