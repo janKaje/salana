@@ -1137,8 +1137,7 @@ class language(commands.Cog):
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
                 if re.search(r'\w', text):
-                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again. Here is the message after substitution:')
-                    await msg.author.send(text)
+                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again.')
                     return
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
@@ -1152,7 +1151,6 @@ class language(commands.Cog):
                 img.save(str(msg.author.id)+'.png') #saves image
                 webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
                 avatar = msg.author.avatar_url
-                username = msg.author.display_name
                 webhook.send(file=discord.File(open(str(msg.author.id)+'.png', 'rb')), avatar_url=avatar, username=username)
                 os.remove(str(msg.author.id)+'.png') #deletes image
                 return
