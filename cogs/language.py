@@ -1119,17 +1119,20 @@ class language(commands.Cog):
         if isinstance(msg.channel, discord.DMChannel):
             return
         if msg.channel.id == 733009134856699924:
-            try:
-                if str(msg.webhook_id) == os.environ['webhookid']:
-                    return
-                elif msg.webhook_id:
-                    await msg.channel.send('ona li ilo')
-                else:
-                    await msg.channel.send('ona li ilo ala')
-            except:
-                await msg.channel.send('ona li pakala')
+            if str(msg.webhook_id) == os.environ['webhookid']:
+                return
+            elif msg.webhook_id:
+                await msg.delete()
+                return
             await msg.delete()
             try:
+                text = msg.content
+                u_search = re.search(r'(u=[^ ]+)', text)
+                if u_search:
+                    username = f'{u_search.group(0)[2:]} ({msg.author.display_name})'
+                    text = re.sub(r' u=[^ ]+|u=[^ ]+ |u=[^ ]+', '', text)
+                else:
+                    username = msg.author.display_name
                 text, fg, bg, border, fontsize = await self.sitelen_replacements(msg.content)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
