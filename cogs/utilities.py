@@ -253,6 +253,7 @@ class utilities(commands.Cog):
 
     #Welcome
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_message(self, message):
         if message.channel.id == wali_welcomechannel_id and message.author.id != 712086611097157652: #if in the wali wi pa mu welcome channel and the message wasn't sent by the bot
             #if the message they send is the key, deletes their message(s), gives them the entry role, and introduces them.

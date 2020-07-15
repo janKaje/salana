@@ -1121,8 +1121,10 @@ class language(commands.Cog):
             try:
                 if str(msg.webhook_id) == os.environ['webhookid']:
                     return
+                elif msg.webhook_id:
+                    await msg.channel.send('ona li ilo')
             except:
-                pass
+                await msg.channel.send('ona li pakala')
             await msg.delete()
             try:
                 text, fg, bg, border, fontsize = await self.sitelen_replacements(msg.content)
