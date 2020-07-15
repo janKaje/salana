@@ -1137,7 +1137,8 @@ class language(commands.Cog):
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
                 if re.search(r'\w', text):
-                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again.')
+                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again. Here is the message after substitution:')
+                    await ctx.send(text)
                     return
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
