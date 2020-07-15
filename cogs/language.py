@@ -1130,12 +1130,10 @@ class language(commands.Cog):
                 u_search = re.search(r'(u=[^ ]+)', text)
                 if u_search:
                     username = f'{u_search.group(0)[2:]} ({msg.author.display_name})'
-                    await msg.author.send(text)
                     text = re.sub(r' u=[^ ]+|u=[^ ]+ |u=[^ ]+', '', text)
-                    await msg.author.send(text)
                 else:
                     username = msg.author.display_name
-                text, fg, bg, border, fontsize = await self.sitelen_replacements(msg.content)
+                text, fg, bg, border, fontsize = await self.sitelen_replacements(text)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
                 if re.search(r'\w', text):
