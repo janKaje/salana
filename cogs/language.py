@@ -1130,17 +1130,21 @@ class language(commands.Cog):
             await msg.delete()
             try:
                 text = msg.content
-                u_search = re.search(r'(u=[^ ]+)', text)
+                u_search = re.search(r'(u=.+)', text, flags=re.DOTALL)
                 if u_search:
                     username = f'{u_search.group(0)[2:]} ({msg.author.display_name})'
-                    text = re.sub(r' u=[^ ]+|u=[^ ]+ |u=[^ ]+', '', text)
+                    text = re.sub('u=.+', '', text, flags=re.DOTALL)
                 else:
                     username = msg.author.display_name
                 text, fg, bg, border, fontsize = await self.sitelen_replacements(text)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
-                if re.search(r'\w', text):
-                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again.')
+                if re.search(r'[a-zA-Z]', text):
+                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again. Here is the message, in case it was long:')
+                    await msg.author.send(msg.content)
+                    return
+                if text == '':
+                    await msg.author.send('The message you sent turned out to be empty. Please try again.')
                     return
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
