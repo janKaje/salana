@@ -93,7 +93,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.ExtensionError):
         await ctx.send(f'The extension {str(error.name)} raised an exception.')
     elif isinstance(error, commands.CommandOnCooldown):
-        await ctx.send(f'That command is on cooldown. Try again in {math.ceil(error.retry_after)} seconds.')
+        await ctx.send(f'That command is on cooldown. Try again in {math.ceil(error.retry_after)} second(s).')
     else:
         await ctx.send(f'ERROR! {error}')
 

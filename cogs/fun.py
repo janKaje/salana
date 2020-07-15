@@ -112,18 +112,22 @@ class fun(commands.Cog):
     @commands.command()
     async def rate(self, ctx, *, item):
         """I'll rate whatever you tell me to."""
+        r = random.getstate()
         random.seed(item)
         rate_value = random.randint(0, 10)
+        random.setstate(r)
         await ctx.send(f"I'd give {item} a {rate_value}/10")
 
     @commands.command(aliases=['rand'])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def random(self, ctx):
         '''Gives a random number. Keeps track of high score.'''
-        value = str(random.randint(0, 9))
+        value = ''
+        choices = [True]
         while True:
-            if random.choice([True, False]):
+            if random.choice(choices):
                 value += str(random.randint(0, 9))
+                choices.append(False)
             else:
                 value = int(value)
                 break

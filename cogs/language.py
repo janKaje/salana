@@ -8,6 +8,7 @@ from math import ceil
 from PIL import Image, ImageDraw, ImageFont
 import os
 import random
+import requests
     
 def setup(client):
     client.add_cog(language(client))
@@ -956,63 +957,67 @@ class language(commands.Cog):
             await ctx.author.add_roles(role)
             await ctx.send("Hardcore role given.")
 
+    async def sitelen_replacements(self, text):
+        #search for fg
+        fg_search = re.search(r'(fg=[^ ]+)', text)
+        if fg_search:
+            fg = fg_search.group(0)[3:]
+            text = re.sub(r' fg=[^ ]+|fg=[^ ]+ |fg=[^ ]+', '', text)
+        else:
+            fg = 'black'
+        #search for bg
+        bg_search = re.search(r'(bg=[^ ]+)', text)
+        if bg_search:
+            bg = bg_search.group(0)[3:]
+            text = re.sub(r' bg=[^ ]+|bg=[^ ]+ |bg=[^ ]+', '', text)
+        else:
+            bg = 'white'
+        #search for border width
+        border_search = re.search(r'(border=[^ ]+)', text)
+        if border_search:
+            border = border_search.group(0)[7:]
+            text = re.sub(r' border=[^ ]+|border=[^ ]+ |border=[^ ]+', '', text)
+        else:
+            border = 5
+        #search for font size
+        size_search = re.search(r'(size=[^ ]+)', text)
+        if size_search:
+            fontsize = size_search.group(0)[5:]
+            text = re.sub(r' size=[^ ]+|size=[^ ]+ |size=[^ ]+', '', text)
+        else:
+            fontsize = 48
+        #search for broken
+        size_search = re.search('=broken', text)
+        if size_search:
+            broken = True
+            text = re.sub(' =broken|=broken |=broken', '', text)
+        else:
+            broken = False
+        #integerifies the integers
+        border = int(border)
+        fontsize = int(fontsize)
+        #replace with single-character equivalents
+        if broken:
+            for i in linja_pona_substitutions:
+                if i in text:
+                    text = re.sub(i, linja_pona_substitutions[i], text)
+        else:
+            for i in sorted(linja_pona_substitutions, key=len, reverse=True):
+                if i in text:
+                    text = re.sub(i, linja_pona_substitutions[i], text)
+        return text, fg, bg, border, fontsize
+
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
         """Displays the given text in sitelen pona.\n\nYou can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color.\n\nThere's also an older, buggier version of the renderer that was brought back by popular demand. ¯\\_(ツ)_/¯ To use it, insert =broken into your text."""
         try:
             async with ctx.channel.typing():
-                #search for fg
-                fg_search = re.search(r'(fg=[^ ]+)', text)
-                if fg_search:
-                    fg = fg_search.group(0)[3:]
-                    text = re.sub(r' fg=[^ ]+|fg=[^ ]+ |fg=[^ ]+', '', text)
-                else:
-                    fg = 'black'
-                #search for bg
-                bg_search = re.search(r'(bg=[^ ]+)', text)
-                if bg_search:
-                    bg = bg_search.group(0)[3:]
-                    text = re.sub(r' bg=[^ ]+|bg=[^ ]+ |bg=[^ ]+', '', text)
-                else:
-                    bg = 'white'
-                #search for border width
-                border_search = re.search(r'(border=[^ ]+)', text)
-                if border_search:
-                    border = border_search.group(0)[7:]
-                    text = re.sub(r' border=[^ ]+|border=[^ ]+ |border=[^ ]+', '', text)
-                else:
-                    border = 5
-                #search for font size
-                size_search = re.search(r'(size=[^ ]+)', text)
-                if size_search:
-                    fontsize = size_search.group(0)[5:]
-                    text = re.sub(r' size=[^ ]+|size=[^ ]+ |size=[^ ]+', '', text)
-                else:
-                    fontsize = 48
-                #search for broken
-                size_search = re.search('=broken', text)
-                if size_search:
-                    broken = True
-                    text = re.sub(' =broken|=broken |=broken', '', text)
-                else:
-                    broken = False
-                #integerifies the integers
-                border = int(border)
-                fontsize = int(fontsize)
+                text, fg, bg, border, fontsize = await self.sitelen_replacements(text)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
-                #replace with single-character equivalents
-                if broken:
-                    for i in linja_pona_substitutions:
-                        if i in text:
-                            text = re.sub(i, linja_pona_substitutions[i], text)
-                else:
-                    for i in sorted(linja_pona_substitutions, key=len, reverse=True):
-                        if i in text:
-                            text = re.sub(i, linja_pona_substitutions[i], text)
                 size = font.getsize_multiline(text) #calculates size
                 finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
-                if finalsize[0]*finalsize[1] > 1000000:
+                if finalsize[0]*finalsize[1] > 6000000:
                     await ctx.send('too big!')
                     return
                 img = Image.new('RGB', finalsize, color=bg) #new image
@@ -1111,6 +1116,39 @@ class language(commands.Cog):
     #On message: hardcore, tpt moderation, emoji adding
     @commands.Cog.listener()
     async def on_message(self, msg):
+        if msg.channel.id == 733009134856699924:
+            await msg.delete()
+            try:
+                async with msg.channel.typing():
+                    text, fg, bg, border, fontsize = await self.sitelen_replacements(msg.content)
+                    #loads font
+                    font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
+                    if re.search(r'\w', text):
+                        await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again.')
+                        return
+                    size = font.getsize_multiline(text) #calculates size
+                    finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
+                    if finalsize[0]*finalsize[1] > 6000000:
+                        await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
+                        await msg.author.send(msg.content)
+                        return
+                    img = Image.new('RGB', finalsize, color=bg) #new image
+                    draw = ImageDraw.Draw(img)
+                    draw.text((border, border), text, fill=fg, font=font) #draws text
+                    img.save(str(msg.author.id)+'.png') #saves image
+                    webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
+                    avatar = msg.author.avatar_url
+                    username = msg.author.display_name
+                webhook.send(file=discord.File(open(str(msg.author.id)+'.png', 'rb')), avatar_url=avatar, username=username)
+                os.remove(str(msg.author.id)+'.png') #deletes image
+                return
+            except Exception as e:
+                try:
+                    await msg.author.send(f'There was an error with the message I tried to convert: {e}')
+                    return
+                except Exception as f:
+                    await self.client.get_user(474349369274007552).send(f'{e}\n{f}')
+                    return
         #if a search command return, add emojis
         if f'page:{msg.nonce}' in self.searchembednonces:
             await msg.add_reaction(emojize(':left_arrow:'))
