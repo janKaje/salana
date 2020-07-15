@@ -1115,14 +1115,17 @@ class language(commands.Cog):
 
     #On message: hardcore, tpt moderation, emoji adding
     @commands.Cog.listener()
-    @commands.guild_only()
     async def on_message(self, msg):
+        if isinstance(msg.channel, discord.DMChannel):
+            return
         if msg.channel.id == 733009134856699924:
             try:
                 if str(msg.webhook_id) == os.environ['webhookid']:
                     return
                 elif msg.webhook_id:
                     await msg.channel.send('ona li ilo')
+                else:
+                    await msg.channel.send('ona li ilo ala')
             except:
                 await msg.channel.send('ona li pakala')
             await msg.delete()
