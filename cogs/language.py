@@ -1117,28 +1117,32 @@ class language(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel.id == 733009134856699924:
+            try:
+                if str(msg.webhook_id) == os.environ['webhookid']:
+                    return
+            except:
+                pass
             await msg.delete()
             try:
-                async with msg.channel.typing():
-                    text, fg, bg, border, fontsize = await self.sitelen_replacements(msg.content)
-                    #loads font
-                    font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
-                    if re.search(r'\w', text):
-                        await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again.')
-                        return
-                    size = font.getsize_multiline(text) #calculates size
-                    finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
-                    if finalsize[0]*finalsize[1] > 6000000:
-                        await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
-                        await msg.author.send(msg.content)
-                        return
-                    img = Image.new('RGB', finalsize, color=bg) #new image
-                    draw = ImageDraw.Draw(img)
-                    draw.text((border, border), text, fill=fg, font=font) #draws text
-                    img.save(str(msg.author.id)+'.png') #saves image
-                    webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
-                    avatar = msg.author.avatar_url
-                    username = msg.author.display_name
+                text, fg, bg, border, fontsize = await self.sitelen_replacements(msg.content)
+                #loads font
+                font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
+                if re.search(r'\w', text):
+                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again.')
+                    return
+                size = font.getsize_multiline(text) #calculates size
+                finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
+                if finalsize[0]*finalsize[1] > 6000000:
+                    await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
+                    await msg.author.send(msg.content)
+                    return
+                img = Image.new('RGB', finalsize, color=bg) #new image
+                draw = ImageDraw.Draw(img)
+                draw.text((border, border), text, fill=fg, font=font) #draws text
+                img.save(str(msg.author.id)+'.png') #saves image
+                webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
+                avatar = msg.author.avatar_url
+                username = msg.author.display_name
                 webhook.send(file=discord.File(open(str(msg.author.id)+'.png', 'rb')), avatar_url=avatar, username=username)
                 os.remove(str(msg.author.id)+'.png') #deletes image
                 return
