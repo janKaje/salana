@@ -1115,6 +1115,7 @@ class language(commands.Cog):
 
     #On message: hardcore, tpt moderation, emoji adding
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_message(self, msg):
         if msg.channel.id == 733009134856699924:
             try:
