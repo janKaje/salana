@@ -94,13 +94,13 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.ExtensionError):
         await ctx.send(f'The extension {str(error.name)} raised an exception.')
     elif isinstance(error, commands.CommandOnCooldown):
-        await ctx.send(f'That command is on cooldown. Try again in {error.retry_after} seconds.')
+        await ctx.send(f'That command is on cooldown. Try again in {math.ceil(error.retry_after)} seconds.')
     else:
         await ctx.send(f'ERROR! {error}')
 
 @client.event
 async def on_error(event, *args, **kwargs):
-    await client.get_user(474349369274007552).send(f'There was an error on {event} in {event.cog}:\n{args}\n{kwargs}')
+    await client.get_user(474349369274007552).send(f'There was an error on {event}:\n{args}\n{kwargs}')
 
 #runs bot
 client.run(TOKEN)
