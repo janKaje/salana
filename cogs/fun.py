@@ -8,8 +8,6 @@ from functools import reduce
 from functools import lru_cache
 import re
 import os
-import requests
-from datetime import datetime as dt
     
 def setup(client):
     client.add_cog(fun(client))
@@ -45,8 +43,6 @@ class fun(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.headers = {'Accept': 'application/vnd.heroku+json; version=3', 'Content-Type': 'application/json'}
-        self.url = 'https://api.heroku.com/apps/salana/config-vars'
     
     #yes I am aware that this is just the Farey series at a number minus 2, but I'm keeping it. I developed this before I knew that the Farey series had been explored, so I'm proud of my accomplishments and don't want to remove this. 
     @commands.command()
@@ -137,9 +133,8 @@ class fun(commands.Cog):
             embed = discord.Embed(color=discord.Color.blurple(), title='Congratulations!! :partying_face:', description='You beat the high score!')
             embed.add_field(name='Old high score:', value=f'{highscore_user} got {highscore_value}')
             embed.add_field(name='New high score:', value=f'{str(ctx.author)} got {value}')
-            data = '{"rand_highscore_user": "'+str(ctx.author)+'", "rand_highscore_value": "'+str(value)+'"}'
-            requests.patch(self.url, data=data, auth=(os.environ['usern'], os.environ['apitoken']), headers=self.headers)
-            await ctx.send(dt.utcnow())
+            os.environ['rand_highscore_user'] = str(ctx.author)
+            os.environ['rand_highscore_value'] = str(value)
         else:
             embed = discord.Embed(color=discord.Color.lighter_grey(), title='Value:', description=str(value))
             embed.set_footer(text='You did not beat the high score.')

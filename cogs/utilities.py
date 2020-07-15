@@ -33,13 +33,12 @@ class utilities(commands.Cog):
     @commands.is_owner()
     async def test(self, ctx, *, message):
         """Don't worry about this one. Bot owner only."""
-        #avatar = ctx.author.avatar_url
-        #username = ctx.author.display_name
-        #webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
-        #webhook.send(message, avatar_url=avatar, username=username)
-        requests.patch(self.url, data='{"TEST": "this is phase two of the test"}', auth=(os.environ['usern'], os.environ['apitoken']), headers=self.headers)
-        await ctx.send(os.environ['TEST'])
-
+        avatar = ctx.author.avatar_url
+        username = ctx.author.display_name
+        webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
+        webhook.send(message, avatar_url=avatar, username=username)
+        #requests.patch(self.url, data='{"TEST": "this is phase two of the test"}', auth=(os.environ['usern'], os.environ['apitoken']), headers=self.headers)
+        #await ctx.send(os.environ['TEST'])
 
     @commands.command(hidden=True)
     @commands.is_owner()

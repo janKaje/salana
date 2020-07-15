@@ -4,6 +4,7 @@ import os
 import time
 import math
 from datetime import datetime as dt
+import requests
 
 #Initialize
 client = commands.Bot(command_prefix = ',')
@@ -16,17 +17,19 @@ if dir_path.startswith('/app'):
 else:
     TOKEN = open(dir_path+'/token.txt', mode='r').read()
 
-try:
-    open(dir_path+'/highscore.txt')
-except:
-    open(dir_path+'/highscore.txt', mode='x')
-    print('first lol:1\n', file=open(dir_path+'/highscore.txt', mode='w'))
-
 #On_ready command
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
-    await client.get_channel(316066233755631616).send(dt.utcnow())
+    await client.get_channel(705223622981320706).send(dt.utcnow())
+
+#resets heroku config keys when disconnects
+@client.event
+async def on_disconnect():
+    headers = {'Accept': 'application/vnd.heroku+json; version=3', 'Content-Type': 'application/json'}
+    url = 'https://api.heroku.com/apps/salana/config-vars'
+    data = '{"rand_highscore_user": "'+os.environ['rand_highscore_user']+'", "rand_highscore_value": "'+os.environ['rand_highscore_value']+'"}'
+    requests.patch(url, data=data, auth=(os.environ['usern'], os.environ['apitoken']), headers=headers)
 
 #Load, unload, reload cog commands
 @client.command()
