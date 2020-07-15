@@ -26,11 +26,6 @@ except:
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
     print('ready')
-    #reloads extensions
-    for filename in os.listdir("./cogs"):
-        if filename.endswith(".py"):
-            client.unload_extension(f"cogs.{filename[:-3]}")
-            client.load_extension(f"cogs.{filename[:-3]}")
 
 #Load, unload, reload cog commands
 @client.command()
