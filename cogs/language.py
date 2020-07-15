@@ -1124,6 +1124,9 @@ class language(commands.Cog):
             elif msg.webhook_id:
                 await msg.delete()
                 return
+            elif msg.author.bot:
+                await msg.delete()
+                return
             await msg.delete()
             try:
                 text = msg.content
