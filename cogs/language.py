@@ -1172,9 +1172,9 @@ class language(commands.Cog):
                     draw = ImageDraw.Draw(img)
                     draw.text((border, border), text, fill=fg, font=font) #draws text
                     img.save(str(msg.author.id)+'.png') #saves image
-                    webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
-                    avatar = msg.author.avatar_url
                     files.append(discord.File(open(str(msg.author.id)+'.png', 'rb')))
+                avatar = msg.author.avatar_url
+                webhook = discord.Webhook.partial(os.environ['webhookid'], os.environ['webhooktoken'], adapter=discord.RequestsWebhookAdapter())
                 webhook.send(files=files, avatar_url=avatar, username=username)
                 if text != '':
                     os.remove(str(msg.author.id)+'.png') #deletes image
