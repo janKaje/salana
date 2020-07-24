@@ -1,6 +1,7 @@
 cogs/__pycache__
 
-highscore.txt
-token.txt
+outline.txt
+config.json
 test.py
 *.png
+.env

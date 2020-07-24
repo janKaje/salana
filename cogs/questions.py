@@ -1,0 +1,105 @@
+import discord
+from discord.ext import commands, tasks
+import json
+import os
+import datetime as dt
+
+dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+config = json.loads(open(dir_path+'/config.json').read())
+
+def setup(client):
+    client.add_cog(questions(client))
+
+class questions(commands.Cog, name='QUESTIONS'):
+
+    '''A module for keeping track of questions. 
+       To begin setup, use `,setup questions`. To remove this feature, use `,remove questions`.'''
+
+    def __init__(self, client):
+        self.client = client
+        self.newquestions = dict()
+
+    async def ifquestions(self, ctx):
+        if ctx.guild is None:
+            return False
+        return config[str(ctx.guild.id)]['questions'] is not None
+
+    async def add_question(self, question, ctx):
+        q_info = {'question': question, 'authorid': ctx.author.id, 'messageid': ctx.message.id}
+        config[str(ctx.guild.id)]['questions'].append(q_info)
+        await ctx.message.add_reaction('\u2705')
+        #questions asked over 24 hours ago are deleted
+        for i in config[str(ctx.guild.id)]['questions']:
+            msg = await ctx.fetch_message(i["messageid"])
+            if dt.datetime.utcnow() - msg.created_at > dt.timedelta(days=1):
+                del i
+        #if the list is too long, deletes the least recent one
+        if len(config[str(ctx.guild.id)]['questions']) > 10:
+            del config[str(ctx.guild.id)]['questions'][0]
+
+    @commands.command(aliases=['q'])
+    async def question(self, ctx, *, question):
+        '''A command to register questions. Use `,q <question>` to ask a question. `,q a` will mark your last question as answered. `,q list` will list the currently open questions.'''
+        #lists open questions
+        if not await self.ifquestions(ctx):
+            return
+        if question == 'list':
+            if len(config[str(ctx.guild.id)]['questions']) == 0:
+                await ctx.send('No currently open questions.')
+                return
+            emb = discord.Embed(color=discord.Color.dark_green(), title='List of open questions:')
+            for i in config[str(ctx.guild.id)]['questions']:
+                #if question was asked more than a day ago, deletes
+                msg = await ctx.fetch_message(i["messageid"])
+                if dt.datetime.utcnow() - msg.created_at > dt.timedelta(days=1):
+                    del i
+                    continue
+                #else, adds field
+                author = self.client.get_user(i["authorid"])
+                message = await ctx.fetch_message(i["messageid"])
+                emb.add_field(name=f'Question #{config[str(ctx.guild.id)]["questions"].index(i)+1}:',
+                              value=f'By {author.mention} in {message.channel.mention}\n'
+                                    f'{i["question"]}\n'
+                                    f'[Jump URL]({message.jump_url})', inline=False)
+            await ctx.send(embed=emb)
+        elif question == 'a':
+            #gets all the questions that the author asked in reverse order
+            setwithauthor = list(reversed([i for i in config[str(ctx.guild.id)]['questions'] if i["authorid"] == ctx.author.id]))
+            if setwithauthor != []:
+                lastq = setwithauthor[0]
+                config[str(ctx.guild.id)]['questions'].remove(lastq)
+                await ctx.message.add_reaction('\u2705')
+                #deleted successfully
+            else:
+                await ctx.send('You have no open questions.')
+        elif question.startswith('a '):
+            try:
+                index = int(question[2:])
+            #if not followed by an integer, interprets it as a question
+            except:
+                await self.add_question(question, ctx)
+                return
+            #if author is not equal to the asker of specified question
+            if config[str(ctx.guild.id)]['questions'][(index-1)]["authorid"] != ctx.author.id:
+                await ctx.send('You didn\'t send that question.')
+                return
+            #else, removes
+            config[str(ctx.guild.id)]['questions'].remove(config[str(ctx.guild.id)]['questions'][index-1])
+            await ctx.message.add_reaction('\u2705')
+        elif question.startswith('delete '):
+            try:
+                index = int(question[7:])
+            #if not followed by an integer, interprets as a question
+            except:
+                self.add_question(question, ctx)
+                return
+            #checks for the manage_messages permission in that channel
+            if not ctx.channel.permissions_for(ctx.author).manage_messages:
+                await ctx.send('You don\'t have the right permissions to delete other\'s questions.')
+                return
+            #else, removes
+            config[str(ctx.guild.id)]['questions'].remove(config[str(ctx.guild.id)]['questions'][index-1])
+            await ctx.send('Deleted successfully.')
+        else:
+            await self.add_question(question, ctx)
+        self.newquestions[str(ctx.guild.id)] = config[str(ctx.guild.id)]['questions']
