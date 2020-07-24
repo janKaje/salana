@@ -11,6 +11,11 @@ client = commands.Bot(command_prefix = ',')
 client.remove_command('help')
 TOKEN = os.environ['TOKEN']
 dir_path = os.path.dirname(os.path.abspath(__file__))
+try:
+    open(dir_path+'/config.json', mode='x')
+except:
+    pass
+print(os.environ['config'], file=open(dir_path+'/config.json', mode='w'))
 
 config = json.loads(open(dir_path+'/config.json').read())
 
