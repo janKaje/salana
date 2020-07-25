@@ -5,18 +5,20 @@ import time
 import math
 from datetime import datetime as dt
 import json
+import requests
 
 #Initialize
 client = commands.Bot(command_prefix = ',')
 client.remove_command('help')
-TOKEN = os.environ['TOKEN']
 dir_path = os.path.dirname(os.path.abspath(__file__))
+
 try:
     open(dir_path+'/config.json', mode='x')
 except:
     pass
 print(os.environ['config'], file=open(dir_path+'/config.json', mode='w'))
 
+TOKEN = os.environ['TOKEN']
 config = json.loads(open(dir_path+'/config.json').read())
 
 #On_ready command
@@ -46,6 +48,12 @@ async def updateconfig():
                     config[i]['tp']['udspc'][j] = newudspcs[i][j]
     for i in newpersonalhighscores:
         config[i] = newpersonalhighscores[i]
+
+    headers = {"Content-Type": "application/json", "Accept": "application/vnd.heroku+json; version=3"}
+    data = '{"config": "'+json.dumps(config)+'"}'
+    auth = (os.environ['usern'], os.environ['apitoken'])
+    url = 'https://api.heroku.com/apps/salana/config-vars'
+    requests.patch(url, data=data, headers=headers, auth=auth)
 
     print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
@@ -150,9 +158,16 @@ async def omoli(ctx):
 @client.command()
 @commands.is_owner()
 async def save(ctx):
-    """Saves the current config to heroku."""
+    """Saves the current config."""
     await updateconfig()
     await ctx.send('Successfully saved data.')
+
+@client.command()
+@commands.is_owner()
+async def saveandshow(ctx):
+    '''Saves the current config and sends it to the channel (USE WITH CAUTION)'''
+    await updateconfig()
+    await ctx.send(json.dumps(config))
 
 @client.command()
 @commands.guild_only()
