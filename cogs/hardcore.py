@@ -41,6 +41,8 @@ class hardcore(commands.Cog, name='HARDCORE'):
     async def on_message(self, msg):
         if not await self.ifhardcore(msg.channel):
             return
+        if msg.author.bot:
+            return
         if msg.channel.id in config[str(msg.guild.id)]['hardcore']['channels']:
             if msg.guild.get_role(config[str(msg.guild.id)]['hardcore']['role']) in msg.author.roles:
                 if config[str(msg.guild.id)]['tp'] is not None:
