@@ -23,8 +23,8 @@ for i in os.environ:
     try:
         int(i)
         config[i] = json.loads(os.environ[i])
-    except:
-        pass
+    except Exception as e:
+        await client.get_user(474349369274007552).send(f'An error: {e}')
 
 config2 = config
 
