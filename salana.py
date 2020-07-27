@@ -16,7 +16,19 @@ try:
     open(dir_path+'/config.json', mode='x')
 except:
     pass
-print(os.environ['config'], file=open(dir_path+'/config.json', mode='w'))
+
+config = dict()
+
+for i in os.environ:
+    try:
+        int(i)
+        config[i] = json.loads(os.environ[i])
+    except:
+        pass
+
+config2 = config
+
+print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
 TOKEN = os.environ['TOKEN']
 config = json.loads(open(dir_path+'/config.json').read())
@@ -29,6 +41,7 @@ async def on_ready():
 
 #function to handle updating of config
 async def updateconfig():
+    #gets new additions to cog-specific config elements
     questions = client.get_cog('QUESTIONS')
     tokipona = client.get_cog('TOKI PONA')
     fun = client.get_cog('FUN')
@@ -36,6 +49,8 @@ async def updateconfig():
     newudspcs = tokipona.newudspcs
     newguildhighscores = fun.newguildhighscores
     newpersonalhighscores = fun.newpersonalhighscores
+
+    #updates the main config with all the new stuff
     for i in config:
         if isinstance(config[i], dict):
             if i in newguildhighscores:
@@ -48,14 +63,24 @@ async def updateconfig():
                     config[i]['tp']['udspc'][j] = newudspcs[i][j]
     for i in newpersonalhighscores:
         config[i] = newpersonalhighscores[i]
+    print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
+    #adds everything that's changed to the data to be readded
+    global config2
+    data = '{'
+    for i in config:
+        if i not in config2 or config[i] != config2[i]:
+            data += f'"{i}": {json.dumps(config[i])}, '
+    data = data[:-2]+'}'
+
+    #makes the request
     headers = {"Content-Type": "application/json", "Accept": "application/vnd.heroku+json; version=3"}
-    data = '{"config": "'+json.dumps(config)+'"}'
     auth = (os.environ['usern'], os.environ['apitoken'])
     url = 'https://api.heroku.com/apps/salana/config-vars'
     requests.patch(url, data=data, headers=headers, auth=auth)
 
-    print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
+    #updates the config2 that keeps track of what's changed
+    config2 = config
 
 #resets heroku config keys when disconnects
 @client.event
@@ -108,13 +133,17 @@ for filename in os.listdir("./cogs"):
     
 @client.event
 async def on_guild_join(guild):
+    #sets basic guild variables
     config[str(guild.id)] = {'hsu': 'nobody', 'hsv': -1, 'tp': None, 'hardcore': None, 'welcome': None, 'questions': None, 'reporting': None, 'logging': None}
+    
+    #sends first message and asks if it should use pa mu or tp
     channel = guild.text_channels[0]
     embed = discord.Embed(title='Hello!', description="I'm salana, a discord bot developed to add toki pona or pa mu features to your server. To begin, select whether this guild is\n1️⃣ a toki pona server, or\n2️⃣ a pa mu server.\nThis is irreversible, so please choose wisely. If you enter the wrong one, kick the bot and invite it again.", color=discord.Color.blue())
     msg = await channel.send(embed=embed)
     await msg.add_reaction('1️⃣')
     await msg.add_reaction('2️⃣')
 
+    #all this is to see the reaction and parse it
     def check(reaction, user):
         nonlocal channel, msg
         return channel.permissions_for(user).manage_guild and reaction.message.id == msg.id and str(reaction.emoji) in '1️⃣2️⃣'
