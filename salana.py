@@ -17,18 +17,20 @@ try:
 except:
     pass
 
-config = dict()
+'''config = dict()
 
 for i in os.environ:
     try:
         int(i)
-        config[i] = json.loads(os.environ[i])
+        config[i] = json.loads(json.dumps(os.environ[i]))
     except Exception as e:
         print(f'An error: {e}')
 
 config2 = config
 
-print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
+print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))'''
+
+print(os.environ['config'], file=open(dir_path+'/config.json', mode='w'))
 
 TOKEN = os.environ['TOKEN']
 config = json.loads(open(dir_path+'/config.json').read())
