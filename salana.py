@@ -68,8 +68,8 @@ async def updateconfig():
     #adds everything that's changed to the data to be readded
     data = dict()
     for i in config:
-        if i not in os.environ or config[i] != os.environ[i]:
-            data[i] = config[i]
+        if i not in os.environ or config[i] != json.loads(os.environ[i]):
+            data[i] = json.dumps(config[i])
     data = json.dumps(data)
 
     #makes the request
@@ -228,9 +228,8 @@ async def saveandshow(ctx):
             if i not in os.environ or config[i] != json.loads(os.environ[i]):
                 data[i] = json.dumps(config[i])
                 await ctx.send(f'{i} updated\n')
-        await ctx.send(f'DATA: {data}\n')
         data = json.dumps(data)
-        await ctx.send(f'DATA (after json.dumps): {data}\n')
+        await ctx.send(f'DATA: {data}\n')
 
         #makes the request
         headers = {"Content-Type": "application/json", "Accept": "application/vnd.heroku+json; version=3"}

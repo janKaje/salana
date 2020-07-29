@@ -156,7 +156,10 @@ class fun(commands.Cog, name='FUN'):
                 value = int(value)
                 break
         if ctx.guild is not None:
-            guild_hsu = config[str(ctx.guild.id)]['hsu']
+            try:
+                guild_hsu = str(self.client.get_user(config[str(ctx.guild.id)]['hsu']))
+            except:
+                guild_hsu = config[str(ctx.guild.id)]['hsu']
             guild_hsv = int(config[str(ctx.guild.id)]['hsv'])
         try:
             personal_hsv = config[str(ctx.author.id)]
