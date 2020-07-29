@@ -205,7 +205,6 @@ async def saveandshow(ctx):
         newudspcs = tokipona.newudspcs
         newguildhighscores = fun.newguildhighscores
         newpersonalhighscores = fun.newpersonalhighscores
-        await ctx.send(newpersonalhighscores)
 
         #updates the main config with all the new stuff
         for i in config:
@@ -226,13 +225,17 @@ async def saveandshow(ctx):
         
         data = dict()
         for i in config:
-            await ctx.send(f'config for {i}: {config[i]}')
-            await ctx.send(f'os.environ for {i}: {os.environ[i]}')
+            await ctx.send(f'config for {i}: {config[i]}\n')
+            try:
+                await ctx.send(f'os.environ for {i}: {os.environ[i]}\n')
+            except:
+                await ctx.send(f'{i} not in os.environ\n')
             if i not in os.environ or config[i] != os.environ[i]:
                 data[i] = config[i]
-                await ctx.send(f'updated')
+                await ctx.send(f'updated\n')
+        await ctx.send(f'DATA: {data}\n')
         data = json.dumps(data)
-        await ctx.send(data)
+        await ctx.send(f'DATA (after json.dumps): {data}\n')
 
         #makes the request
         headers = {"Content-Type": "application/json", "Accept": "application/vnd.heroku+json; version=3"}
