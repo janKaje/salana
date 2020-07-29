@@ -210,6 +210,7 @@ async def saveandshow(ctx):
         newudspcs = tokipona.newudspcs
         newguildhighscores = fun.newguildhighscores
         newpersonalhighscores = fun.newpersonalhighscores
+        await ctx.send(newpersonalhighscores)
 
         #updates the main config with all the new stuff
         for i in config:
