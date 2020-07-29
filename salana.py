@@ -225,14 +225,9 @@ async def saveandshow(ctx):
         
         data = dict()
         for i in config:
-            await ctx.send(f'config for {i}: {config[i]}\n')
-            try:
-                await ctx.send(f'os.environ for {i}: {os.environ[i]}\n')
-            except:
-                await ctx.send(f'{i} not in os.environ\n')
             if i not in os.environ or config[i] != json.loads(os.environ[i]):
-                data[i] = config[i]
-                await ctx.send(f'updated\n')
+                data[i] = json.dumps(config[i])
+                await ctx.send(f'{i} updated\n')
         await ctx.send(f'DATA: {data}\n')
         data = json.dumps(data)
         await ctx.send(f'DATA (after json.dumps): {data}\n')
