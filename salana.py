@@ -201,8 +201,51 @@ async def save(ctx):
 @commands.is_owner()
 async def saveandshow(ctx):
     '''Saves the current config and sends it to the channel (USE WITH CAUTION)'''
-    await updateconfig()
-    await ctx.send(json.dumps(config))
+    try:
+        #gets new additions to cog-specific config elements
+        questions = client.get_cog('QUESTIONS')
+        tokipona = client.get_cog('TOKI PONA')
+        fun = client.get_cog('FUN')
+        newquestions = questions.newquestions
+        newudspcs = tokipona.newudspcs
+        newguildhighscores = fun.newguildhighscores
+        newpersonalhighscores = fun.newpersonalhighscores
+
+        #updates the main config with all the new stuff
+        for i in config:
+            if isinstance(config[i], dict):
+                if i in newguildhighscores:
+                    config[i]['hsu'] = newguildhighscores[i][0]
+                    config[i]['hsv'] = newguildhighscores[i][1]
+                if i in newquestions:
+                    config[i]['questions'] = newquestions[i]
+                if i in newudspcs:
+                    for j in newudspcs[i]:
+                        config[i]['tp']['udspc'][j] = newudspcs[i][j]
+        for i in newpersonalhighscores:
+            config[i] = newpersonalhighscores[i]
+        print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
+
+        #adds everything that's changed to the data to be readded
+        global config2
+        data = dict()
+        for i in config:
+            if i not in config2 or config[i] != config2[i]:
+                data[i] = config[i]
+        data = json.dumps(data)
+        await ctx.send(data)
+
+        #makes the request
+        headers = {"Content-Type": "application/json", "Accept": "application/vnd.heroku+json; version=3"}
+        auth = (os.environ['usern'], os.environ['apitoken'])
+        url = 'https://api.heroku.com/apps/salana/config-vars'
+        requests.patch(url, data=data, headers=headers, auth=auth)
+
+        #updates the config2 that keeps track of what's changed
+        config2 = config
+        await ctx.send(json.dumps(config))
+    except Exception as e:
+        await ctx.send(e)
 
 @client.command()
 @commands.guild_only()
