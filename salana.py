@@ -23,8 +23,8 @@ for i in os.environ:
     try:
         int(i)
         config[i] = json.loads(os.environ[i])
-    except Exception as e:
-        print(f'An error: {e}')
+    except:
+        pass
 
 print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 '''
@@ -32,7 +32,6 @@ print(os.environ['config'], file=open(dir_path+'/config.json', mode='w'))
 config = json.loads(open(dir_path+'/config.json').read())'''
 
 TOKEN = os.environ['TOKEN']
-config2 = config
 
 #On_ready command
 @client.event
@@ -67,10 +66,9 @@ async def updateconfig():
     print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
     #adds everything that's changed to the data to be readded
-    global config2
     data = dict()
     for i in config:
-        if i not in config2 or config[i] != config2[i]:
+        if i not in os.environ or config[i] != os.environ[i]:
             data[i] = config[i]
     data = json.dumps(data)
 
@@ -79,9 +77,6 @@ async def updateconfig():
     auth = (os.environ['usern'], os.environ['apitoken'])
     url = 'https://api.heroku.com/apps/salana/config-vars'
     requests.patch(url, data=data, headers=headers, auth=auth)
-
-    #updates the config2 that keeps track of what's changed
-    config2 = config
 
 #resets heroku config keys when disconnects
 @client.event
@@ -228,12 +223,12 @@ async def saveandshow(ctx):
         print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
         #adds everything that's changed to the data to be readded
-        global config2
+        
         data = dict()
         for i in config:
             await ctx.send(f'config for {i}: {config[i]}')
-            await ctx.send(f'config2 for {i}: {config2[i]}')
-            if i not in config2 or config[i] != config2[i]:
+            await ctx.send(f'os.environ for {i}: {os.environ[i]}')
+            if i not in os.environ or config[i] != os.environ[i]:
                 data[i] = config[i]
                 await ctx.send(f'updated')
         data = json.dumps(data)
@@ -244,9 +239,6 @@ async def saveandshow(ctx):
         auth = (os.environ['usern'], os.environ['apitoken'])
         url = 'https://api.heroku.com/apps/salana/config-vars'
         requests.patch(url, data=data, headers=headers, auth=auth)
-
-        #updates the config2 that keeps track of what's changed
-        config2 = config
     except Exception as e:
         await ctx.send(e)
 
