@@ -230,7 +230,7 @@ async def saveandshow(ctx):
                 await ctx.send(f'os.environ for {i}: {os.environ[i]}\n')
             except:
                 await ctx.send(f'{i} not in os.environ\n')
-            if i not in os.environ or config[i] != os.environ[i]:
+            if i not in os.environ or config[i] != json.loads(os.environ[i]):
                 data[i] = config[i]
                 await ctx.send(f'updated\n')
         await ctx.send(f'DATA: {data}\n')
