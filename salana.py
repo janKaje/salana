@@ -231,8 +231,11 @@ async def saveandshow(ctx):
         global config2
         data = dict()
         for i in config:
+            await ctx.send(f'config for {i}: {config[i]}')
+            await ctx.send(f'config2 for {i}: {config2[i]}')
             if i not in config2 or config[i] != config2[i]:
                 data[i] = config[i]
+                await ctx.send(f'updated')
         data = json.dumps(data)
         await ctx.send(data)
 
@@ -244,7 +247,6 @@ async def saveandshow(ctx):
 
         #updates the config2 that keeps track of what's changed
         config2 = config
-        await ctx.send(json.dumps(config))
     except Exception as e:
         await ctx.send(e)
 
