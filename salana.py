@@ -17,23 +17,22 @@ try:
 except:
     pass
 
-'''config = dict()
+config = dict()
 
 for i in os.environ:
     try:
         int(i)
-        config[i] = json.loads(json.dumps(os.environ[i]))
+        config[i] = json.loads(os.environ[i])
     except Exception as e:
         print(f'An error: {e}')
 
-config2 = config
-
-print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))'''
-
+print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
+'''
 print(os.environ['config'], file=open(dir_path+'/config.json', mode='w'))
+config = json.loads(open(dir_path+'/config.json').read())'''
 
 TOKEN = os.environ['TOKEN']
-config = json.loads(open(dir_path+'/config.json').read())
+config2 = config
 
 #On_ready command
 @client.event
@@ -69,11 +68,11 @@ async def updateconfig():
 
     #adds everything that's changed to the data to be readded
     global config2
-    data = '{'
+    data = dict()
     for i in config:
         if i not in config2 or config[i] != config2[i]:
-            data += f'"{i}": {json.dumps(config[i])}, '
-    data = data[:-2]+'}'
+            data[i] = config[i]
+    data = json.dumps(data)
 
     #makes the request
     headers = {"Content-Type": "application/json", "Accept": "application/vnd.heroku+json; version=3"}
@@ -164,6 +163,11 @@ async def on_guild_join(guild):
 @client.event
 async def on_guild_remove(guild):
     del config[str(guild.id)]
+    data = {str(guild.id): None}
+    headers = {"Content-Type": "application/json", "Accept": "application/vnd.heroku+json; version=3"}
+    auth = (os.environ['usern'], os.environ['apitoken'])
+    url = 'https://api.heroku.com/apps/salana/config-vars'
+    requests.patch(url, data=data, headers=headers, auth=auth)
 
 @client.command()
 @commands.is_owner()
