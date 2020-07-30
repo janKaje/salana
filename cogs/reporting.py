@@ -20,9 +20,10 @@ class reporting(commands.Cog, name='REPORTING'):
         self.client = client
 
     async def ifreporting(self, ctx):
-        if ctx.guild is None:
+        try:
+            return config[str(ctx.guild.id)]['reporting'] is not None
+        except:
             return False
-        return config[str(ctx.guild.id)]['reporting'] is not None
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):

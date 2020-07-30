@@ -37,7 +37,6 @@ TOKEN = os.environ['TOKEN']
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game('type ,help for help'))
-    await client.get_user(474349369274007552).send(f'Ready on {dt.utcnow()}')
 
 #function to handle updating of config
 async def updateconfig():
@@ -133,11 +132,15 @@ async def on_guild_join(guild):
     config[str(guild.id)] = {'hsu': 'nobody', 'hsv': -1, 'tp': None, 'hardcore': None, 'welcome': None, 'questions': None, 'reporting': None, 'logging': None}
     
     #sends first message and asks if it should use pa mu or tp
-    channel = guild.text_channels[0]
     embed = discord.Embed(title='Hello!', description="I'm salana, a discord bot developed to add toki pona or pa mu features to your server. To begin, select whether this guild is\n1️⃣ a toki pona server, or\n2️⃣ a pa mu server.\nThis is irreversible, so please choose wisely. If you enter the wrong one, kick the bot and invite it again.", color=discord.Color.blue())
-    msg = await channel.send(embed=embed)
-    await msg.add_reaction('1️⃣')
-    await msg.add_reaction('2️⃣')
+    for channel in guild.text_channels:
+        try:
+            msg = await channel.send(embed=embed)
+            await msg.add_reaction('1️⃣')
+            await msg.add_reaction('2️⃣')
+            break
+        except:
+            await msg.delete
 
     #all this is to see the reaction and parse it
     def check(reaction, user):
@@ -148,12 +151,14 @@ async def on_guild_join(guild):
     
     if str(reaction.emoji) == '1️⃣':
         config[str(guild.id)]['tp'] = {'udspc': dict(), 'tasochannelids': [], 'spchannel': None}
-        await channel.send("Congrats! You can now use all of the base toki pona features. I have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`. To set channels in which I will try to only speak in toki pona, use the command `,settaso` in those channels.")
+        await channel.send("Congrats! Give me a few seconds to save the data. Once I'm done, you'll be able to use all of the base toki pona features.\n\nI have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`. To set channels in which I will try to only speak in toki pona, use the command `,settaso` in those channels.")
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
                 client.reload_extension(f"cogs.{filename[:-3]}")
     elif str(reaction.emoji) == '2️⃣':
-        await channel.send("Congrats! You can now use all of the pa mu features. I have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`.")
+        await channel.send("Congrats! Give me a few seconds to save the data. Once I'm done, you'll be able to use all of the pa mu features.\n\nI have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`.")
+    
+    await updateconfig()
 
 @client.event
 async def on_guild_remove(guild):
