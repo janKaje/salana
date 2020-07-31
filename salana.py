@@ -27,9 +27,6 @@ for i in os.environ:
         pass
 
 print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
-'''
-print(os.environ['config'], file=open(dir_path+'/config.json', mode='w'))
-config = json.loads(open(dir_path+'/config.json').read())'''
 
 TOKEN = os.environ['TOKEN']
 
@@ -132,15 +129,24 @@ async def on_guild_join(guild):
     config[str(guild.id)] = {'hsu': 'nobody', 'hsv': -1, 'tp': None, 'hardcore': None, 'welcome': None, 'questions': None, 'reporting': None, 'logging': None}
     
     #sends first message and asks if it should use pa mu or tp
-    embed = discord.Embed(title='Hello!', description="I'm salana, a discord bot developed to add toki pona or pa mu features to your server. To begin, select whether this guild is\n1️⃣ a toki pona server, or\n2️⃣ a pa mu server.\nThis is irreversible, so please choose wisely. If you enter the wrong one, kick the bot and invite it again.", color=discord.Color.blue())
+    embed = discord.Embed(title='Hello!', description="I'm salana, a discord bot developed to add toki pona or pa mu features to your server. To begin, select whether this guild is\n\n1️⃣ a toki pona server, or\n2️⃣ a pa mu server.\n\nThis can be changed later with the `,switchlanguage` command.", color=discord.Color.blue())
+    done = False
     for channel in guild.text_channels:
         try:
             msg = await channel.send(embed=embed)
             await msg.add_reaction('1️⃣')
             await msg.add_reaction('2️⃣')
+            done = True
             break
         except:
-            await msg.delete
+            try:
+                await msg.delete
+            except:
+                pass
+
+    if not done:
+        await guild.me.edit(nick="couldn't send setup msg", reason="If you're reading this, I tried to send a message to initialize my features. I wasn't able to, and as a result, the pa mu features are enabled by default. If you want to use the toki pona features, you need to use \",switchlanguage\"")
+        return
 
     #all this is to see the reaction and parse it
     def check(reaction, user):
@@ -152,9 +158,6 @@ async def on_guild_join(guild):
     if str(reaction.emoji) == '1️⃣':
         config[str(guild.id)]['tp'] = {'udspc': dict(), 'tasochannelids': [], 'spchannel': None}
         await channel.send("Congrats! Give me a few seconds to save the data. Once I'm done, you'll be able to use all of the base toki pona features.\n\nI have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`. To set channels in which I will try to only speak in toki pona, use the command `,settaso` in those channels.")
-        for filename in os.listdir("./cogs"):
-            if filename.endswith(".py"):
-                client.reload_extension(f"cogs.{filename[:-3]}")
     elif str(reaction.emoji) == '2️⃣':
         await channel.send("Congrats! Give me a few seconds to save the data. Once I'm done, you'll be able to use all of the pa mu features.\n\nI have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`.")
     
@@ -189,6 +192,26 @@ async def omoli(ctx):
     await updateconfig()
     await ctx.send('a! :dizzy_face::skull_crossbones:')
     quit()
+
+@client.command()
+@commands.is_owner()
+async def guildinfo(ctx, *, guild=None):
+    '''Shows which guilds salana is a part of, and which language they are. Also can display info about specific guilds.'''
+    if guild == None:
+        info = ''
+        for i in client.guilds:
+            if config[str(i.id)]['tp'] is None:
+                info += f'{i.name} - pa mu\n'
+            else:
+                info += f'{i.name} - toki pona\n'
+        await ctx.send(info)
+    else:
+        g = ''
+        for i in client.guilds:
+            if i.name == guild:
+                g = i
+                break
+        await ctx.send(config[str(g.id)])
 
 @client.command()
 @commands.is_owner()
@@ -248,7 +271,7 @@ async def saveandshow(ctx):
 @commands.guild_only()
 @commands.has_permissions(manage_guild=True)
 async def settaso(ctx):
-    '''Adds a toki pona taso channel to the bot's internal library.'''
+    '''Adds or removes a toki pona taso channel to the bot's internal library. This means that the bot will try to only speak in toki pona in these channels. Requires manage server permissions.'''
     if config[str(ctx.guild.id)]['tp'] is None:
         await ctx.send('This is only available on a toki pona server.')
         return
@@ -262,11 +285,33 @@ async def settaso(ctx):
     print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
     client.reload_extension('cogs.tokipona')
 
+@client.command()
+@commands.guild_only()
+@commands.has_permissions(manage_guild=True)
+async def switchlanguage(ctx, confirm=None):
+    '''Switches the server's language. Deletes any data regarding toki pona, including tpt channels, sitelen pona channel, default sp colors, etc. Requires manage server permissions.'''
+    if confirm == None:
+        if config[str(ctx.guild.id)]['tp'] is None:
+            await ctx.send('This will switch this server from a pa mu one to a toki pona one. Type `,switchlanguage confirm` to confirm that you want to do this.')
+        else:
+            await ctx.send('This will switch this server from a toki pona one to a pa mu one. It will delete all data regarding toki pona, including tpt channels, sitelen pona channel, default sp colors, etc. Type `,switchlanguage confirm` to confirm that you want to do this.')
+        return
+    if confirm != 'confirm':
+        await ctx.send('Please type `,switchlanguage confirm` to confirm this.')
+        return
+    if config[str(ctx.guild.id)]['tp'] is None:
+        config[str(ctx.guild.id)]['tp'] = {'udspc': dict(), 'tasochannelids': [], 'spchannel': None}
+        await ctx.send('Done! Give me a few seconds to save the data. Once I\'m done, you\'ll be able to use all of the base toki pona features.')
+    else:
+        config[str(ctx.guild.id)]['tp'] = None
+        await ctx.send('Done! Give me a few seconds to save the data. Once I\'m done, you\'ll be able to use all of the pa mu features.')
+    await updateconfig()
+
 @client.group(name='setup', invoke_without_command=True)
 @commands.guild_only()
 @commands.has_permissions(manage_guild=True)
 async def setup_command(ctx):
-    '''General command to set up or edit different modules. For more information, see `,server` or `,help <module>`.'''
+    '''General command to set up or edit different modules. For more information, see `,server` or `,help <module>`. Requires manage server permissions.'''
     await ctx.send('You entered an unknown subcommand or didn\'t enter one at all. Please try again.')
 
 @setup_command.command(name='hardcore')

@@ -29,8 +29,8 @@ class utilities(commands.Cog, name="UTILITIES"):
         """Displays the help command. `<cmd>` can be the name of a command or category, and if given, displays the long help text for that command or category. If `<cmd>` is 'commands' or not specified, lists the commands. If `<cmd>` is 'modules', lists the modules available on the current server and info about them."""
         #displays all commands if cmd is not given
         if cmd == None or cmd == 'commands':
-            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.')
-            
+            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.\n\n***setup*** - ***remove*** - ***switchlanguage***')
+
             cog_info = ''
             for i in self.client.get_cog('FUN').walk_commands():
                 if not i.hidden:
@@ -48,6 +48,7 @@ class utilities(commands.Cog, name="UTILITIES"):
             cog_info = ''
             tp = self.client.get_cog('TOKI PONA')
             if await tp.iftokipona(ctx):
+                cog_info += f'***settaso***  -  '
                 for i in tp.walk_commands():
                     if not i.hidden:
                         cog_info += f'***{i.name}***  -  '
@@ -154,11 +155,11 @@ class utilities(commands.Cog, name="UTILITIES"):
                     return
             comd = ''
             alia = 'Aliases: '
-            #iterates through cogs
+            #iterates through commands
             for c in self.client.walk_commands():
                 if c.name == cmd or cmd in c.aliases: #if search term matches command or any of the aliases
-                    title = f'{c.name}' #adds name
-                    comd = f'{c.help}' #adds help
+                    title = c.name #adds name
+                    comd = c.help #adds help
                     #adds aliases
                     for a in c.aliases:
                         alia += f'{a}, '
@@ -185,7 +186,7 @@ class utilities(commands.Cog, name="UTILITIES"):
         embed.add_field(name='Link to my Github', value=f'[Click Here](https://github.com/janKaje/salana)')
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(aliases=['serverinfo'])
     @commands.guild_only()
     async def server(self, ctx):
         """Gives information about the server, such as what modules are active and what the guild high score is."""
