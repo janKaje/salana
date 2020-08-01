@@ -20,22 +20,18 @@ class questions(commands.Cog, name='QUESTIONS'):
         self.newquestions = dict()
 
     async def ifquestions(self, ctx):
-        if ctx.guild is None:
+        try:
+            return config[str(ctx.guild.id)]['questions'] is not None
+        except:
             return False
-        return config[str(ctx.guild.id)]['questions'] is not None
 
     async def add_question(self, question, ctx):
-        q_info = {'question': question, 'authorid': ctx.author.id, 'messageid': ctx.message.id}
+        q_info = {'question': question, 'authormention': ctx.author.mention, 'messageurl': ctx.message.jump_url, 'channelmention': ctx.channel.mention, 'messageutc': ctx.message.created_at.isoformat()}
         config[str(ctx.guild.id)]['questions'].append(q_info)
         await ctx.message.add_reaction('\u2705')
         #questions asked over 24 hours ago are deleted
         for i in config[str(ctx.guild.id)]['questions']:
-            try:
-                msg = await ctx.fetch_message(i["messageid"])
-            except:
-                del i
-                continue
-            if dt.datetime.utcnow() - msg.created_at > dt.timedelta(days=1):
+            if dt.datetime.utcnow() - dt.datetime.fromisoformat(i['messageutc']) > dt.timedelta(days=1):
                 del i
         #if the list is too long, deletes the least recent one
         if len(config[str(ctx.guild.id)]['questions']) > 10:
@@ -54,25 +50,18 @@ class questions(commands.Cog, name='QUESTIONS'):
             emb = discord.Embed(color=discord.Color.dark_green(), title='List of open questions:')
             for i in config[str(ctx.guild.id)]['questions']:
                 #if question was asked more than a day ago, deletes
-                try:
-                    msg = await ctx.fetch_message(i["messageid"])
-                except:
-                    del i
-                    continue
-                if dt.datetime.utcnow() - msg.created_at > dt.timedelta(days=1):
+                if dt.datetime.utcnow() - dt.datetime.fromisoformat(i['messageutc']) > dt.timedelta(days=1):
                     del i
                     continue
                 #else, adds field
-                author = self.client.get_user(i["authorid"])
-                message = await ctx.fetch_message(i["messageid"])
                 emb.add_field(name=f'Question #{config[str(ctx.guild.id)]["questions"].index(i)+1}:',
-                              value=f'By {author.mention} in {message.channel.mention}\n'
+                              value=f'By {i["authormention"]} in {i["channelmention"]}\n'
                                     f'{i["question"]}\n'
-                                    f'[Jump URL]({message.jump_url})', inline=False)
+                                    f'[Jump URL]({i["messageurl"]})', inline=False)
             await ctx.send(embed=emb)
         elif question == 'a':
             #gets all the questions that the author asked in reverse order
-            setwithauthor = list(reversed([i for i in config[str(ctx.guild.id)]['questions'] if i["authorid"] == ctx.author.id]))
+            setwithauthor = list(reversed([i for i in config[str(ctx.guild.id)]['questions'] if i["authormention"] == ctx.author.mention]))
             if setwithauthor != []:
                 lastq = setwithauthor[0]
                 config[str(ctx.guild.id)]['questions'].remove(lastq)
@@ -88,7 +77,7 @@ class questions(commands.Cog, name='QUESTIONS'):
                 await self.add_question(question, ctx)
                 return
             #if author is not equal to the asker of specified question
-            if config[str(ctx.guild.id)]['questions'][(index-1)]["authorid"] != ctx.author.id:
+            if config[str(ctx.guild.id)]['questions'][(index-1)]["authormention"] != ctx.author.mention:
                 await ctx.send('You didn\'t send that question.')
                 return
             #else, removes
