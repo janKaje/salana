@@ -30,7 +30,11 @@ class questions(commands.Cog, name='QUESTIONS'):
         await ctx.message.add_reaction('\u2705')
         #questions asked over 24 hours ago are deleted
         for i in config[str(ctx.guild.id)]['questions']:
-            msg = await ctx.fetch_message(i["messageid"])
+            try:
+                msg = await ctx.fetch_message(i["messageid"])
+            except:
+                del i
+                continue
             if dt.datetime.utcnow() - msg.created_at > dt.timedelta(days=1):
                 del i
         #if the list is too long, deletes the least recent one
@@ -50,7 +54,11 @@ class questions(commands.Cog, name='QUESTIONS'):
             emb = discord.Embed(color=discord.Color.dark_green(), title='List of open questions:')
             for i in config[str(ctx.guild.id)]['questions']:
                 #if question was asked more than a day ago, deletes
-                msg = await ctx.fetch_message(i["messageid"])
+                try:
+                    msg = await ctx.fetch_message(i["messageid"])
+                except:
+                    del i
+                    continue
                 if dt.datetime.utcnow() - msg.created_at > dt.timedelta(days=1):
                     del i
                     continue
