@@ -207,11 +207,34 @@ async def guildinfo(ctx, *, guild=None):
         await ctx.send(info)
     else:
         g = ''
+        info = ''
         for i in client.guilds:
             if i.name == guild:
-                g = i
+                g = str(i.id)
+                info = f'__{i.name}__\n'
                 break
-        await ctx.send(config[str(g.id)])
+        else:
+            await ctx.send('Unknown guild')
+            return
+        if config[g]['tp'] is None:
+            info += 'Language is pa mu\n'
+        else:
+            info += 'Language is toki pona\n'
+            if config[g]['tp']['spchannel'] is not None:
+                info += 'sitelen pona channel is active\n'
+        if config[g]['hardcore'] is not None:
+            info += 'Hardcore is active\n'
+        if config[g]['welcome'] is not None:
+            info += f'Welcome is active, key is {config[g]["welcome"]["key"]}\n'
+            if config[g]['welcome']['second'] is not None:
+                info += 'Second welcome is active\n'
+        if config[g]['questions'] is not None:
+            info += 'Questions are active\n'
+        if config[g]['reporting'] is not None:
+            info += 'Reporting is active\n'
+        if config[g]['logging'] is not None:
+            info += 'Logging is active\n'
+        await ctx.send(info)
 
 @client.command()
 @commands.is_owner()
@@ -613,7 +636,10 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send("You don't have the right permissions to execute that command.")
     elif isinstance(error, commands.BotMissingPermissions):
-        await ctx.send('The bot is missing the required permissions to invoke this command: '+str(error.missing_perms))
+        try:
+            await ctx.send('The bot is missing the required permissions to invoke this command: '+str(error.missing_perms))
+        except commands.CommandInvokeError:
+            await ctx.author.send("An error occurred and I wasn't able to handle it normally. I can't send messages to the channel you entered that command in. Other permissions I'm missing are "+str(error.missing_perms))
     elif isinstance(error, commands.ExtensionError):
         await ctx.send(f'The extension {str(error.name)} raised an exception.')
     elif isinstance(error, commands.CommandOnCooldown):
