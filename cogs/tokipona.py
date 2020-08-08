@@ -807,8 +807,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             "ala": "\uE602",
             "akesi": "\uE601",
             "a": "\uE600",
-            "tonsi": "\uE697",
-            "$": "\uE678"
+            "tonsi": "\uE697"
         }
         self.newudspcs = dict()
 
