@@ -808,23 +808,25 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             "akesi": "\uE601",
             "a": "\uE600",
             "tonsi": "\uE697",
-            "A": "_\uE600",
-            "E": "_\uE609",
-            "I": "_\uE60C",
-            "J": "_\uE611",
-            "K": "_\uE614",
-            "L": "_\uE621",
-            "M": "_\uE630",
-            "N": "_\uE63D",
-            "O": "_\uE644",
-            "P": "_\uE648",
-            "S": "_\uE656",
-            "T": "_\uE667",
-            "U": "_\uE670",
-            "W": "_\uE672"
         }
         self.newudspcs = dict()
         self.newdefaultglyphs = dict()
+        self.tp_substitutions = {
+            'A': '_a',
+            'E': '_e',
+            'I': '_ijo',
+            'J': '_jan',
+            'K': '_ko',
+            'L': '_la',
+            'M': '_ma',
+            'N': '_ni',
+            'O': '_o',
+            'P': '_pi',
+            'S': '_sin',
+            'T': '_tan',
+            'U': '_uta',
+            'W': '_wan',
+        }
 
     async def iftokipona(self, ctx):
         try:
@@ -894,28 +896,18 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             text = re.sub(r' size=[^ ]+|size=[^ ]+ |size=[^ ]+', '', text)
         else:
             fontsize = 48
-        #search for broken
-        size_search = re.search('=broken', text)
-        if size_search:
-            broken = True
-            text = re.sub(' =broken|=broken |=broken', '', text)
-        else:
-            broken = False
         #integerifies the integers
         border = int(border)
         fontsize = abs(int(fontsize))
         #replace with single-character equivalents
-        for i in config[guildid]['tp']['defaultglyphs']:
+        if re.match('<@!?[0-9]+>', text):
+            for i in config[guildid]['tp']['defaultglyphs']:
+                if i in text:
+                    text = re.sub(f'<@!?{i}>', config[guildid]['tp']['defaultglyphs'][i], text)
+        text = await self.substitute_names(text)
+        for i in self.linja_pona_substitutions:
             if i in text:
-                text = text.replace(i, config[guildid]['tp']['defaultglyphs'][i])
-        if broken:
-            for i in self.linja_pona_substitutions:
-                if i in text:
-                    text = text.replace(i, self.linja_pona_substitutions[i])
-        else:
-            for i in sorted(self.linja_pona_substitutions, key=len, reverse=True):
-                if i in text:
-                    text = text.replace(i, self.linja_pona_substitutions[i])
+                text = text.replace(i, self.linja_pona_substitutions[i])
         return text, fg, bg, border, fontsize
 
     async def safesend(self, ctx, english, tokipona):
@@ -925,6 +917,12 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             await ctx.send(tokipona)
         else:
             await ctx.send(english)
+
+    def tp_sbstitute(self, matchobj):
+        return '[' + ''.join([self.tp_substitutions[c] for c in matchobj.group('name')]) + ']'
+
+    async def substitute_names(self, text):
+        return re.sub(r"\[(?P<name>[AEIJKLMNOPSTUW]*)\]", self.tp_sbstitute, text)
 
     @commands.command(aliases=['k', 'kpnn'])
     async def kon_pi_nimi_ni(self, ctx, *words):
@@ -957,7 +955,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
-        """Displays the given text in sitelen pona.\n\nYou can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color.\n\nThere's also an older, buggier version of the renderer that was brought back by popular demand. ¯\\_(ツ)_/¯ To use it, insert =broken into your text."""
+        """Displays the given text in sitelen pona.\n\nYou can use border=# to define border width, size=# to define font size, and fg=[color] and bg=[color] to define the text color and background color."""
         if not await self.iftokipona(ctx):
             return
         try:
@@ -1011,10 +1009,10 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         if re.search(r'[a-zA-Z1-9]', newtext):
             await ctx.send('Invalid sitelen pona.')
             return
-        config[str(ctx.guild.id)]['tp']['defaultglyphs'][ctx.author.mention] = text
+        config[str(ctx.guild.id)]['tp']['defaultglyphs'][str(ctx.author.id)] = text
         try:
             self.newdefaultglyphs[str(ctx.guild.id)] = self.newdefaultglyphs[str(ctx.guild.id)]
         except:
             self.newdefaultglyphs[str(ctx.guild.id)] = dict()
-        self.newdefaultglyphs[str(ctx.guild.id)][f'<@{ctx.author.id}>'] = text
+        self.newdefaultglyphs[str(ctx.guild.id)][str(ctx.author.id)] = text
         await ctx.send('Updated successfully.')
