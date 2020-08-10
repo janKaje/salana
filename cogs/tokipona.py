@@ -905,7 +905,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
                 if i in text:
                     text = re.sub(f'<@!?{i}>', config[guildid]['tp']['defaultglyphs'][i], text)
         text = await self.substitute_names(text)
-        for i in self.linja_pona_substitutions:
+        for i in sorted(self.linja_pona_substitutions, key=len, reverse=True):
             if i in text:
                 text = text.replace(i, self.linja_pona_substitutions[i])
         return text, fg, bg, border, fontsize
