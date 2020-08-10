@@ -5,6 +5,7 @@ import os
 import re
 from emoji import demojize
 from PIL import Image, ImageFont, ImageDraw, ImageColor
+from random import choice
 
 dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config = json.loads(open(dir_path+'/config.json').read())
@@ -812,22 +813,22 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         self.newudspcs = dict()
         self.newdefaultglyphs = dict()
         self.tp_substitutions = {
-            'A': '_a',
-            'E': '_e',
-            'I': '_ijo',
-            'J': '_jan',
-            'K': '_ko',
-            'L': '_la',
-            'M': '_ma',
-            'N': '_ni',
-            'O': '_o',
-            'P': '_pi',
-            'S': '_sin',
-            'T': '_tan',
-            'U': '_uta',
-            'W': '_wan',
+            'A' : ['_a', '_akesi', '_ala', '_alasa', '_ale', '_ali', '_anpa', '_ante', '_anu', '_awen'],
+            'E' : ['_e', '_en', '_esun'],
+            'I' : ['_ijo', '_ike', '_ilo', '_insa'],
+            'J' : ['_jaki', '_jan', '_jelo', '_jo'],
+            'K' : ['_kala', '_kalama', '_kama', '_kasi', '_ken', '_kepeken', '_kili', '_kin', '_kiwen', '_ko', '_kon', '_kule', '_kulupu', '_kute'],
+            'L' : ['_la', '_lape', '_laso', '_lawa', '_len', '_lete', '_li', '_lili', '_linja', '_lipu', '_loje', '_lon', '_luka', '_lukin', '_lupa'],
+            'M' : ['_ma', '_mama', '_mani', '_meli', '_mi', '_mije', '_moku', '_moli', '_monsi', '_mu', '_mun', '_musi', '_mute'],
+            'N' : ['_namako', '_nanpa', '_nasa', '_nasin', '_nena', '_ni', '_nimi', '_noka'],
+            'O' : ['_o', '_oko', '_olin', '_ona', '_open'],
+            'P' : ['_pakala', '_pali', '_palisa', '_pan', '_pana', '_pi', '_pilin', '_pimeja', '_pini', '_pipi', '_poka', '_poki', '_pona', '_pu'],
+            'S' : ['_sama', '_seli', '_selo', '_seme', '_sewi', '_sijelo', '_sike', '_sin', '_sina', '_sinpin', '_sitelen', '_sona', '_soweli', '_suli', '_suno', '_supa', '_suwi'],
+            'T' : ['_tan', '_taso', '_tawa', '_telo', '_tenpo', '_toki', '_tomo'],
+            'U' : ['_unpa', '_uta', '_utala'],
+            'W' : ['_walo', '_wan', '_waso', '_wawa', '_weka', '_wile']
         }
-
+        
     async def iftokipona(self, ctx):
         try:
             return config[str(ctx.guild.id)]['tp'] is not None
@@ -900,7 +901,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         border = int(border)
         fontsize = abs(int(fontsize))
         #replace with single-character equivalents
-        if re.match('<@!?[0-9]+>', text):
+        if re.search(r'<@!?\d+>', text):
             for i in config[guildid]['tp']['defaultglyphs']:
                 if i in text:
                     text = re.sub(f'<@!?{i}>', config[guildid]['tp']['defaultglyphs'][i], text)
@@ -919,7 +920,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             await ctx.send(english)
 
     def tp_sbstitute(self, matchobj):
-        return '[' + ''.join([self.tp_substitutions[c] for c in matchobj.group('name')]) + ']'
+        return '[' + ''.join([choice(self.tp_substitutions[c]) for c in matchobj.group('name')]) + ']'
 
     async def substitute_names(self, text):
         return re.sub(r"\[(?P<name>[AEIJKLMNOPSTUW]*)\]", self.tp_sbstitute, text)

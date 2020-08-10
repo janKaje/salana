@@ -57,7 +57,7 @@ class spchannel(commands.Cog, name='SITELEN PONA CHANNEL'):
                 text, fg, bg, border, fontsize = await tokipona.sitelen_replacements(text, msg.author.id, msg.guild.id)
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
-                if re.search(r'[a-zA-Z1-9]', text):
+                if re.search(r'[a-zA-Z]', text):
                     await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again. Here is the message, in case it was long:')
                     await msg.author.send(msg.content)
                     return
