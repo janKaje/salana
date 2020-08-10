@@ -1007,8 +1007,8 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         '''Sets default sitelen pona text to replace when people mention you in sitelen pona.'''
         if not await self.iftokipona(ctx):
             return
-        text, _, _, _, _ = await self.sitelen_replacements(text, ctx.author.id, ctx.guild.id)
-        if re.search(r'[a-zA-Z1-9]', text):
+        newtext, _, _, _, _ = await self.sitelen_replacements(text, ctx.author.id, ctx.guild.id)
+        if re.search(r'[a-zA-Z1-9]', newtext):
             await ctx.send('Invalid sitelen pona.')
             return
         config[str(ctx.guild.id)]['tp']['defaultglyphs'][ctx.author.mention] = text
@@ -1016,5 +1016,5 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             self.newdefaultglyphs[str(ctx.guild.id)] = self.newdefaultglyphs[str(ctx.guild.id)]
         except:
             self.newdefaultglyphs[str(ctx.guild.id)] = dict()
-        self.newdefaultglyphs[str(ctx.guild.id)][ctx.author.mention] = text
+        self.newdefaultglyphs[str(ctx.guild.id)][ctx.author.mention.replace('!', '')] = text
         await ctx.send('Updated successfully.')
