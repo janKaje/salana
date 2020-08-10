@@ -1016,5 +1016,5 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             self.newdefaultglyphs[str(ctx.guild.id)] = self.newdefaultglyphs[str(ctx.guild.id)]
         except:
             self.newdefaultglyphs[str(ctx.guild.id)] = dict()
-        self.newdefaultglyphs[str(ctx.guild.id)][ctx.author.mention.replace('!', '')] = text
+        self.newdefaultglyphs[str(ctx.guild.id)][f'<@{ctx.author.id}>'] = text
         await ctx.send('Updated successfully.')
