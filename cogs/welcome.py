@@ -13,11 +13,11 @@ def setup(client):
 class welcome(commands.Cog, name='WELCOME'):
 
     '''A module that regulates member entry. A certain message will be sent by the bot to a specific channel. It should be the only message in the channel. Then, if someone sends a message to that channel that is equal to a certain key and they do not have the join role, they are given the join role and all their previous messages in that channel are deleted.
-       To begin setup, use `,setup welcome`. To remove this feature, use `,remove welcome`.
+       \nTo begin setup, use `,setup welcome`. To remove this feature, use `,remove welcome`.
 
-       There is also a separate module inside this one that will welcome these new members into a certain channel with a certain message.
-       To set this up, use `,setup welcome2`. You must have already set up the main module.
-       To remove this feature, use `,remove welcome2`.'''
+       \nThere is also a separate module inside this one that will welcome these new members into a certain channel with a certain message.
+       \nTo set this up, use `,setup welcome2`. You must have already set up the main module.
+       \nTo remove this feature, use `,remove welcome2`.'''
 
     def __init__(self, client):
         self.client = client

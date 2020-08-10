@@ -12,9 +12,8 @@ def setup(client):
 
 class reporting(commands.Cog, name='REPORTING'):
 
-    '''A module for the report feature. This will detect if a message has a certain number of the triangular flag emoji in its reactions,
-       and will automatically send a copy of that message to a certain channel. It's designed to assist with moderation. 
-       To begin setup, use `,setup reporting`. To remove this feature, use `,remove reporting`.'''
+    '''A module for the report feature. This will detect if a message has a certain number of the triangular flag emoji in its reactions, and will automatically send a copy of that message to a certain channel. It's designed to assist with moderation.
+       \nTo begin setup, use `,setup reporting`. To remove this feature, use `,remove reporting`.'''
 
     def __init__(self, client):
         self.client = client

@@ -12,8 +12,8 @@ def setup(client):
 
 class questions(commands.Cog, name='QUESTIONS'):
 
-    '''A module for keeping track of questions. 
-       To begin setup, use `,setup questions`. To remove this feature, use `,remove questions`.'''
+    '''A module for keeping track of questions.
+       \nTo begin setup, use `,setup questions`. To remove this feature, use `,remove questions`.'''
 
     def __init__(self, client):
         self.client = client
@@ -32,7 +32,7 @@ class questions(commands.Cog, name='QUESTIONS'):
         #questions asked over 24 hours ago are deleted
         for i in config[str(ctx.guild.id)]['questions']:
             if dt.datetime.utcnow() - dt.datetime.fromisoformat(i['messageutc']) > dt.timedelta(days=1):
-                del i
+                config[str(ctx.guild.id)]['questions'].remove(i)
         #if the list is too long, deletes the least recent one
         if len(config[str(ctx.guild.id)]['questions']) > 10:
             del config[str(ctx.guild.id)]['questions'][0]
@@ -51,7 +51,7 @@ class questions(commands.Cog, name='QUESTIONS'):
             for i in config[str(ctx.guild.id)]['questions']:
                 #if question was asked more than a day ago, deletes
                 if dt.datetime.utcnow() - dt.datetime.fromisoformat(i['messageutc']) > dt.timedelta(days=1):
-                    del i
+                    config[str(ctx.guild.id)]['questions'].remove(i)
                     continue
                 #else, adds field
                 emb.add_field(name=f'Question #{config[str(ctx.guild.id)]["questions"].index(i)+1}:',

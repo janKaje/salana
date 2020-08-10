@@ -13,7 +13,7 @@ def setup(client):
 class logging(commands.Cog, name='LOGGING'):
 
     '''A module for join/leave logging.
-       To begin setup, use `,setup logging`. To remove this feature, use `,remove logging`.'''
+       \nTo begin setup, use `,setup logging`. To remove this feature, use `,remove logging`.'''
 
     def __init__(self, client):
         self.client = client

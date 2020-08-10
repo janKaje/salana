@@ -277,8 +277,8 @@ class utilities(commands.Cog, name="UTILITIES"):
                 for i in words:
                     if i in tokipona.tpt_dict:
                         await ctx.send(tokipona.tpt_dict[i])
-                    elif i in tokipona.tpt_dict:
-                        await ctx.send(f'toki pona la mi sona ala e kon pi nimi ni. ni li kon ona pi toki Inli:\n||{tokipona.tpt_dict[i]}||')
+                    elif i in tokipona.tp_dict:
+                        await ctx.send(f'toki pona la mi sona ala e kon pi nimi ni. ni li kon ona pi toki Inli:\n||{tokipona.tp_dict[i]}||')
                     else:
                         await ctx.send(f'mi sona ala e nimi "{i}".')
                 return

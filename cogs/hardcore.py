@@ -13,7 +13,7 @@ def setup(client):
 class hardcore(commands.Cog, name='HARDCORE'):
 
     '''A module for the hardcore feature. This will detect if people with a certain role in certain channels are not speaking in toki pona or pa mu.
-       To begin setup, please use `,setup hardcore`. To remove this feature, use `,remove hardcore`.'''
+       \nTo begin setup, please use `,setup hardcore`. To remove this feature, use `,remove hardcore`.'''
 
     def __init__(self, client):
         self.client = client

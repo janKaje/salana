@@ -14,7 +14,7 @@ def setup(client):
 class spchannel(commands.Cog, name='SITELEN PONA CHANNEL'):
 
     '''A module to implement a sitelen pona only channel. This will take a channel and automatically convert everything that is sent to it to sitelen pona. Only works in toki pona servers.
-       To begin setup, use `,setup spchannel`. To remove this feature, use `,remove spchannel`.'''
+       \nTo begin setup, use `,setup spchannel`. To remove this feature, use `,remove spchannel`.'''
 
     def __init__(self, client):
         self.client = client
@@ -29,13 +29,10 @@ class spchannel(commands.Cog, name='SITELEN PONA CHANNEL'):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if not await self.ifspchannel(msg.channel):
+        if not await self.ifspchannel(msg):
             return
         if msg.channel.id == config[str(msg.guild.id)]['tp']['spchannel']['channelid']:
             if msg.webhook_id == config[str(msg.guild.id)]['tp']['spchannel']['webhook_id']:
-                return
-            elif msg.webhook_id:
-                await msg.delete()
                 return
             elif msg.author.bot:
                 await msg.delete()
@@ -81,16 +78,18 @@ class spchannel(commands.Cog, name='SITELEN PONA CHANNEL'):
                 webhook.send(files=files, avatar_url=avatar, username=username)
                 if text != '':
                     os.remove(str(msg.author.id)+'.png') #deletes image
-                try:
-                    open(str(msg.author.id)+'.png', 'r')
-                    await self.client.get_user(474349369274007552).send('file did not delete')
-                except:
-                    pass
-                return
             except Exception as e:
                 try:
                     await msg.author.send(f'There was an error with the message I tried to convert: {e}')
-                    return
                 except Exception as f:
                     await self.client.get_user(474349369274007552).send(f'There was an error sending an error to the user: {e}\n{f}\nMessage: {msg.content}\nAuthor: {str(msg.author)}')
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        if not await self.ifspchannel(reaction.message):
+            return
+        if str(reaction.emoji) == '🗑️':
+            for i in reaction.message.attachments:
+                if i.filename.startswith(str(user.id)):
+                    await reaction.message.delete()
                     return

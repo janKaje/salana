@@ -807,9 +807,24 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             "ala": "\uE602",
             "akesi": "\uE601",
             "a": "\uE600",
-            "tonsi": "\uE697"
+            "tonsi": "\uE697",
+            "A": "_\uE600",
+            "E": "_\uE609",
+            "I": "_\uE60C",
+            "J": "_\uE611",
+            "K": "_\uE614",
+            "L": "_\uE621",
+            "M": "_\uE630",
+            "N": "_\uE63D",
+            "O": "_\uE644",
+            "P": "_\uE648",
+            "S": "_\uE656",
+            "T": "_\uE667",
+            "U": "_\uE670",
+            "W": "_\uE672"
         }
         self.newudspcs = dict()
+        self.newdefaultglyphs = dict()
 
     async def iftokipona(self, ctx):
         try:
@@ -890,14 +905,17 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         border = int(border)
         fontsize = abs(int(fontsize))
         #replace with single-character equivalents
+        for i in config[guildid]['tp']['defaultglyphs']:
+            if i in text:
+                text = text.replace(i, config[guildid]['tp']['defaultglyphs'][i])
         if broken:
             for i in self.linja_pona_substitutions:
                 if i in text:
-                    text = re.sub(i, self.linja_pona_substitutions[i], text)
+                    text = text.replace(i, self.linja_pona_substitutions[i])
         else:
             for i in sorted(self.linja_pona_substitutions, key=len, reverse=True):
                 if i in text:
-                    text = re.sub(i, self.linja_pona_substitutions[i], text)
+                    text = text.replace(i, self.linja_pona_substitutions[i])
         return text, fg, bg, border, fontsize
 
     async def safesend(self, ctx, english, tokipona):
@@ -932,7 +950,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         '''Checks if the input text is toki pona or not.'''
         if not await self.iftokipona(ctx):
             return
-        if self.tp_check(text):
+        if await self.tp_check(text):
             await self.safesend(ctx, 'toki pona confirmed. :sleepy:', 'ni li toki pona. pona a!')
         else:
             await self.safesend(ctx, ":rotating_light: Not toki pona! :rotating_light:", 'ni li toki pona ala a! o weka e ona :angry:')
@@ -982,4 +1000,17 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         except:
             self.newudspcs[str(ctx.guild.id)] = dict()
         self.newudspcs[str(ctx.guild.id)][str(ctx.author.id)] = {'fg': fg, 'bg': bg}
-        await ctx.send('updated successfully.')
+        await ctx.send('Updated successfully.')
+
+    @commands.command(aliases=['glyphs', 'g'])
+    async def myglyphs(self, ctx, *, text):
+        '''Sets default sitelen pona text to replace when people mention you in sitelen pona.'''
+        if not await self.iftokipona(ctx):
+            return
+        text, _, _, _, _ = await self.sitelen_replacements(text, ctx.author.id, ctx.guild.id)
+        if re.search(r'[a-zA-Z1-9]', text):
+            await ctx.send('Invalid sitelen pona.')
+            return
+        config[str(ctx.guild.id)]['tp']['defaultglyphs'][ctx.author.mention] = text
+        self.newdefaultglyphs[str(ctx.guild.id)][ctx.author.mention] = text
+        await ctx.send('Updated successfully.')

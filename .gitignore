@@ -3,6 +3,5 @@ cogs/__pycache__
 token.txt
 outline.txt
 config.json
-config copy.json
 test.py
 *.png

@@ -89,7 +89,7 @@ class pamu(commands.Cog, name='PA MU'):
         """Checks if the input text is valid in pa mu or not. It does so by first removing anything behind spoiler bars and any whitespace characters, then removing emojis, and then it runs the text through all possible syllables in pa mu."""
         if not await self.ifpamu(ctx):
             return
-        if self.pamu_check(text):
+        if await self.pamu_check(text):
             await ctx.send("pa mu confirmed. :sleepy:")
         else:
             await ctx.send(":rotating_light: Not pa mu! :rotating_light:")

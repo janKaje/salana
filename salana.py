@@ -26,6 +26,11 @@ for i in os.environ:
     except:
         pass
 
+for i in config:
+    if isinstance(i, dict):
+        if config[i]['tp'] is not None:
+            config[i]['tp']['defaultglyphs'] = dict()
+
 print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
 TOKEN = os.environ['TOKEN']
@@ -43,6 +48,7 @@ async def updateconfig():
     fun = client.get_cog('FUN')
     newquestions = questions.newquestions
     newudspcs = tokipona.newudspcs
+    newglyphs = tokipona.newdefaultglyphs
     newguildhighscores = fun.newguildhighscores
     newpersonalhighscores = fun.newpersonalhighscores
 
@@ -57,6 +63,9 @@ async def updateconfig():
             if i in newudspcs:
                 for j in newudspcs[i]:
                     config[i]['tp']['udspc'][j] = newudspcs[i][j]
+            if i in newglyphs:
+                for j in newglyphs[i]:
+                    config[i]['tp']['defaultglyphs'][j] = newglyphs[i][j]
     for i in newpersonalhighscores:
         config[i] = newpersonalhighscores[i]
     print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
@@ -126,25 +135,22 @@ for filename in os.listdir("./cogs"):
 @client.event
 async def on_guild_join(guild):
     #sets basic guild variables
-    config[str(guild.id)] = {'hsu': 'nobody', 'hsv': -1, 'tp': None, 'hardcore': None, 'welcome': None, 'questions': None, 'reporting': None, 'logging': None}
+    config[str(guild.id)] = {'hsu': 'nobody', 'hsv': -1, 'tp': {'udspc': dict(), 'tasochannelids': [], 'spchannel': None, 'defaultglyphs': dict()}, 'hardcore': None, 'welcome': None, 'questions': None, 'reporting': None, 'logging': None}
     
     #sends first message and asks if it should use pa mu or tp
     embed = discord.Embed(title='Hello!', description="I'm salana, a discord bot developed to add toki pona or pa mu features to your server. To begin, select whether this guild is\n\n1️⃣ a toki pona server, or\n2️⃣ a pa mu server.\n\nThis can be changed later with the `,switchlanguage` command.", color=discord.Color.blue())
-    done = False
     for channel in guild.text_channels:
         try:
             msg = await channel.send(embed=embed)
             await msg.add_reaction('1️⃣')
             await msg.add_reaction('2️⃣')
-            done = True
             break
         except:
             try:
                 await msg.delete
             except:
                 pass
-
-    if not done:
+    else:
         await guild.me.edit(nick="couldn't send setup msg", reason="If you're reading this, I tried to send a message to initialize my features. I wasn't able to, and as a result, the pa mu features are enabled by default. If you want to use the toki pona features, you need to use \",switchlanguage\"")
         return
 
@@ -156,9 +162,9 @@ async def on_guild_join(guild):
     reaction, _ = await client.wait_for('reaction_add', check=check)
     
     if str(reaction.emoji) == '1️⃣':
-        config[str(guild.id)]['tp'] = {'udspc': dict(), 'tasochannelids': [], 'spchannel': None}
         await channel.send("Congrats! Give me a few seconds to save the data. Once I'm done, you'll be able to use all of the base toki pona features.\n\nI have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`. To set channels in which I will try to only speak in toki pona, use the command `,settaso` in those channels.")
     elif str(reaction.emoji) == '2️⃣':
+        config[str(guild.id)]['tp'] = None
         await channel.send("Congrats! Give me a few seconds to save the data. Once I'm done, you'll be able to use all of the pa mu features.\n\nI have many more modules than this. If you'd like to see them, use `,server`. To see more information about a module, or to learn how to enable it, use `,help <module>`.")
     
     await updateconfig()
