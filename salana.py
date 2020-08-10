@@ -26,11 +26,6 @@ for i in os.environ:
     except:
         pass
 
-for i in config:
-    if isinstance(config[i], dict):
-        if config[i]['tp'] is not None:
-            config[i]['tp']['defaultglyphs'] = dict()
-
 print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
 TOKEN = os.environ['TOKEN']
