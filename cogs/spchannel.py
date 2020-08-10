@@ -13,7 +13,7 @@ def setup(client):
 
 class spchannel(commands.Cog, name='SITELEN PONA CHANNEL'):
 
-    '''A module to implement a sitelen pona only channel. This will take a channel and automatically convert everything that is sent to it to sitelen pona. Only works in toki pona servers.
+    '''A module to implement a sitelen pona only channel. This will take a channel and automatically convert everything that is sent to it to sitelen pona. Messages can be deleted by the author by reacting to it with 🗑️. Only works in toki pona servers.
        \nTo begin setup, use `,setup spchannel`. To remove this feature, use `,remove spchannel`.'''
 
     def __init__(self, client):

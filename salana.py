@@ -27,7 +27,7 @@ for i in os.environ:
         pass
 
 for i in config:
-    if isinstance(i, dict):
+    if isinstance(config[i], dict):
         if config[i]['tp'] is not None:
             config[i]['tp']['defaultglyphs'] = dict()
 
