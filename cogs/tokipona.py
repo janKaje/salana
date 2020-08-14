@@ -789,8 +789,8 @@ class tokipona(commands.Cog, name='TOKI PONA'):
                   if baseword in self.linja_pona_substitutions \
                   and all(m in self.linja_pona_substitutions for m in modifiers):
                   
-                        if 'base' in linja_pona_substitutions[baseword] \
-                        and all('sup' in linja_pona_substitutions[m] for m in modifiers):
+                        if 'base' in self.linja_pona_substitutions[baseword] \
+                        and all('sup' in self.linja_pona_substitutions[m] for m in modifiers):
                         
                               newphrase += self.linja_pona_substitutions[baseword]['base']
                               for m in modifiers:
