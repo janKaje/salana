@@ -29,7 +29,7 @@ class utilities(commands.Cog, name="UTILITIES"):
         """Displays the help command. `<cmd>` can be the name of a command or category, and if given, displays the long help text for that command or category. If `<cmd>` is 'commands' or not specified, lists the commands. If `<cmd>` is 'modules', lists the modules available on the current server and info about them."""
         #displays all commands if cmd is not given
         if cmd == None or cmd == 'commands':
-            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.\n\n***setup*** - ***remove*** - ***switchlanguage***')
+            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.\n\n***setup***  -  ***remove***  -  ***switchlanguage***')
 
             cog_info = ''
             for i in self.client.get_cog('FUN').walk_commands():
@@ -73,13 +73,9 @@ class utilities(commands.Cog, name="UTILITIES"):
                 cog_info = re.sub(r'  \-  \Z', '', cog_info)
                 command_msg.add_field(name = f'__HARDCORE__', value = cog_info, inline = False)
 
-            cog_info = ''
             welcome = self.client.get_cog('WELCOME')
-            if await welcome.ifwelcome(ctx):
-                for i in welcome.walk_commands():
-                    if not i.hidden:
-                        cog_info += f'***{i.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info)
+            if await welcome.ifwelcome(ctx) and (ctx.author.guild_permissions.manage_roles or ctx.author.guild.permissions.manage_messages):
+                cog_info = '***reset***  -  ***blacklist***  -  ***unblacklist***  -  ***blacklistshow***'
                 command_msg.add_field(name = f'__WELCOME__', value = cog_info, inline = False)
 
             cog_info = ''
@@ -100,7 +96,7 @@ class utilities(commands.Cog, name="UTILITIES"):
             spchannel = self.client.get_cog('SITELEN PONA CHANNEL')
             if await spchannel.ifspchannel(ctx):
                 channelmention = self.client.get_channel(config[str(ctx.guild.id)]['tp']['spchannel']['channelid']).mention
-                extra_msg.add_field(name='__SITELEN PONA CHANNEL__', value=f'Any message you send in {channelmention} will be turned into sitelen pona. For those of you who use Pluralkit, you can insert `u=` into your message and whatever comes after will be the display name used when the bot replaces your message.')
+                extra_msg.add_field(name='__SITELEN PONA CHANNEL__', value=f'Any message you send in {channelmention} will be turned into sitelen pona. For those of you who use Pluralkit, you can insert `u=` into your message and whatever comes after will be the display name used when the bot replaces your message. If you\'d like to delete your message, react to it with 🗑️.')
 
             hardcore = self.client.get_cog('HARDCORE')
             if await hardcore.ifhardcore(ctx):

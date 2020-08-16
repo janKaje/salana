@@ -55,6 +55,9 @@ class welcome(commands.Cog, name='WELCOME'):
         if message.channel.id == config[str(message.guild.id)]['welcome']['channel'] and not message.author.bot:
             #if the message they send is the key, deletes their message(s) and gives them the entry role.
             if re.sub(r'\W', '', message.content).lower() == config[str(message.guild.id)]['welcome']['key'].lower():
+                if message.author.id in config[str(message.guild.id)]['welcome']['blacklist']:
+                    await message.channel.send('You have been blacklisted from the automatic welcome feature. You need to talk to the moderators to gain entry.')
+                    return
                 join_role = message.guild.get_role(config[str(message.guild.id)]['welcome']['role'])
                 if join_role not in message.author.roles:
                     await message.author.add_roles(join_role)

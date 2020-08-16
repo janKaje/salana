@@ -26,6 +26,10 @@ for i in os.environ:
     except:
         pass
 
+for entry in config:
+    if isinstance(config[entry], dict) and config[entry]['welcome'] is not None:
+        config[entry]['welcome']['blacklist'] = []
+
 print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
 TOKEN = os.environ['TOKEN']
@@ -172,6 +176,41 @@ async def on_guild_remove(guild):
     auth = (os.environ['usern'], os.environ['apitoken'])
     url = 'https://api.heroku.com/apps/salana/config-vars'
     requests.patch(url, data=data, headers=headers, auth=auth)
+
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def blacklist(ctx, userid:int):
+    '''Blacklists a user from automatically joining in the welcome channel. Requires manage roles permissions.'''
+    if not await client.get_cog('WELCOME').ifwelcome(ctx):
+        return
+    if userid in config[str(ctx.guild.id)]['welcome']['blacklist']:
+        await ctx.send('Already blacklisted.')
+        return
+    config[str(ctx.guild.id)]['welcome']['blacklist'].append(userid)
+    await ctx.send('Successfully blacklisted.')
+
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def unblacklist(ctx, userid:int):
+    '''Removes a blacklist entry for the welcome channel. Requires manage roles permissions.'''
+    if not await client.get_cog('WELCOME').ifwelcome(ctx):
+        return
+    if userid not in config[str(ctx.guild.id)]['welcome']['blacklist']:
+        await ctx.send('Not in blacklist.')
+        return
+    config[str(ctx.guild.id)]['welcome']['blacklist'].remove(userid)
+    await ctx.send('Removed from blacklist.')
+
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def blacklistshow(ctx):
+    '''Shows blacklisted users. Requires manage roles permissions.'''
+    if not await client.get_cog('WELCOME').ifwelcome(ctx):
+        return
+    emb = discord.Embed(title='Blacklisted users', color=discord.Color.blue())
+    for user in config[str(ctx.guild.id)]['welcome']['blacklist']:
+        emb.add_field(name=str(user), value=f'<@{user}>')
+    await ctx.send(embed=emb)
 
 @client.command()
 @commands.is_owner()
