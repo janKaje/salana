@@ -26,10 +26,6 @@ for i in os.environ:
     except:
         pass
 
-for entry in config:
-    if isinstance(config[entry], dict) and config[entry]['welcome'] is not None:
-        config[entry]['welcome']['blacklist'] = []
-
 print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
 
 TOKEN = os.environ['TOKEN']
@@ -206,6 +202,9 @@ async def unblacklist(ctx, userid:int):
 async def blacklistshow(ctx):
     '''Shows blacklisted users. Requires manage roles permissions.'''
     if not await client.get_cog('WELCOME').ifwelcome(ctx):
+        return
+    if len(config[str(ctx.guild.id)]['welcome']['blacklist']) == 0:
+        await ctx.send('No blacklisted users.')
         return
     emb = discord.Embed(title='Blacklisted users', color=discord.Color.blue())
     for user in config[str(ctx.guild.id)]['welcome']['blacklist']:
