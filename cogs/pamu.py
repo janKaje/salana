@@ -84,7 +84,7 @@ class pamu(commands.Cog, name='PA MU'):
         else:
             return False
 
-    @commands.command(aliases=['check_for_pamu', 'cfpm', 'cfp', 'cpm'])
+    @commands.command(aliases=['check_for_pamu', 'cfpm'])
     async def pamucheck(self, ctx, *, text):
         """Checks if the input text is valid in pa mu or not. It does so by first removing anything behind spoiler bars and any whitespace characters, then removing emojis, and then it runs the text through all possible syllables in pa mu."""
         if not await self.ifpamu(ctx):

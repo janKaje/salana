@@ -553,118 +553,118 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             "pake": {"glyph": u"\uE696", "mark": u"\uF227"},
             "oko": {"glyph": u"\uE695", "mark": u"\uF226", "sup": u"\uE728"},
             "namako": {"glyph": u"\uE694", "mark": u"\uF225"},
-            "monsuta": {"glyph": u"\uE693", "mark": u"\uF224"},
+            "monsuta": {"glyph": u"\uE693", "mark": u"\uF224", "mini": u"\uF004"},
             "leko": {"glyph": u"\uE692", "mark": u"\uF223"},
-            "kipisi": {"glyph": u"\uE691", "mark": u"\uF222"},
+            "kipisi": {"glyph": u"\uE691", "mark": u"\uF222", "sup": u"\uE719"},
             "kin": {"glyph": u"\uE690", "mark": u"\uF221"},
             "wile": {"glyph": u"\uE677", "mark": u"\uF220"},
             "weka": {"glyph": u"\uE676", "mark": u"\uF219"},
             "wawa": {"glyph": u"\uE675", "mark": u"\uF218"},
             "waso": {"glyph": u"\uE674", "mark": u"\uF217"},
             "wan": {"glyph": u"\uE673", "mark": u"\uF216"},
-            "walo": {"glyph": u"\uE672", "mark": u"\uF215"},
-            "utala": {"glyph": u"\uE671", "mark": u"\uF214"},
+            "walo": {"glyph": u"\uE672", "mark": u"\uF215", "mini": u"\uE825"},
+            "utala": {"glyph": u"\uE671", "mark": u"\uF214", "mini": u"\uE930"},
             "uta": {"glyph": u"\uE670", "mark": u"\uF213"},
-            "unpa": {"glyph": u"\uE66F", "mark": u"\uF212"},
+            "unpa": {"glyph": u"\uE66F", "mark": u"\uF212", "mini": u"\uE872"},
             "tu": {"glyph": u"\uE66E", "mark": u"\uF211"},
             "tomo": {"glyph": u"\uE66D", "mark": u"\uF210", "sup": u"\uF022"},
-            "toki": {"glyph": u"\uE66C", "mark": u"\uF209", "sup": u"\uE725"},
-            "tenpo": {"glyph": u"\uE66B", "mark": u"\uF208", "base": u"\uF024"},
-            "telo": {"glyph": u"\uE66A", "mark": u"\uF207", "base": u"\uE955"},
-            "tawa": {"glyph": u"\uE669", "mark": u"\uF206", "base": u"\uF026"},
+            "toki": {"glyph": u"\uE66C", "mark": u"\uF209", "sup": u"\uE725", "mini": u"\uF014"},
+            "tenpo": {"glyph": u"\uE66B", "mark": u"\uF208", "base": u"\uF024", "mini": u"\uE925"},
+            "telo": {"glyph": u"\uE66A", "mark": u"\uF207", "outside": u"\uE955"},
+            "tawa": {"glyph": u"\uE669", "mark": u"\uF206", "base": u"\uF026", "mini": u"\uE915"},
             "taso": {"glyph": u"\uE668", "mark": u"\uF205"},
             "tan": {"glyph": u"\uE667", "mark": u"\uF204"},
-            "suwi": {"glyph": u"\uE666", "mark": u"\uF203"},
+            "suwi": {"glyph": u"\uE666", "mark": u"\uF203", "base": u"\uE813"},
             "supa": {"glyph": u"\uE665", "mark": u"\uF202", "base": u"\uE945"},
-            "suno": {"glyph": u"\uE664", "mark": u"\uF201", "sup": u"\uE724"},
+            "suno": {"glyph": u"\uE664", "mark": u"\uF201", "sup": u"\uE724", "mini": u"\uF038"},
             "suli": {"glyph": u"\uE663", "mark": u"\uF200"},
 	        "su": {"glyph": u"\uE698", "mark": u"\uF12A"},
             "soweli": {"glyph": u"\uE662", "mark": u"\uF199", "sup": u"\uE944"},
-            "sona": {"glyph": u"\uE661", "mark": u"\uF198"},
-            "sitelen": {"glyph": u"\uE660", "mark": u"\uF197", "base": u"\uF010"},
+            "sona": {"glyph": u"\uE661", "mark": u"\uF198", "mini": u"\uE961"},
+            "sitelen": {"glyph": u"\uE660", "mark": u"\uF197", "outside": u"\uF010", "mini": u"\uF013"},
             "sinpin": {"glyph": u"\uE65F", "mark": u"\uF196", "sup": u"\uE94A"},
             "sina": {"glyph": u"\uE65E", "mark": u"\uF195"},
-            "sin": {"glyph": u"\uE65D", "mark": u"\uF194"},
-            "sike": {"glyph": u"\uE65C", "mark": u"\uF193", "base": u"\uE913"},
-            "sijelo": {"glyph": u"\uE65B", "mark": u"\uF192", "base": u"\uE941"},
-            "sewi": {"glyph": u"\uE65A", "mark": u"\uF191"},
+            "sin": {"glyph": u"\uE65D", "mark": u"\uF194", "uppermini": u"\uE840"},
+            "sike": {"glyph": u"\uE65C", "mark": u"\uF193", "outside": u"\uE913"},
+            "sijelo": {"glyph": u"\uE65B", "mark": u"\uF192", "base": u"\uE941", "mini": u"\uE923"},
+            "sewi": {"glyph": u"\uE65A", "mark": u"\uF191", "mini": u"\uF015"},
             "seme": {"glyph": u"\uE659", "mark": u"\uF190"},
             "selo": {"glyph": u"\uE658", "mark": u"\uF189", "base": u"\uE942"},
-            "seli": {"glyph": u"\uE657", "mark": u"\uF188"},
-            "sama": {"glyph": u"\uE656", "mark": u"\uF187", "base": u"\uF029"},
+            "seli": {"glyph": u"\uE657", "mark": u"\uF188", "mini": u"\uE823"},
+            "sama": {"glyph": u"\uE656", "mark": u"\uF187", "base": u"\uF029", "mini": u"\uE871"},
             "pu": {"glyph": u"\uE655", "mark": u"\uF186"},
             "pona": {"glyph": u"\uE654", "mark": u"\uF185", "sup": u"\uE843"},
-            "poki": {"glyph": u"\uE653", "mark": u"\uF184"},
+            "poki": {"glyph": u"\uE653", "mark": u"\uF184", "mini": u"\uF011"},
             "poka": {"glyph": u"\uE652", "mark": u"\uF183"},
             "pipi": {"glyph": u"\uE651", "mark": u"\uF182"},
             "pini": {"glyph": u"\uE650", "mark": u"\uF181", "base": u"\uF02A"},
-            "pimeja": {"glyph": u"\uE64F", "mark": u"\uF180"},
+            "pimeja": {"glyph": u"\uE64F", "mark": u"\uF180", "mini": u"\uE829"},
             "pilin": {"glyph": u"\uE64E", "mark": u"\uF179"},
-            "pi": {"glyph": u"\uE64D", "mark": u"\uF178", "base": u"\uE730"},
+            "pi": {"glyph": u"\uE64D", "mark": u"\uF178", "initial": u"\uE730", "underscore": u"\uE733"}, #needs fixing
             "pana": {"glyph": u"\uE64C", "mark": u"\uF177"},
             "pan": {"glyph": u"\uE64B", "mark": u"\uF176"},
-            "palisa": {"glyph": u"\uE64A", "mark": u"\uF175"},
+            "palisa": {"glyph": u"\uE64A", "mark": u"\uF175", "base": u"\uE812"},
             "pali": {"glyph": u"\uE649", "mark": u"\uF174", "sup": u"\uE949"},
-            "pakala": {"glyph": u"\uE648", "mark": u"\uF173"},
+            "pakala": {"glyph": u"\uE648", "mark": u"\uF173", "mini": u"\uE896"},
             "open": {"glyph": u"\uE647", "mark": u"\uF172", "sup": u"\uE723"},
             "ona": {"glyph": u"\uE646", "mark": u"\uF171"},
             "olin": {"glyph": u"\uE645", "mark": u"\uF170"},
             "o": {"glyph": u"\uE644", "mark": u"\uF169"},
-            "noka": {"glyph": u"\uE643", "mark": u"\uF168"},
-            "nimi": {"glyph": u"\uE642", "mark": u"\uF167", "base": u"\uE831"},
+            "noka": {"glyph": u"\uE643", "mark": u"\uF168", "uppermini": u"\uE838"},
+            "nimi": {"glyph": u"\uE642", "mark": u"\uF167", "outside": u"\uE831"},
             "ni": {"glyph": u"\uE641", "mark": u"\uF166"},
             "nena": {"glyph": u"\uE640", "mark": u"\uF165"},
             "nasin": {"glyph": u"\uE63F", "mark": u"\uF164"},
-            "nasa": {"glyph": u"\uE63E", "mark": u"\uF163"},
-            "nanpa": {"glyph": u"\uE63D", "mark": u"\uF162", "sup": u"\uE722"},
+            "nasa": {"glyph": u"\uE63E", "mark": u"\uF163", "mini": u"\uE824"},
+            "nanpa": {"glyph": u"\uE63D", "mark": u"\uF162", "sup": u"\uE722", "mini": u"\uE921"},
             "mute": {"glyph": u"\uE63C", "mark": u"\uF161"},
             "musi": {"glyph": u"\uE63B", "mark": u"\uF160", "sup": u"\uE721"},
-            "mun": {"glyph": u"\uE63A", "mark": u"\uF159"},
+            "mun": {"glyph": u"\uE63A", "mark": u"\uF159", "mini": u"\uF036"},
             "mu": {"glyph": u"\uE639", "mark": u"\uF158"},
             "monsi": {"glyph": u"\uE638", "mark": u"\uF157", "sup": u"\uE948"},
             "moli": {"glyph": u"\uE637", "mark": u"\uF156", "sup": u"\uE727"},
             "moku": {"glyph": u"\uE636", "mark": u"\uF155", "sup": u"\uE947"},
-            "mije": {"glyph": u"\uE635", "mark": u"\uF154"},
+            "mije": {"glyph": u"\uE635", "mark": u"\uF154", "uppermini": u"\uE867"},
             "mi": {"glyph": u"\uE634", "mark": u"\uF153"},
-            "meli": {"glyph": u"\uE633", "mark": u"\uF152", "base": u"\uE870"},
+            "meli": {"glyph": u"\uE633", "mark": u"\uF152", "outside": u"\uE870", "uppermini": u"\uE866"},
             "mani": {"glyph": u"\uE632", "mark": u"\uF151"},
-            "mama": {"glyph": u"\uE631", "mark": u"\uF150", "base": u"\uE864"},
-            "ma": {"glyph": u"\uE630", "mark": u"\uF149", "base": u"\uF020"},
-            "lupa": {"glyph": u"\uE62F", "mark": u"\uF148", "base": u"\uE726", "sup": u"\uE950"},
-            "lukin": {"glyph": u"\uE62E", "mark": u"\uF147"},
-            "luka": {"glyph": u"\uE62D", "mark": u"\uF146", "base": u"\uE850", "sup": u"\uE851"},
+            "mama": {"glyph": u"\uE631", "mark": u"\uF150", "upper": u"\uE864", "uppermini": u"\uE865"},
+            "ma": {"glyph": u"\uE630", "mark": u"\uF149", "base": u"\uF020", "mini": u"\uF012"},
+            "lupa": {"glyph": u"\uE62F", "mark": u"\uF148", "sup": u"\uE950"},
+            "lukin": {"glyph": u"\uE62E", "mark": u"\uF147", "base": u"\uE726"},
+            "luka": {"glyph": u"\uE62D", "mark": u"\uF146", "base": u"\uE850", "sup": u"\uE851", "uppermini": u"\uE837"},
             "lon": {"glyph": u"\uE62C", "mark": u"\uF145", "base": u"\uF028"},
-            "loje": {"glyph": u"\uE62B", "mark": u"\uF144"},
+            "loje": {"glyph": u"\uE62B", "mark": u"\uF144", "mini": u"\uE828"},
             "lipu": {"glyph": u"\uE62A", "mark": u"\uF143"},
             "linja": {"glyph": u"\uE629", "mark": u"\uF142", "base": u"\uE842"},
-            "lili": {"glyph": u"\uE628", "mark": u"\uF141", "sup": u"\uF065"},
+            "lili": {"glyph": u"\uE628", "mark": u"\uF141", "sup": u"\uF065", "mini": u"\uE800"},
             "li": {"glyph": u"\uE627", "mark": u"\uF140"},
-            "lete": {"glyph": u"\uE626", "mark": u"\uF139"},
-            "len": {"glyph": u"\uE625", "mark": u"\uF138", "base": u"\uF070", "sup": u"\uE943"},
-            "lawa": {"glyph": u"\uE624", "mark": u"\uF137", "sup": u"\uE946"},
-            "laso": {"glyph": u"\uE623", "mark": u"\uF136"},
-            "lape": {"glyph": u"\uE622", "mark": u"\uF135"},
+            "lete": {"glyph": u"\uE626", "mark": u"\uF139", "mini": u"\uE801"},
+            "len": {"glyph": u"\uE625", "mark": u"\uF138", "upper": u"\uF070", "sup": u"\uE943"},
+            "lawa": {"glyph": u"\uE624", "mark": u"\uF137", "sup": u"\uE946", "uppermini": u"\uE836"},
+            "laso": {"glyph": u"\uE623", "mark": u"\uF136", "mini": u"\uE827"},
+            "lape": {"glyph": u"\uE622", "mark": u"\uF135", "sup": u"\uE720"},
             "la": {"glyph": u"\uE621", "mark": u"\uF134"},
             "kute": {"glyph": u"\uE620", "mark": u"\uF133"},
             "kulupu": {"glyph": u"\uE61F", "mark": u"\uF132"},
-            "kule": {"glyph": u"\uE61E", "mark": u"\uF131"},
-            "kon": {"glyph": u"\uE61D", "mark": u"\uF130", "base": u"\uE830"},
+            "kule": {"glyph": u"\uE61E", "mark": u"\uF131", "mini": u"\uE819"},
+            "kon": {"glyph": u"\uE61D", "mark": u"\uF130", "outside": u"\uE830"},
             "ko": {"glyph": u"\uE61C", "mark": u"\uF129"},
             "kiwen": {"glyph": u"\uE61B", "mark": u"\uF128"},
             "kili": {"glyph": u"\uE61A", "mark": u"\uF127"},
             "kepeken": {"glyph": u"\uE619", "mark": u"\uF126"},
             "ken": {"glyph": u"\uE618", "mark": u"\uF125"},
-            "kasi": {"glyph": u"\uE617", "mark": u"\uF124", "base": u"\uE805", "sup": u"\uF021"},
+            "kasi": {"glyph": u"\uE617", "mark": u"\uF124", "base": u"\uE805", "sup": u"\uF021", "mini": u"\uE818"},
             "kama": {"glyph": u"\uE616", "mark": u"\uF123", "base": u"\uF025"},
             "kalama": {"glyph": u"\uE615", "mark": u"\uF122"},
             "kala": {"glyph": u"\uE614", "mark": u"\uF121"},
             "jo": {"glyph": u"\uE613", "mark": u"\uF120"},
-            "jelo": {"glyph": u"\uE612", "mark": u"\uF119"},
-            "jan": {"glyph": u"\uE611", "mark": u"\uF118"},
-            "jaki": {"glyph": u"\uE610", "mark": u"\uF117"},
+            "jelo": {"glyph": u"\uE612", "mark": u"\uF119", "mini": u"\uE826"},
+            "jan": {"glyph": u"\uE611", "mark": u"\uF118", "uppermini": u"\uE835"},
+            "jaki": {"glyph": u"\uE610", "mark": u"\uF117", "mini": u"\uE820"},
             "insa": {"glyph": u"\uE60F", "mark": u"\uF116"},
             "ilo": {"glyph": u"\uE60E", "mark": u"\uF115", "base": u"\uE718"},
-            "ike": {"glyph": u"\uE60D", "mark": u"\uF114", "base": u"\uF062"},
+            "ike": {"glyph": u"\uE60D", "mark": u"\uF114", "base": u"\uF062", "mini": u"\uE919"},
             "ijo": {"glyph": u"\uE60C", "mark": u"\uF113"},
             "esun": {"glyph": u"\uE60B", "mark": u"\uF112"},
             "en": {"glyph": u"\uE60A", "mark": u"\uF111"},
@@ -676,7 +676,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             "ale": {"glyph": u"\uE604", "mark": u"\uF105"},
             "ali": {"glyph": u"\uE604", "mark": u"\uF105"},
             "alasa": {"glyph": u"\uE603", "mark": u"\uF104"},
-            "ala": {"glyph": u"\uE602", "mark": u"\uF103", "sup": u"\uF064"},
+            "ala": {"glyph": u"\uE602", "mark": u"\uF103", "sup": u"\uF064", "mini": u"\uE917"},
             "akesi": {"glyph": u"\uE601", "mark": u"\uF102"},
             "a": {"glyph": u"\uE600", "mark": u"\uF101"},
             "tonsi": {"glyph": u"\uE697", "mark": u"\uF228"}
@@ -733,6 +733,34 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         s = s[:j]
         return s
 
+    async def compoundglyphs(self, baseword, modifiers):
+        newphrase = ''
+        if 'base' in self.linja_pona_substitutions[baseword] \
+        and all('sup' in self.linja_pona_substitutions[m] for m in modifiers):
+        
+            newphrase += self.linja_pona_substitutions[baseword]['base']
+            for m in modifiers:
+                newphrase += self.linja_pona_substitutions[m]['sup']
+                    
+        elif 'outside' in self.linja_pona_substitutions[baseword] \
+        and all('mini' in self.linja_pona_substitutions[m] for m in modifiers):
+            newphrase += self.linja_pona_substitutions[baseword]['outside']
+            for m in modifiers:
+                newphrase += self.linja_pona_substitutions[m]['mini']
+
+        elif 'upper' in self.linja_pona_substitutions[baseword] \
+        and all('uppermini' in self.linja_pona_substitutions[m] for m in modifiers):
+            newphrase += self.linja_pona_substitutions[baseword]['upper']
+            for m in modifiers:
+                newphrase += self.linja_pona_substitutions[m]['uppermini']
+
+        else:
+            newphrase += self.linja_pona_substitutions[baseword]['glyph']
+            for m in modifiers:
+                newphrase += self.linja_pona_substitutions[m]['mark']
+
+        return newphrase
+
     async def sitelen_replacements(self, text, authorid, guildid):
         #search for fg
         authorid = str(authorid)
@@ -778,56 +806,65 @@ class tokipona(commands.Cog, name='TOKI PONA'):
                     text = re.sub(f'<@!?{i}>', config[guildid]['tp']['defaultglyphs'][i], text)
         text = await self.substitute_names(text)
         
-        
         for phrase in re.findall(r'[a-z\-]+', deepcopy(text)):
             newphrase = ""
             
             if "-" in phrase:
-                  modifiers = re.split("\-", phrase)
-                  baseword = modifiers.pop(0)
-                  
-                  if baseword in self.linja_pona_substitutions \
-                  and all(m in self.linja_pona_substitutions for m in modifiers):
-                  
-                        if 'base' in self.linja_pona_substitutions[baseword] \
-                        and all('sup' in self.linja_pona_substitutions[m] for m in modifiers):
+                modifiers = re.split(r"\-", phrase)
+                baseword = modifiers.pop(0)
+                
+                if baseword in self.linja_pona_substitutions \
+                and all(m in self.linja_pona_substitutions for m in modifiers):
+
+                    if baseword == 'pi':
+                        picount = 1
+                        for i in deepcopy(modifiers):
+                            if i == '':
+                                picount += 1
+                                modifiers.pop(0)
+                            else:
+                                break
                         
-                              newphrase += self.linja_pona_substitutions[baseword]['base']
-                              for m in modifiers:
-                                    newphrase += self.linja_pona_substitutions[m]['sup']
-                                    
+                        if picount > 2:
+                            newphrase += u"\uE734"
+                        elif picount == 2:
+                            newphrase += u"\uE733"
                         else:
-                              newphrase += self.linja_pona_substitutions[baseword]['glyph']
-                              for m in modifiers:
-                                    newphrase += self.linja_pona_substitutions[m]['mark']
-                                    
-                  else:
-                        if baseword in self.linja_pona_substitutions:
-                              newphrase += self.linja_pona_substitutions[baseword]['glyph']
-                        else:
-                              newphrase += baseword
+                            newphrase += u"\uE730"
                         
-                        for m in modifiers:
-                              if m in self.linja_pona_substitutions:
-                                    newphrase += self.linja_pona_substitutions[m]['mark']
-                              else:
-                                    newphrase += m
+                        if len(modifiers) == 1:
+                            modifier = modifiers[0]
+                            if modifier in self.linja_pona_substitutions:
+                                newphrase += self.linja_pona_substitutions[modifier]['glyph']
+                            else:
+                                newphrase += modifier
+                        else:
+                            newphrase += await self.compoundglyphs(modifiers[0], modifiers[1:])
+                    
+                    else:
+                        newphrase += await self.compoundglyphs(baseword, modifiers)
+                
+                else:
+                    if baseword in self.linja_pona_substitutions:
+                        newphrase += self.linja_pona_substitutions[baseword]['glyph']
+                    else:
+                        newphrase += baseword
+                    
+                    for m in modifiers:
+                        if m in self.linja_pona_substitutions:
+                            newphrase += self.linja_pona_substitutions[m]['mark']
+                        else:
+                            newphrase += m
                                     
             else:
-                  if phrase in self.linja_pona_substitutions:
-                        newphrase += self.linja_pona_substitutions[phrase]['glyph']
-                  else:
-                        newphrase += phrase
+                if phrase in self.linja_pona_substitutions:
+                    newphrase += self.linja_pona_substitutions[phrase]['glyph']
+                else:
+                    newphrase += phrase
 
             text = text.replace(phrase, newphrase, 1)
             
         return text, fg, bg, border, fontsize
-                  
-        
-#        for i in sorted(self.linja_pona_substitutions, key=len, reverse=True):
-#            if i in text:
-#                text = text.replace(i, self.linja_pona_substitutions[i])
-#        return text, fg, bg, border, fontsize
 
     async def safesend(self, ctx, english, tokipona):
         if config[str(ctx.guild.id)]['tp'] == None:
@@ -862,7 +899,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             else:
                 await ctx.send(f'mi sona ala e nimi "{i}".')
 
-    @commands.command(aliases=['check_for_tp', 'ctp', 'cftp', 'cft'])
+    @commands.command(aliases=['check_for_tp', 'ctp',])
     async def tpcheck(self, ctx, *, text):
         '''Checks if the input text is toki pona or not.'''
         if not await self.iftokipona(ctx):
