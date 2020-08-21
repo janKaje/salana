@@ -594,7 +594,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             "seli": {"glyph": u"\uE657", "mark": u"\uF188", "mini": u"\uE823"},
             "sama": {"glyph": u"\uE656", "mark": u"\uF187", "base": u"\uF029", "mini": u"\uE871"},
             "pu": {"glyph": u"\uE655", "mark": u"\uF186"},
-            "pona": {"glyph": u"\uE654", "mark": u"\uF185", "sup": u"\uE843"},
+            "pona": {"glyph": u"\uE654", "mark": u"\uF185", "sup": u"\uE843", "mini": u"\uF011"},
             "poki": {"glyph": u"\uE653", "mark": u"\uF184", "mini": u"\uF011"},
             "poka": {"glyph": u"\uE652", "mark": u"\uF183"},
             "pipi": {"glyph": u"\uE651", "mark": u"\uF182"},
@@ -839,6 +839,8 @@ class tokipona(commands.Cog, name='TOKI PONA'):
                                 newphrase += self.linja_pona_substitutions[modifier]['glyph']
                             else:
                                 newphrase += modifier
+                        elif len(modifiers) == 0:
+                            newphrase = self.linja_pona_substitutions['pi']['glyph']
                         else:
                             newphrase += await self.compoundglyphs(modifiers[0], modifiers[1:])
                     

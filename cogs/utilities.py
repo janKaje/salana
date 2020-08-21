@@ -74,7 +74,7 @@ class utilities(commands.Cog, name="UTILITIES"):
                 command_msg.add_field(name = f'__HARDCORE__', value = cog_info, inline = False)
 
             welcome = self.client.get_cog('WELCOME')
-            if await welcome.ifwelcome(ctx) and (ctx.author.guild_permissions.manage_roles or ctx.author.guild.permissions.manage_messages):
+            if await welcome.ifwelcome(ctx) and (ctx.author.guild_permissions.manage_roles or ctx.author.guild_permissions.manage_messages):
                 cog_info = '***reset***  -  ***blacklist***  -  ***unblacklist***  -  ***blacklistshow***'
                 command_msg.add_field(name = f'__WELCOME__', value = cog_info, inline = False)
 
