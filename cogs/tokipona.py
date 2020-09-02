@@ -339,7 +339,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             'nena': '***nena*** – *~pu~* bump, button, hill, mountain, nose, protuberance\n\t← Finnish *nenä* ‘nose’',
             'ni': '***ni*** – *~pu~* that, this {see ***ona***}\n\t← Cantonese 呢 *ni* ‘this’',
             'nimi': '***nimi*** – *~pu~* name, word\n\t← Finnish *nimi* ‘name’',
-            'noka': '***noka*** – *~pu~* foot, leg, organ of locomotion; bottom, lower part\n\t← Serbo-Croatian *нога noga* ‘foot, leg’ | *~alt. usage~* ten; twenty; negate five',
+            'noka': '***noka*** – *~pu~* foot, leg, organ of locomotion; bottom, lower part | *~alt. usage~* ten; twenty; negate five\n\t← Serbo-Croatian *нога noga* ‘foot, leg’',
             'nu': '***nu*** – *~post-pu, humorous~* {see ***nuwa***, ***sin***}\n\t← English *new*',
             'nun': '***nun*** – *~post-pu~* the digit ‘5’\n\t← Cantonese 五 / 伍 *ńgh* ‘five’',
             'nuwa': '***nuwa*** – *~post-pu, humorous~* {see ***nu***, ***sin***}\n\t← English *newer*',
