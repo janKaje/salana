@@ -142,8 +142,8 @@ class fun(commands.Cog, name='FUN'):
         random.setstate(r)
         await self.client.get_cog('TOKI PONA').safesend(ctx, f"I'd give {item} a {rate_value}/10", f'mi la {item} li {rate_value}/10')
 
-    @commands.command(aliases=['rand'])
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(aliases=['rand', 'r'])
+    @commands.cooldown(1, 1, commands.BucketType.user)
     async def random(self, ctx):
         '''Gives a random number. Keeps track of high score.'''
         value = ''
