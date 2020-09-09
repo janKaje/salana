@@ -790,7 +790,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
                 if mode == 'subject' and tempsubj != []:
                     subjects.append(tempsubj)
                     tempsubj = []
-                elif mode == 'subject':
+                if mode == 'subject':
                     the_sentence_is_good = False
                     reason += f'Incorrect placement of e directly after subject or at the beginning of the sentence in the {ordinal(index)} sentence\n'
                 if mode == 'predicate' and temppred != []:
@@ -825,16 +825,23 @@ class tokipona(commands.Cog, name='TOKI PONA'):
                     continue
                 subjects.append(tempsubj)
                 tempsubj = []
+
+            #la?
+            if word == 'la':
+                the_sentence_is_good = False
+                reason += f'Incorrect usage of la, either at the beginning of a sentence or after another la, found in the {ordinal(index)} sentence\n'
+                wordno += 1
+                continue
             
             #subjects
             if mode == 'subject':
-                tempsubj.append(word)
-                if word in {'mi', 'sina'}:
+                if word in {'mi', 'sina'} and tempsubj == []:
                     mode = 'predicate'
-                    subjects.append(tempsubj)
-                    tempsubj = []
+                    subjects.append([word])
                     wordno += 1
                     continue
+                else:
+                    tempsubj.append(word)
             #predicates
             if mode == 'predicate':
                 temppred.append(word)
@@ -944,7 +951,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
                 sentencewithoutla = laphrases.pop(len(laphrases)-1)
                 for phrase in laphrases:
                     words = re.findall(r'\w+', phrase)
-                    if any(i in words for i in ['li', 'e']) or words[0] in ['mi', 'sina']:
+                    if (any(i in words for i in ['li', 'e']) or words[0] in ['mi', 'sina']) and len(words) > 1:
                         s, r = await self.sentenceparse(phrase, index)
                         if not s:
                             the_sentence_is_good = False

@@ -31,6 +31,15 @@ class utilities(commands.Cog, name="UTILITIES"):
         if cmd == None or cmd == 'commands':
             command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.\n\n***setup***  -  ***remove***  -  ***switchlanguage***')
 
+            def addcommands(cog):
+                nonlocal command_msg
+                cog_info = ''
+                for i in self.client.get_cog(cog).walk_commands():
+                    if any(not j()):
+                        cog_info += f'***{i.name}***  -  '
+                cog_info = re.sub(r'  \-  \Z', '', cog_info)
+                command_msg.add_field(name = f'__{cog}__', value = cog_info, inline = False)
+
             cog_info = ''
             for i in self.client.get_cog('FUN').walk_commands():
                 if not i.hidden:
