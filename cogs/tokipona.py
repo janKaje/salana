@@ -20,211 +20,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
 
     def __init__(self, client):
         self.client = client
-        self.tp_words = {
-            '',
-            'a', 'あ',
-            'kin', 'きん',
-            'akesi', 'あけし',
-            'ala', 'あら',
-            'alasa', 'あらさ',
-            'ale', 'あれ',
-            'ali', 'あり',
-            'anpa', 'あんぱ',
-            'ante', 'あんて',
-            'anu', 'あぬ',
-            'awen', 'あうぇん',
-            'e', 'え',
-            'en', 'えん',
-            'esun', 'えすん',
-            'ijo', 'いよ',
-            'ike', 'いけ',
-            'ilo', 'いろ',
-            'insa', 'いんさ',
-            'jaki', 'やき',
-            'jan', 'やん',
-            'jelo', 'いぇろ',
-            'jo', 'よ',
-            'kala', 'から',
-            'kalama', 'からま',
-            'kama', 'かま',
-            'kasi', 'かし',
-            'ken', 'けん',
-            'kepeken', 'けぺけん',
-            'kili', 'きり',
-            'kiwen', 'きうぇん',
-            'ko', 'こ',
-            'kon', 'こん',
-            'kule', 'くれ',
-            'kulupu', 'くるぷ',
-            'kute', 'くて',
-            'la', 'ら',
-            'lape', 'らぺ',
-            'laso', 'らそ',
-            'lawa', 'らわ',
-            'len', 'れん',
-            'lete', 'れて',
-            'li', 'り',
-            'lili', 'りり',
-            'linja', 'りんや',
-            'lipu', 'りぷ',
-            'loje', 'ろいえ',
-            'lon', 'ろん',
-            'luka', 'るか',
-            'lukin', 'るきん',
-            'oko', 'おこ',
-            'lupa', 'るぱ',
-            'ma', 'ま',
-            'mama', 'まま',
-            'mani', 'まに',
-            'meli', 'めり',
-            'mi', 'み',
-            'mije', 'みいぇ',
-            'moku', 'もく',
-            'moli', 'もり',
-            'monsi', 'もんし',
-            'mu', 'む',
-            'mun', 'むん',
-            'musi', 'むし',
-            'mute', 'むて',
-            'nanpa', 'なんぱ',
-            'nasa', 'なさ',
-            'nasin', 'なしん',
-            'nena', 'ねな',
-            'ni', 'に',
-            'nimi', 'にみ',
-            'noka', 'のか',
-            'o', 'お',
-            'olin', 'おりん',
-            'omekapo',
-            'ona', 'おな',
-            'open', 'おぺん',
-            'pakala', 'ぱから',
-            'pali', 'ぱり',
-            'palisa', 'ぱりさ',
-            'pan', 'ぱん',
-            'pana', 'ぱな',
-            'pi', 'ぴ',
-            'pilin', 'ぴりん',
-            'pimeja', 'ぴめや',
-            'pini', 'ぴに',
-            'pipi', 'ぴぴ',
-            'poka', 'ぽか',
-            'poki', 'ぽき',
-            'pona', 'ぽな',
-            'pu', 'ぷ',
-            'sama', 'さま',
-            'seli', 'せり',
-            'selo', 'せろ',
-            'seme', 'せめ',
-            'sewi', 'せうぃ',
-            'sijelo', 'しいぇろ',
-            'sike', 'しけ',
-            'sin', 'しん',
-            'namako', 'なまこ',
-            'sina', 'しな',
-            'sinpin', 'しんぴん',
-            'sitelen', 'してれん',
-            'sona', 'そな',
-            'soweli', 'そうぇり',
-            'suli', 'すり',
-            'suno', 'すの',
-            'supa', 'すぱ',
-            'suwi', 'すうぃ',
-            'tan', 'たん',
-            'taso', 'たそ',
-            'tawa', 'たわ',
-            'telo', 'てろ',
-            'tenpo', 'てんぽ',
-            'toki', 'とき',
-            'tomo', 'とも',
-            'tu', 'つ',
-            'unpa', 'うんぱ',
-            'uta', 'うた',
-            'utala', 'うたら',
-            'walo', 'わろ',
-            'wan', 'わん',
-            'waso', 'わそ',
-            'wawa', 'わわ',
-            'weka', 'うぇか',
-            'wile', 'うぃれ',
-            'monsuta', 'もんすた',
-            'kipisi', 'きぴし',
-            'kijetesantakalu', 'きいぇてさんたかる',
-            'tonsi', 'とんし',
-            'leko', 'れこ',
-            'apeja', 'あぺや',
-            'majuna', 'まゆな',
-            'pake', 'ぱけ',
-            'mulapisu', 'むらぴす',
-            'powe', 'ぽうぇ',
-            'linluwi', 'りんるうぃ',
-            'epiku', 'えぴく',
-            'yupekosi', 'ゆぺこし',
-            'lanpan', 'らんぱん',
-            'pata', 'ぱた',
-            'wuwojiti', 'うをいち',
-            'tuli', 'つり',
-            'po', 'ぽ',
-            'kan', 'かん',
-            'iki', 'いき',
-            'kapa', 'かぱ',
-            'kapesi', 'かぺし',
-            'misikeke', 'みしけけ',
-            'pasila', 'ぱしら',
-            'alu', 'ある',
-            'ete', 'えて',
-            'ewe', 'えうぇ',
-            'ini', 'いに',
-            'jaku', 'やく',
-            'jami', 'やみ',
-            'jasima', 'やしま',
-            'jatu', 'やつ',
-            'kajo', 'かよ',
-            'kamalawala', 'かまらわら',
-            'ke', 'け',
-            'kulu', 'くる',
-            'kuntu', 'くんつ',
-            'lenke', 'れんけ',
-            'likujo', 'りくよ',
-            'loku', 'ろく',
-            'melome', 'めろめ',
-            'mijomi', 'みよみ',
-            'neja', 'ねや',
-            'nun', 'ぬん',
-            'oke', 'おけ',
-            'patu', 'ぱつ',
-            'peto', 'ぺと',
-            'peta', 'ぺた',
-            'san', 'さん',
-            'se', 'せ',
-            'soko', 'そこ',
-            'soto', 'そと',
-            'take', 'たけ',
-            'te', 'て',
-            'ten', 'てん',
-            'we', 'うぇ',
-            'ipi', 'いぴ',
-            'jalan', 'やらん',
-            'epiku', 'えぴく',
-            'itomi', 'いとみ',
-            'jans', 'やんす',
-            'lokon', 'ろこん',
-            'nu', 'ぬ',
-            'nuwa', 'ぬわ',
-            'okepuma', 'おけぷま',
-            'omen', 'おめん',
-            'pa', 'ぱ',
-            'pipo', 'ぴぽ',
-            'polinpin', 'ぽりんぴん',
-            'pomotolo', 'ぽもとろ',
-            'samu', 'さむ',
-            'sikomo', 'しこも',
-            'slape', 'すらぺ',
-            'su', 'す',
-            'wawajete', 'わわいぇて',
-            'wi', 'うぃ',
-            'waleja', 'われや'
-        }
+        self.tpwords = {'isipin', 'je', 'ki', 'n', 'teje', 'to', 'wa', 'wekama', 'ini', 'te', 'ike', 'kalama', 'kuntu', 'ipi', 'meli', 'awen', 'anu', 'pimeja', 'loku', 'nasa', 'okepuma', 'lete', 'o', 'soweli', 'pomotolo', 'peta', 'en', 'jatu', 'pipi', 'sona', 'lape', 'mije', 'mun', 'likujo', 'kan', 'namako', 'wawajete', 'mi', 'mu', 'lupa', 'kamalawala', 'palisa', 'ale', 'monsuta', 'li', 'jans', 'ete', 'peto', 'po', 'kulupu', 'ni', 'luka', 'len', 'pata', 'pa', 'pi', 'tawa', 'musi', 'ma', 'kala', 'sama', 'moku', 'alu', 'mute', 'jalan', 'jelo', 'jami', 'misikeke', 'nun', 'soto', 'powe', 'monsi', 'linluwi', 'sinpin', 'sewi', 'patu', 'loje', 'lili', 'ante', 'ten', 'lanpan', 'ijo', 'tu', 'pasila', 'sin', 'weka', 'majuna', 'wan', 'apeja', 'nuwa', 'kama', 'alasa', 'tuli', 'mijomi', 'se', 'la', 'ewe', 'insa', 'oko', 'tan', 'utala', 'kijetesantakalu', 'toki', 'tenpo', 'lenke', 'pana', 'we', 'kule', 'waleja', 'slape', 'poki', 'pona', 'pakala', 'pipo', 'wawa', 'kepeken', 'jan', 'seme', 'walo', 'wuwojiti', 'itomi', 'anpa', 'open', 'suli', 'jo', 'wile', 'ken', 'noka', 'jaku', 'pu', 'uta', 'su', 'lokon', 'epiku', 'lon', 'suwi', 'nimi', 'omen', 'nu', 'pan', 'ilo', 'ali', 'tomo', 'akesi', 'poka', 'mani', 'olin', 'ona', 'taso', 'samu', 'nanpa', 'lukin', 'suno', 'san', 'tonsi', 'waso', 'laso', 'sitelen', 'pini', 'kasi', 'sina', 'ala', 'mama', 'pake', 'kiwen', 'esun', 'pilin', 'supa', 'yupekosi', 'oke', 'mulapisu', 'kili', 'sijelo', 'kipisi', 'jasima', 'sike', 'nena', 'selo', 'polinpin', 'unpa', 'a', 'telo', 'jaki', 'e', 'wi', 'moli', 'pali', 'kin', 'kapesi', 'leko', 'omekapo', 'kapa', 'take', 'kulu', 'lipu', 'ko', 'nasin', 'lawa', 'neja', 'ke', 'kon', 'seli', 'iki', 'soko', 'sikomo', 'linja', 'kajo', 'kute', 'melome'}
         self.tp_dict = {
             'a': '***a*** – *~pu~* (emphasis, emotion or confirmation) {see ***kin***}\n\t←? onomatopoeia',
             'akesi': '***akesi*** – *~pu~* non-cute animal; reptile, amphibian\n\t← Dutch *hagedis* ‘lizard’',
@@ -709,6 +505,8 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             'U' : ['_unpa', '_uta', '_utala'],
             'W' : ['_walo', '_wan', '_waso', '_wawa', '_weka', '_wile']
         }
+        self.particles = {'li', 'pi', 'e', 'o', 'la'}
+        self.contentwords = {'kule', 'nun', 'pake', 'sona', 'take', 'suli', 'weka', 'seme', 'wi', 'likujo', 'sin', 'tonsi', 'ten', 'walo', 'pini', 'peto', 'tuli', 'nuwa', 'loje', 'kapa', 'kalama', 'open', 'ike', 'pakala', 'jaki', 'okepuma', 'kili', 'itomi', 'wile', 'soweli', 'lete', 'monsuta', 'pata', 'kala', 'ante', 'toki', 'kepeken', 'san', 'polinpin', 'suno', 'alasa', 'soko', 'anu', 'unpa', 'kijetesantakalu', 'jans', 'mi', 'pa', 'kajo', 'pona', 'wawa', 'a', 'melome', 'pimeja', 'nimi', 'neja', 'loku', 'samu', 'epiku', 'laso', 'supa', 'sama', 'nasa', 'ken', 'nena', 'pomotolo', 'iki', 'poki', 'mijomi', 'sike', 'kulupu', 'majuna', 'moku', 'palisa', 'poka', 'wan', 'kiwen', 'soto', 'kute', 'kin', 'po', 'akesi', 'sina', 'tenpo', 'wekama', 'lipu', 'jan', 'pali', 'jatu', 'seli', 'luka', 'noka', 'nu', 'jasima', 'nanpa', 'waleja', 'lanpan', 'teje', 'ini', 'isipin', 'ilo', 'esun', 'te', 'ipi', 'powe', 'to', 'ete', 'lenke', 'lon', 'insa', 'kipisi', 'awen', 'selo', 'apeja', 'mun', 'linja', 'omekapo', 'sitelen', 'ala', 'moli', 'wawajete', 'lupa', 'slape', 'se', 'pana', 'ijo', 'jo', 'mani', 'monsi', 'kuntu', 'ni', 'n', 'uta', 'tu', 'je', 'we', 'ki', 'kan', 'jaku', 'musi', 'lukin', 'su', 'mulapisu', 'jami', 'tawa', 'telo', 'nasin', 'pasila', 'lili', 'mama', 'ke', 'omen', 'waso', 'ale', 'ko', 'wuwojiti', 'tomo', 'wa', 'sewi', 'peta', 'len', 'jelo', 'pipo', 'yupekosi', 'sijelo', 'kama', 'leko', 'namako', 'alu', 'sikomo', 'linluwi', 'kulu', 'kasi', 'ona', 'ma', 'mu', 'lokon', 'jalan', 'pilin', 'olin', 'pan', 'kapesi', 'pipi', 'kamalawala', 'oke', 'lawa', 'kon', 'meli', 'mije', 'misikeke', 'ewe', 'anpa', 'sinpin', 'tan', 'suwi', 'oko', 'utala', 'lape', 'patu', 'en', 'ali', 'taso', 'pu', 'mute'}
         
     async def iftokipona(self, ctx):
         try:
@@ -721,12 +519,12 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         step2 = demojize(step1) #Turns emojis into ascii characters
         step3 = re.sub(r':[\w-]+:', '', step2) #Removes now textified emojis
         step4 = re.sub(r'https\S+', '', step3) #Removes links
-        step5 = re.sub('j?[A-Z][a-z]+|[゠-ヿ]+', '', step4) #Removes proper names
+        step5 = re.sub('j?[A-Z][a-z]+', '', step4) #Removes proper names
         step6 = re.sub(r'[\W_0-9]', ' ', step5) #Removes non-letter characters, such as punctuation
         step7 = await self.removeduplicates(step6) #Removes repeated letters
         step8 = re.split(r'\s+', step7) #Splits the string and prepares it for analysis
         for dj in step8:
-            if dj not in self.tp_words:
+            if dj not in self.tpwords:
                 return False
         return True
 
@@ -892,6 +690,286 @@ class tokipona(commands.Cog, name='TOKI PONA'):
     async def substitute_names(self, text):
         return re.sub(r"\[(?P<name>[AEIJKLMNOPSTUW]*)\]", self.tp_sbstitute, text)
 
+    async def isthepigood(self, wordlist):
+        if wordlist[0] == 'pi' or wordlist[len(wordlist)-1] == 'pi' or len(wordlist) < 4:
+            return False
+        phrase = ' '.join(wordlist)
+        piseparated = re.split(' pi ', phrase)
+        piseparated.pop(0)
+        for i in piseparated:
+            if len(re.split(' ', i)) < 2:
+                return False
+        return True
+
+    async def isproperpropername(self, wordlist):
+        if wordlist[0] not in self.tpwords and wordlist[0] != '':
+            return 0
+        for word in wordlist[1:]:
+            if word not in self.tpwords:
+                if not re.fullmatch('[A-Z][a-z]+', word) and word != '':
+                    return 1
+                elif re.fullmatch('[a-z]+', word):
+                    return word
+        return 2
+
+    async def sentenceparse(self, sentence, index):
+        subjects = []
+        predicates = []
+        objects = []
+        tempsubj = []
+        temppred = []
+        tempobj = []
+        mode = 'subject'
+        sentencetype = ''
+        wordno = 0
+        reason = ''
+        the_sentence_is_good = True
+        ordinal = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
+
+        wordlist = re.split(r'\s+', sentence)
+
+        if wordlist[0] in ['mi', 'sina'] and wordlist[1] == 'li':
+            the_sentence_is_good = False
+            reason += f'Incorrect usage of li after a single mi or sina in the {ordinal(index)} sentence\n'
+
+        #this is mostly to break up the sentence into its parts, although it does pick out a few errors
+        for word in wordlist:
+
+            #o
+            if word == 'o':
+                if sentencetype == 'indicative':
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of o after li in the {ordinal(index)} sentence\n'
+                if wordlist[wordno-1] in {'o', 'li', 'e', 'pi'}:
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of o directly after a particle in the {ordinal(index)} sentence\n'
+                if mode == 'subject' and tempsubj != []:
+                    subjects.append(tempsubj)
+                    tempsubj = []
+                if mode == 'object' and tempobj != []:
+                    objects.append(tempobj)
+                    tempobj = []
+                if mode == 'predicate' and temppred != []:
+                    predicates.append(temppred)
+                    temppred =[]
+                mode = 'predicate'
+                sentencetype = 'imperative'
+                wordno += 1
+                continue
+
+            #li
+            if word == 'li':
+                if sentencetype == 'imperative':
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of li after o in the {ordinal(index)} sentence\n'
+                if wordlist[wordno-1] in self.particles:
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of li directly after a particle in the {ordinal(index)} sentence\n'
+                if mode == 'subject' and tempsubj != []:
+                    subjects.append(tempsubj)
+                    tempsubj = []
+                elif mode == 'subject':
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of li at the beginning of a sentence in the {ordinal(index)} sentence\n'
+                if mode == 'object' and tempobj != []:
+                    objects.append(tempobj)
+                    tempobj = []
+                if mode == 'predicate' and temppred != []:
+                    predicates.append(temppred)
+                    temppred =[]
+                mode = 'predicate'
+                sentencetype = 'indicative'
+                wordno += 1
+                continue
+
+            #e
+            if word == 'e':
+                if wordlist[wordno-1] in self.particles:
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of e after a particle in the {ordinal(index)} sentence\n'
+                if mode == 'subject' and tempsubj != []:
+                    subjects.append(tempsubj)
+                    tempsubj = []
+                elif mode == 'subject':
+                    the_sentence_is_good = False
+                    reason += f'Incorrect placement of e directly after subject or at the beginning of the sentence in the {ordinal(index)} sentence\n'
+                if mode == 'predicate' and temppred != []:
+                    predicates.append(temppred)
+                    temppred = []
+                if mode == 'object' and tempobj != []:
+                    objects.append(tempobj)
+                    temppobj = []
+                mode = 'object'
+                wordno += 1
+                continue
+
+            #en
+            if word == 'en':
+                if wordlist[wordno-1] in self.particles:
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of en directly after a particle in the {ordinal(index)} sentence\n'
+                if mode == 'predicate':
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of en in a predicate in the {ordinal(index)} sentence\n'
+                    wordno += 1
+                    continue
+                if mode == 'object':
+                    the_sentence_is_good = False
+                    reason += f'Incorrect usage of en in an object in the {ordinal(index)} sentence\n'
+                    wordno += 1
+                    continue
+                if tempsubj == []:
+                    the_sentence_is_good = False
+                    reason += f'Cannot begin a sentence with en, found in the {ordinal(index)} sentence\n'
+                    wordno += 1
+                    continue
+                subjects.append(tempsubj)
+                tempsubj = []
+            
+            #subjects
+            if mode == 'subject':
+                tempsubj.append(word)
+                if word in {'mi', 'sina'}:
+                    mode = 'predicate'
+                    subjects.append(tempsubj)
+                    tempsubj = []
+                    wordno += 1
+                    continue
+            #predicates
+            if mode == 'predicate':
+                temppred.append(word)
+            #objects
+            if mode == 'object':
+                tempobj.append(word)
+
+            wordno += 1
+
+        if tempsubj != []:
+            subjects.append(tempsubj)
+        if temppred != []:
+            predicates.append(temppred)
+        if tempobj != []:
+            objects.append(tempobj)
+
+        #debugging code
+        #print(subjects, predicates, objects)
+        #print(sentence)
+
+        #making sure all words are content words, use pi's correctly, and have proper names in the correct form and place
+        #subjects
+        for subject in subjects:
+            if not all(i in self.contentwords for i in subject):
+
+                if not all(i in self.tpwords for i in subject):
+                    proper = await self.isproperpropername(subject)
+                    if proper == 0:
+                        the_sentence_is_good = False
+                        reason += f'Unknown word acting as a head in a subject of the {ordinal(index)} sentence\n'
+                    elif proper == 1:
+                        the_sentence_is_good = False
+                        reason += f'Incorrect proper name form in a subject of the {ordinal(index)} sentence\n'
+                    elif isinstance(proper, str):
+                        the_sentence_is_good = False
+                        reason += f'Non-toki pona word {proper} used as a toki pona word in a subject of the {ordinal(index)} sentence\n'
+
+                if 'pi' in subject:
+                    if not await self.isthepigood(subject):
+                        the_sentence_is_good = False
+                        reason += f'Incorrect usage of pi in a subject of the {ordinal(index)} sentence\n'
+                    
+        #predicates
+        for pred in predicates:
+            if not all(i in self.contentwords for i in pred):
+
+                if not all(i in self.tpwords for i in pred):
+                    proper = await self.isproperpropername(pred)
+                    if proper == 0:
+                        the_sentence_is_good = False
+                        reason += f'Unknown word acting as a head in a predicate of the {ordinal(index)} sentence\n'
+                    elif proper == 1:
+                        the_sentence_is_good = False
+                        reason += f'Incorrect proper name form in a predicate of the {ordinal(index)} sentence\n'
+                    elif isinstance(proper, str):
+                        the_sentence_is_good = False
+                        reason += f'Non-toki pona word {proper} used as a toki pona word in a predicate of the {ordinal(index)} sentence\n'
+
+                if 'pi' in pred:
+                    if not await self.isthepigood(pred):
+                        the_sentence_is_good = False
+                        reason += f'Incorrect usage of pi in a predicate of the {ordinal(index)} sentence\n'
+
+        #objects
+        for obj in objects:
+            if not all(i in self.contentwords for i in obj):
+
+                if not all(i in self.tpwords for i in obj):
+                    proper = await self.isproperpropername(obj)
+                    if proper == 0:
+                        the_sentence_is_good = False
+                        reason += f'Unknown word acting as a head in an object of the {ordinal(index)} sentence\n'
+                    elif proper == 1:
+                        the_sentence_is_good = False
+                        reason += f'Incorrect proper name form in an object of the {ordinal(index)} sentence\n'
+                    elif isinstance(proper, str):
+                        the_sentence_is_good = False
+                        reason += f'Non-toki pona word {proper} used as a toki pona word in an object of the {ordinal(index)} sentence\n'
+
+                if 'pi' in obj:
+                    if not await self.isthepigood(obj):
+                        the_sentence_is_good = False
+                        reason += f'Incorrect usage of pi in an object of the {ordinal(index)} sentence\n'
+        
+        return the_sentence_is_good, reason
+
+    async def parsetext(self, text):
+        sentences = re.split(r'[\.|\?|!|,|:] ?', re.sub('["\']', '', text))
+        the_sentence_is_good = True
+        reason = ''
+        ordinal = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
+        for sentence in sentences:
+            index = sentences.index(sentence)+1
+
+            #if the string is empty, carry on
+            if sentence == '':
+                continue
+
+            #DON'T CAPITALIZE SENTENCES
+            if sentence[0] in 'AEIOUMNPTKSLWJ':
+                the_sentence_is_good = False
+                reason += f'The {ordinal(index)} sentence is incorrectly capitalized\n'
+
+            #when there's a la
+            if ' la ' in sentence:
+                laphrases = re.split(' la ', sentence)
+                sentencewithoutla = laphrases.pop(len(laphrases)-1)
+                for phrase in laphrases:
+                    words = re.findall(r'\w+', phrase)
+                    if any(i in words for i in ['li', 'e']) or words[0] in ['mi', 'sina']:
+                        s, r = await self.sentenceparse(phrase, index)
+                        if not s:
+                            the_sentence_is_good = False
+                            reason += r
+                    elif 'o' in words:
+                        the_sentence_is_good = False
+                        reason += f'Invalid o in la phrase in the {ordinal(index)} sentence\n'
+                    elif 'la' in words:
+                        the_sentence_is_good = False
+                        reason += f'Incorrect placement of la in the {ordinal(index)} sentence\n'
+                    elif 'pi' in words and not await self.isthepigood(words):
+                        the_sentence_is_good = False
+                        reason += f'Incorrect usage of pi in the {ordinal(index)} sentence\n'
+                s, r = await self.sentenceparse(sentencewithoutla, index)
+                if not s:
+                    the_sentence_is_good = False
+                    reason += r
+
+            else:
+                s, r = await self.sentenceparse(sentence, index)
+                if not s:
+                    the_sentence_is_good = False
+                    reason += r
+        return the_sentence_is_good, reason
+
     @commands.command(aliases=['k', 'kpnn'])
     async def kon_pi_nimi_ni(self, ctx, *words):
         "sina toki e ni la mi toki e kon pi nimi pi toki sina. jan Kaje li kama e toki ni tan *lipu nimi pi toki pona taso.* ona li ante lili e toki ona.\nni li jo ala e nimi ale pona. sina wile e kon pi nimi pi pu ala la sina o pali e ona o pana e ona tawa jan Kaje lon lipu GitHub."
@@ -920,6 +998,17 @@ class tokipona(commands.Cog, name='TOKI PONA'):
             await self.safesend(ctx, 'toki pona confirmed. :sleepy:', 'ni li toki pona. pona a!')
         else:
             await self.safesend(ctx, ":rotating_light: Not toki pona! :rotating_light:", 'ni li toki pona ala a! o weka e ona :angry:')
+
+    @commands.command(aliases=['g'])
+    async def grammarcheck(self, ctx, *, text):
+        """Runs the given text through a toki pona grammar checker. It only looks for grammatical errors, not whether or not something makes sense or is likely to be said. Currently, it doesn't allow for `pi ... en ...` structures, and considers commas as full sentence breaks."""
+        if not await self.iftokipona(ctx):
+            return
+        s, r = await self.parsetext(text)
+        if s:
+            await self.safesend(ctx, 'I found no errors in this text.', 'sona mi la toki ni li pona :+1:')
+        else:
+            await self.safesend(ctx, f'I found it to be incorrect. Here are the errors that I found:\n{r}', f'sona mi la toki ni li ike. ni li ike toki (pi toki Inli):\n||{r}||')
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
@@ -968,7 +1057,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         self.newudspcs[str(ctx.guild.id)][str(ctx.author.id)] = {'fg': fg, 'bg': bg}
         await ctx.send('Updated successfully.')
 
-    @commands.command(aliases=['glyphs', 'g'])
+    @commands.command(aliases=['glyphs'])
     async def myglyphs(self, ctx, *, text):
         '''Sets default sitelen pona text to replace when people mention you in sitelen pona.'''
         if not await self.iftokipona(ctx):
