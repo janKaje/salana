@@ -76,7 +76,7 @@ class utilities(commands.Cog, name="UTILITIES"):
 
             hc = self.client.get_cog('HARDCORE')
             if await hc.ifhardcore(ctx):
-                await addcommands(hc)
+                await addcommands(hc, add=['ignore'])
 
             w = self.client.get_cog('WELCOME')
             if await w.ifwelcome(ctx):
@@ -88,7 +88,7 @@ class utilities(commands.Cog, name="UTILITIES"):
 
             if await self.client.is_owner(ctx.author):
                 info = ''
-                for command in self.client.walk_commands():
+                for command in self.client.commands:
                     if command.name not in cmds:
                         info += f'***{command.name}***  -  '
                         cmds.append(command.name)
@@ -126,7 +126,7 @@ class utilities(commands.Cog, name="UTILITIES"):
                             mentions += f'or {channel}'
                         else:
                             mentions += f'{channel}, '
-                hardcore_text = f'If you have the `{role}` role, any message that you send in {mentions} that is not in {pamu_or_tp} will be deleted. The bot checks for {pamu_or_tp} using the same method as the check command.'
+                hardcore_text = f'If you have the `{role}` role, any message that you send (unless it\'s in in {mentions}) that is not in {pamu_or_tp} will be deleted. The bot checks for {pamu_or_tp} using the same method as the check command.'
                 extra_msg.add_field(name='__HARDCORE__', value=hardcore_text, inline = False)
 
             welcome = self.client.get_cog('WELCOME')

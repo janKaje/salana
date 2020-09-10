@@ -381,11 +381,11 @@ async def ignore(ctx, ar='add'):
     if ar == 'add':
         config[str(ctx.guild.id)]['hardcore']['channels'].append(ctx.channel.id)
         print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
-        await ctx.send('This channel will now be ignored. Changes should be available shortly.')
+        await ctx.send('Hardcore will now ignore this channel. Changes should be available shortly.')
     elif ar == 'remove':
         config[str(ctx.guild.id)]['hardcore']['channels'].remove(ctx.channel.id)
         print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
-        await ctx.send('This channel will now be ignored. Changes should be available shortly.')
+        await ctx.send('Hardcore will no longer ignore this channel. Changes should be available shortly.')
     else:
         await ctx.send('Unknown parameter. Please enter either "add" or "remove".')
         return
@@ -424,7 +424,7 @@ async def setup_command(ctx):
     if not await logging.iflogging(ctx):
         info.add_field(name='logging', value='A simple module for join/leave logging.')
 
-    await ctx.send(info)
+    await ctx.send(embed=info)
 
 @setup_command.command(name='hardcore')
 @commands.guild_only()
@@ -593,7 +593,7 @@ async def remove_command(ctx):
     if await logging.iflogging(ctx):
         info.add_field(name='logging', value='\u200b')
 
-    await ctx.send(info)
+    await ctx.send(embed=info)
 
 @remove_command.command(name='hardcore')
 @commands.guild_only()
