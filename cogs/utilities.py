@@ -90,8 +90,17 @@ class utilities(commands.Cog, name="UTILITIES"):
                 info = ''
                 for command in self.client.commands:
                     if command.name not in cmds:
-                        info += f'***{command.name}***  -  '
-                        cmds.append(command.name)
+                        checks = True
+                        for j in command.checks:
+                            try:
+                                if not await j(ctx):
+                                    checks = False
+                            except:
+                                if not j(ctx):
+                                    checks = False
+                        if checks:
+                            info += f'***{command.name}***  -  '
+                            cmds.append(command.name)
                 if info != '':
                     command_msg.add_field(name = '__OWNER ONLY__', value = re.sub(r'  \-  \Z', '', info), inline = False)
 

@@ -373,7 +373,7 @@ async def switchlanguage(ctx, confirm=None):
 @commands.guild_only()
 @commands.has_permissions(manage_guild=True)
 async def ignore(ctx, ar='add'):
-    '''Adds a channel to the bot's list to ignore the hardcore feature in. You can specify to add or remove a channel. Defaults to add.'''
+    '''Adds a channel to the bot's list to ignore the hardcore feature in. You can specify to add or remove a channel. Defaults to add. Requires manage server permissions.'''
     hardcore = client.get_cog('HARDCORE')
     if not await hardcore.ifhardcore(ctx):
         await ctx.send('Not in the right context.')
@@ -396,7 +396,7 @@ async def ignore(ctx, ar='add'):
 @commands.guild_only()
 @commands.has_permissions(manage_guild=True)
 async def setup_command(ctx):
-    '''General command to set up or edit different modules. For more information, see `,server` or `,help <module>`. Requires manage server permissions.'''
+    '''General command to set up or edit different modules. Requires manage server permissions.'''
     info = discord.Embed(title='Setup help', description='Use `,setup <module>` to begin setup for a specified module.\nModules that you can enable:')
 
     tp = client.get_cog('TOKI PONA')
@@ -565,7 +565,7 @@ async def logging_setup(ctx, confirm=None):
 @commands.guild_only()
 @commands.has_permissions(manage_guild=True)
 async def remove_command(ctx):
-    '''General command to remove modules.'''
+    '''General command to remove modules. Requires manage server permissions.'''
     info = discord.Embed(title='Remove help', description='Use `,remove <module>` to begin removal for a specified module.\nModules that you have enabled:')
 
     tp = client.get_cog('TOKI PONA')
