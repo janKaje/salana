@@ -31,7 +31,6 @@ class utilities(commands.Cog, name="UTILITIES"):
         if cmd == None or cmd == 'commands':
             command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.')
 
-            await ctx.send('debug check 1')
             async def addcommands(cog, add=[]):
                 nonlocal command_msg, ctx
                 cog_info = ''
@@ -61,14 +60,9 @@ class utilities(commands.Cog, name="UTILITIES"):
                 if cog_info != '':
                     cog_info = re.sub(r'  \-  \Z', '', cog_info)
                     command_msg.add_field(name = f'__{cog.qualified_name}__', value = cog_info, inline = False)
-                    await ctx.send(f'debug check for {cog.qualified_name}')
-
-            await ctx.send('debug check 2')
 
             await addcommands(self.client.get_cog('UTILITIES'), add=['setup', 'remove', 'switchlanguage'])
             await addcommands(self.client.get_cog('FUN'))
-
-            await ctx.send('debug check 3')
 
             tp = self.client.get_cog('TOKI PONA')
             if await tp.iftokipona(ctx):
@@ -81,8 +75,6 @@ class utilities(commands.Cog, name="UTILITIES"):
             hc = self.client.get_cog('HARDCORE')
             if await hc.ifhardcore(ctx):
                 await addcommands(hc)
-
-            await ctx.send('debug check 4')
 
             w = self.client.get_cog('WELCOME')
             if await w.ifwelcome(ctx):

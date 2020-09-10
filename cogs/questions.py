@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 import json
 import os
 import datetime as dt
+from copy import deepcopy
 
 dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config = json.loads(open(dir_path+'/config.json').read())
@@ -30,7 +31,7 @@ class questions(commands.Cog, name='QUESTIONS'):
         config[str(ctx.guild.id)]['questions'].append(q_info)
         await ctx.message.add_reaction('\u2705')
         #questions asked over 24 hours ago are deleted
-        for i in config[str(ctx.guild.id)]['questions']:
+        for i in deepcopy(config[str(ctx.guild.id)]['questions']):
             if dt.datetime.utcnow() - dt.datetime.fromisoformat(i['messageutc']) > dt.timedelta(days=1):
                 config[str(ctx.guild.id)]['questions'].remove(i)
         #if the list is too long, deletes the least recent one
@@ -48,7 +49,7 @@ class questions(commands.Cog, name='QUESTIONS'):
                 await ctx.send('No currently open questions.')
                 return
             emb = discord.Embed(color=discord.Color.dark_green(), title='List of open questions:')
-            for i in config[str(ctx.guild.id)]['questions']:
+            for i in deepcopy(config[str(ctx.guild.id)]['questions']):
                 #if question was asked more than a day ago, deletes
                 if dt.datetime.utcnow() - dt.datetime.fromisoformat(i['messageutc']) > dt.timedelta(days=1):
                     config[str(ctx.guild.id)]['questions'].remove(i)
