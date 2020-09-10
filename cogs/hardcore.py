@@ -12,7 +12,7 @@ def setup(client):
 
 class hardcore(commands.Cog, name='HARDCORE'):
 
-    '''A module for the hardcore feature. This will detect if people with a certain role in certain channels are not speaking in toki pona or pa mu.
+    '''A module for the hardcore feature. This will detect if people with a certain role are not speaking in toki pona or pa mu. It will then delete their message, unless they're in one of a specified list of channels to ignore.
        \nTo begin setup, please use `,setup hardcore`. To remove this feature, use `,remove hardcore`.'''
 
     def __init__(self, client):
@@ -43,7 +43,7 @@ class hardcore(commands.Cog, name='HARDCORE'):
             return
         if msg.author.bot:
             return
-        if msg.channel.id in config[str(msg.guild.id)]['hardcore']['channels']:
+        if msg.channel.id not in config[str(msg.guild.id)]['hardcore']['channels']:
             if msg.guild.get_role(config[str(msg.guild.id)]['hardcore']['role']) in msg.author.roles:
                 if config[str(msg.guild.id)]['tp'] is not None:
                     tokipona = self.client.get_cog('TOKI PONA')

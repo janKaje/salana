@@ -215,7 +215,7 @@ async def blacklistshow(ctx):
 @commands.is_owner()
 async def test(ctx):
     """Don't worry about this one. Bot owner only."""
-    await ctx.send(config[str(ctx.guild.id)])
+    await ctx.send('test')
 
 @client.command()
 @commands.is_owner()
@@ -369,36 +369,83 @@ async def switchlanguage(ctx, confirm=None):
         await ctx.send('Done! Give me a few seconds to save the data. Once I\'m done, you\'ll be able to use all of the pa mu features.')
     await updateconfig()
 
+@client.command()
+@commands.guild_only()
+@commands.has_permissions(manage_guild=True)
+async def ignore(ctx, ar='add'):
+    '''Adds a channel to the bot's list to ignore the hardcore feature in. You can specify to add or remove a channel. Defaults to add.'''
+    hardcore = client.get_cog('HARDCORE')
+    if not await hardcore.ifhardcore(ctx):
+        await ctx.send('Not in the right context.')
+        return
+    if ar == 'add':
+        config[str(ctx.guild.id)]['hardcore']['channels'].append(ctx.channel.id)
+        print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
+        await ctx.send('This channel will now be ignored. Changes should be available shortly.')
+    elif ar == 'remove':
+        config[str(ctx.guild.id)]['hardcore']['channels'].remove(ctx.channel.id)
+        print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
+        await ctx.send('This channel will now be ignored. Changes should be available shortly.')
+    else:
+        await ctx.send('Unknown parameter. Please enter either "add" or "remove".')
+        return
+    client.reload_extension('cogs.hardcore')
+    client.reload_extension('cogs.utilities')
+
 @client.group(name='setup', invoke_without_command=True)
 @commands.guild_only()
 @commands.has_permissions(manage_guild=True)
 async def setup_command(ctx):
     '''General command to set up or edit different modules. For more information, see `,server` or `,help <module>`. Requires manage server permissions.'''
-    await ctx.send('You entered an unknown subcommand or didn\'t enter one at all. Please try again.')
+    info = discord.Embed(title='Setup help', description='Use `,setup <module>` to begin setup for a specified module.\nModules that you can enable:')
+
+    tp = client.get_cog('TOKI PONA')
+    spchannel = client.get_cog('SITELEN PONA CHANNEL')
+    if not await spchannel.ifspchannel(ctx) and await tp.iftokipona(ctx):
+        info.add_field(name='spchannel', value='This will take a channel and automatically convert everything that is sent to it to sitelen pona. Messages can be deleted by the author by reacting to it with 🗑️. Only works in toki pona servers.')
+    
+    hardcore = client.get_cog('HARDCORE')
+    if not await hardcore.ifhardcore(ctx):
+        info.add_field(name='hardcore', value='This will detect if people with a certain role are not speaking in toki pona or pa mu. It will then delete their message, unless they\'re in one of a specified list of channels to ignore.')
+
+    welcome = client.get_cog('WELCOME')
+    if not await welcome.ifwelcome(ctx):
+        info.add_field(name='welcome', value='A module that regulates member entry. A certain message will be sent by the bot to a specific channel. It should be the only message in the channel. Then, if someone sends a message to that channel that is equal to a certain key and they do not have the join role, they are given the join role and all their previous messages in that channel are deleted. An optional feature that can be added is a second welcome, where the newcomer is greeted with a welcome message in a channel of your choice.')
+
+    questions = client.get_cog('QUESTIONS')
+    if not await questions.ifquestions(ctx):
+        info.add_field(name='questions', value='A module for keeping track of questions that people might have. Useful for busy language servers.')
+
+    reporting = client.get_cog('REPORTING')
+    if not await reporting.ifreporting(ctx):
+        info.add_field(name='reporting', value='This will detect if a message has a certain number of the triangular flag emoji in its reactions, and will automatically send a copy of that message to a certain channel. It\'s designed to assist with moderation.')
+
+    logging = client.get_cog('LOGGING')
+    if not await logging.iflogging(ctx):
+        info.add_field(name='logging', value='A simple module for join/leave logging.')
+
+    await ctx.send(info)
 
 @setup_command.command(name='hardcore')
 @commands.guild_only()
 @commands.has_permissions(manage_guild=True)
 async def hardcore_setup(ctx, *, param=None):
     '''Command to setup or edit the hardcore module'''
-    if ctx.guild is None:
-        return
-    if config[str(ctx.guild.id)]['hardcore'] is None and param is None:
+    if config[str(ctx.guild.id)]['hardcore'] is None:
         config[str(ctx.guild.id)]['hardcore'] = {'role': None, 'channels': []}
-        await ctx.send('Initial setup complete. Please repeat the command followed by the role that will be the hardcore role.')
-    elif param is not None:
+        await ctx.send('Initial setup complete. Please repeat the command followed by a mention of the role that will be the hardcore role.')
+    elif param is not None and config[str(ctx.guild.id)]['hardcore'] is not None:
         rolementions = ctx.message.raw_role_mentions
         if len(rolementions) > 0:
             config[str(ctx.guild.id)]['hardcore']['role'] = rolementions[0]
-            await ctx.send('Successfully added. Now type `,setup hardcore` in any channel that you would like to add to the list of channels in which this will be enforced.')
+            await ctx.send('Successfully added. Changes should be available shortly. You can choose to ignore the hardcore role in certain channels with `,ignore`.')
+            print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
+            client.reload_extension('cogs.hardcore')
+            client.reload_extension('cogs.utilities')
         else:
             await ctx.send('That role was not recognized. Please try again.')
     else:
-        config[str(ctx.guild.id)]['hardcore']['channels'].append(ctx.channel.id)
-        print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
-        await ctx.send('Hardcore channel added. Changes should be available shortly.')
-        client.reload_extension('cogs.hardcore')
-        client.reload_extension('cogs.utilities')
+        await ctx.send('Please enter a role to be the hardcore role.')
 
 @setup_command.command(name='spchannel')
 @commands.guild_only()
@@ -437,7 +484,7 @@ async def welcome_setup(ctx, key=None, role=None, *, message=None):
         await ctx.send('Please mention the join role.')
     config[str(ctx.guild.id)]['welcome'] = {'key': key, 'role': rolementions[0], 'channel': ctx.channel.id, 'message': message, 'second': None}
     print(json.dumps(config), file=open(dir_path+'/config.json', mode='w'))
-    await ctx.send('Successfully configured. Changes should be available shortly.')
+    await ctx.send('Successfully configured. Changes should be available shortly. If you\'d also like to set up the optional portion of the welcome module, use `,setup welcome2`')
     client.reload_extension('cogs.welcome')
     client.reload_extension('cogs.utilities')
 
@@ -519,7 +566,34 @@ async def logging_setup(ctx, confirm=None):
 @commands.has_permissions(manage_guild=True)
 async def remove_command(ctx):
     '''General command to remove modules.'''
-    await ctx.send("You either didn't enter a subcommand or entered an invalid one. Please try again.")
+    info = discord.Embed(title='Remove help', description='Use `,remove <module>` to begin removal for a specified module.\nModules that you have enabled:')
+
+    tp = client.get_cog('TOKI PONA')
+    spchannel = client.get_cog('SITELEN PONA CHANNEL')
+    if await spchannel.ifspchannel(ctx) and await tp.iftokipona(ctx):
+        info.add_field(name='spchannel', value='\u200b')
+    
+    hardcore = client.get_cog('HARDCORE')
+    if await hardcore.ifhardcore(ctx):
+        info.add_field(name='hardcore', value='\u200b')
+
+    welcome = client.get_cog('WELCOME')
+    if await welcome.ifwelcome(ctx):
+        info.add_field(name='welcome', value='\u200b')
+
+    questions = client.get_cog('QUESTIONS')
+    if await questions.ifquestions(ctx):
+        info.add_field(name='questions', value='\u200b')
+
+    reporting = client.get_cog('REPORTING')
+    if await reporting.ifreporting(ctx):
+        info.add_field(name='reporting', value='\u200b')
+
+    logging = client.get_cog('LOGGING')
+    if await logging.iflogging(ctx):
+        info.add_field(name='logging', value='\u200b')
+
+    await ctx.send(info)
 
 @remove_command.command(name='hardcore')
 @commands.guild_only()

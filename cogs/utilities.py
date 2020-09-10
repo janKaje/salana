@@ -31,8 +31,9 @@ class utilities(commands.Cog, name="UTILITIES"):
         if cmd == None or cmd == 'commands':
             command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.')
 
+            cmds = []
             async def addcommands(cog, add=[]):
-                nonlocal command_msg, ctx
+                nonlocal command_msg, cmds
                 cog_info = ''
                 for i in cog.walk_commands():
                     checks = True
@@ -45,6 +46,7 @@ class utilities(commands.Cog, name="UTILITIES"):
                                 checks = False
                     if checks:
                         cog_info += f'***{i.name}***  -  '
+                        cmds.append(i.name)
                 for cmd in add:
                     i = self.client.get_command(cmd)
                     checks = True
@@ -57,9 +59,9 @@ class utilities(commands.Cog, name="UTILITIES"):
                                 checks = False
                     if checks:
                         cog_info += f'***{i.name}***  -  '
+                        cmds.append(i.name)
                 if cog_info != '':
-                    cog_info = re.sub(r'  \-  \Z', '', cog_info)
-                    command_msg.add_field(name = f'__{cog.qualified_name}__', value = cog_info, inline = False)
+                    command_msg.add_field(name = f'__{cog.qualified_name}__', value = re.sub(r'  \-  \Z', '', cog_info), inline = False)
 
             await addcommands(self.client.get_cog('UTILITIES'), add=['setup', 'remove', 'switchlanguage'])
             await addcommands(self.client.get_cog('FUN'))
@@ -83,6 +85,15 @@ class utilities(commands.Cog, name="UTILITIES"):
             q = self.client.get_cog('QUESTIONS')
             if await q.ifquestions(ctx):
                 await addcommands(q)
+
+            if await self.client.is_owner(ctx.author):
+                info = ''
+                for command in self.client.walk_commands():
+                    if command.name not in cmds:
+                        info += f'***{command.name}***  -  '
+                        cmds.append(command.name)
+                if info != '':
+                    command_msg.add_field(name = '__OWNER ONLY__', value = re.sub(r'  \-  \Z', '', info), inline = False)
 
             await ctx.send(embed=command_msg)
 
@@ -177,75 +188,6 @@ class utilities(commands.Cog, name="UTILITIES"):
         '''Links to the github repository for this bot.'''
         embed = discord.Embed(color=discord.Color.gold())
         embed.add_field(name='Link to my Github', value=f'[Click Here](https://github.com/janKaje/salana)')
-        await ctx.send(embed=embed)
-
-    @commands.command(aliases=['serverinfo'])
-    @commands.guild_only()
-    async def server(self, ctx):
-        """Gives information about the server, such as what modules are active and what the guild high score is."""
-        if config[str(ctx.guild.id)]['tp'] == None:
-            lang = 'pa mu'
-        else:
-            lang = 'toki pona'
-        embed = discord.Embed(color=discord.Color.blue(), title=f'Info for {ctx.guild.name}', description=lang)
-
-        if lang == 'toki pona':
-            spchannel = self.client.get_cog('SITELEN PONA CHANNEL')
-            if await spchannel.ifspchannel(ctx):
-                mention = self.client.get_channel(config[str(ctx.guild.id)]['tp']['spchannel']['channelid']).mention
-                message = f'{mention} is the sitelen pona channel on this server.'
-            else:
-                message = 'A sitelen pona channel is not available on this server.'
-            embed.add_field(name='sitelen pona channel', value=message)
-
-        if config[str(ctx.guild.id)]['hardcore'] is None:
-            message = 'This server does not have the hardcore feature.'
-        else:
-            role = ctx.guild.get_role(config[str(ctx.guild.id)]['hardcore']['role']).name
-            if len(config[str(ctx.guild.id)]['hardcore']['channels']) == 1:
-                mentions = self.client.get_channel(config[str(ctx.guild.id)]['hardcore']['channels'][0]).mention
-            elif len(config[str(ctx.guild.id)]['hardcore']['channels']) == 2:
-                mentions = f"{self.client.get_channel(config[str(ctx.guild.id)]['hardcore']['channels'][0]).mention} or "
-                mentions += self.client.get_channel(config[str(ctx.guild.id)]['hardcore']['channels'][1]).mention
-            else:
-                mentions = ''
-                for i in config[str(ctx.guild.id)]['hardcore']['channels']:
-                    channel = self.client.get_channel(i).mention
-                    if config[str(ctx.guild.id)]['hardcore']['channels'].index(i) == len(config[str(ctx.guild.id)]['hardcore']['channels'])-1:
-                        mentions += f'and {channel}'
-                    else:
-                        mentions += f'{channel}, '
-            message = f'This server uses the hardcore module. The hardcore role is `@{role}` and the hardcore channels are {mentions}'
-        embed.add_field(name='Hardcore', value=message)
-
-        if config[str(ctx.guild.id)]['welcome'] is None:
-            message = 'This server does not use the welcome module.'
-        elif config[str(ctx.guild.id)]['welcome']['second'] is None:
-            message = 'This server uses the main welcome module.'
-        else:
-            message = 'This server uses both the main welcome module and the secondary welcome module.'
-        embed.add_field(name='Welcome', value=message)
-
-        if config[str(ctx.guild.id)]['questions'] is None:
-            message = 'This server does not use the question logging module.'
-        else:
-            message = 'This server uses the question logging module.'
-        embed.add_field(name='Questions', value=message)
-
-        if config[str(ctx.guild.id)]['reporting'] is None:
-            message = 'This server does not use the reporting module.'
-        else:
-            message = f"This server uses the reporting module. The number of required reactions is {config[str(ctx.guild.id)]['reporting']['count']}."
-        embed.add_field(name='Reporting', value=message)
-
-        if config[str(ctx.guild.id)]['logging'] is None:
-            message = 'This server does not use the join/leave logging module.'
-        else:
-            message = f"This server uses the join/leave logging module. The logging channel is {ctx.guild.get_channel(config[str(ctx.guild.id)]['logging']).mention}"
-        embed.add_field(name='Logging', value=message)
-
-        embed.set_footer(text=f"Guild high score: {config[str(ctx.guild.id)]['hsv']} by {str(self.client.get_user(config[str(ctx.guild.id)]['hsu']))}")
-
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['d', 'dict', 'define'])
