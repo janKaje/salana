@@ -47,10 +47,10 @@ class hardcore(commands.Cog, name='HARDCORE'):
             if msg.guild.get_role(config[str(msg.guild.id)]['hardcore']['role']) in msg.author.roles:
                 if config[str(msg.guild.id)]['tp'] is not None:
                     tokipona = self.client.get_cog('TOKI PONA')
-                    delete = msg.startswith('*') or await tokipona.tp_check(msg.content)
+                    delete = msg.content.startswith('*') or await tokipona.tp_check(msg.content)
                 else:
                     pamu = self.client.get_cog('PA MU')
-                    delete = msg.startswith('*') or await pamu.pamu_check(msg.content)
+                    delete = msg.content.startswith('*') or await pamu.pamu_check(msg.content)
                 if not delete:
                     if len(msg.content) > 15:
                         await msg.author.send('I may have deleted a message of yours that was long:')

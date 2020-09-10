@@ -29,72 +29,52 @@ class utilities(commands.Cog, name="UTILITIES"):
         """Displays the help command. `<cmd>` can be the name of a command or category, and if given, displays the long help text for that command or category. If `<cmd>` is 'commands' or not specified, lists the commands. If `<cmd>` is 'modules', lists the modules available on the current server and info about them."""
         #displays all commands if cmd is not given
         if cmd == None or cmd == 'commands':
-            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.\n\n***setup***  -  ***remove***  -  ***switchlanguage***')
+            command_msg = discord.Embed(title='Commands', color=discord.Color.blue(), description='Type `,help [command]` or `,help [category]` for more information. Also available is `,help modules`, which lists the modules available for this server and details about them.')
 
-            def addcommands(cog):
+            async def addcommands(cog, add=[]):
                 nonlocal command_msg
                 cog_info = ''
-                for i in self.client.get_cog(cog).walk_commands():
-                    if any(not j()):
+                for i in cog.walk_commands():
+                    checks = True
+                    for j in i.checks:
+                        if not await j(ctx):
+                            checks = False
+                    if checks:
                         cog_info += f'***{i.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info)
-                command_msg.add_field(name = f'__{cog}__', value = cog_info, inline = False)
+                for cmd in add:
+                    i = self.client.get_command(cmd)
+                    checks = True
+                    for j in i.checks:
+                        if not await j(ctx):
+                            checks = False
+                    if checks:
+                        cog_info += f'***{i.name}***  -  '
+                if cog_info != '':
+                    cog_info = re.sub(r'  \-  \Z', '', cog_info)
+                    command_msg.add_field(name = f'__{cog.qualified_name}__', value = cog_info, inline = False)
 
-            cog_info = ''
-            for i in self.client.get_cog('FUN').walk_commands():
-                if not i.hidden:
-                    cog_info += f'***{i.name}***  -  '
-            cog_info = re.sub(r'  \-  \Z', '', cog_info)
-            command_msg.add_field(name = '__FUN__', value = cog_info, inline = False)
+            await addcommands(self.client.get_cog('UTILITIES'), add=['setup', 'remove', 'switchlanguage'])
+            await addcommands(self.client.get_cog('FUN'))
 
-            cog_info = ''
-            for i in self.client.get_cog('UTILITIES').walk_commands():
-                if not i.hidden:
-                    cog_info += f'***{i.name}***  -  '
-            cog_info = re.sub(r'  \-  \Z', '', cog_info)
-            command_msg.add_field(name = '__UTILITIES__', value = cog_info, inline = False)
-
-            cog_info = ''
             tp = self.client.get_cog('TOKI PONA')
             if await tp.iftokipona(ctx):
-                cog_info += f'***settaso***  -  '
-                for i in tp.walk_commands():
-                    if not i.hidden:
-                        cog_info += f'***{i.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info)
-                command_msg.add_field(name = '__TOKI PONA__', value = cog_info, inline = False)
+                await addcommands(tp)
 
-            cog_info = ''
             pamu = self.client.get_cog('PA MU')
             if await pamu.ifpamu(ctx):
-                for i in pamu.walk_commands():
-                    if not i.hidden:
-                        cog_info += f'***{i.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info)
-                command_msg.add_field(name = '__PA MU__', value = cog_info, inline = False)
+                await addcommands(pamu)
 
-            cog_info = ''
-            hardcore = self.client.get_cog('HARDCORE')
-            if await hardcore.ifhardcore(ctx):
-                for i in hardcore.walk_commands():
-                    if not i.hidden:
-                        cog_info += f'***{i.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info)
-                command_msg.add_field(name = f'__HARDCORE__', value = cog_info, inline = False)
+            hc = self.client.get_cog('HARDCORE')
+            if await hc.ifhardcore(ctx):
+                await addcommands(hc)
 
-            welcome = self.client.get_cog('WELCOME')
-            if await welcome.ifwelcome(ctx) and (ctx.author.guild_permissions.manage_roles or ctx.author.guild_permissions.manage_messages):
-                cog_info = '***reset***  -  ***blacklist***  -  ***unblacklist***  -  ***blacklistshow***'
-                command_msg.add_field(name = f'__WELCOME__', value = cog_info, inline = False)
+            w = self.client.get_cog('WELCOME')
+            if await w.ifwelcome(ctx):
+                await addcommands(w, add=['blacklist', 'unblacklist', 'blacklistshow'])
 
-            cog_info = ''
-            questions = self.client.get_cog('QUESTIONS')
-            if await questions.ifquestions(ctx):
-                for i in questions.walk_commands():
-                    if not i.hidden:
-                        cog_info += f'***{i.name}***  -  '
-                cog_info = re.sub(r'  \-  \Z', '', cog_info)
-                command_msg.add_field(name = f'__QUESTIONS__', value = cog_info, inline = False)
+            q = self.client.get_cog('QUESTIONS')
+            if await q.ifquestions(ctx):
+                await addcommands(q)
 
             await ctx.send(embed=command_msg)
 

@@ -1008,7 +1008,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
 
     @commands.command(aliases=['g'])
     async def grammarcheck(self, ctx, *, text):
-        """Runs the given text through a toki pona grammar checker. It only looks for grammatical errors, not whether or not something makes sense or is likely to be said. Currently, it doesn't allow for `pi ... en ...` structures, and considers commas as full sentence breaks."""
+        """Runs the given text through a toki pona grammar checker. It only looks for grammatical errors, not whether or not something makes sense or is likely to be said. Right now, it's very buggy and doesn't always catch errors. I'm working on a new method of grammar checking."""
         if not await self.iftokipona(ctx):
             return
         s, r = await self.parsetext(text)
