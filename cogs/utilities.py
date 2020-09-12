@@ -39,10 +39,14 @@ class utilities(commands.Cog, name="UTILITIES"):
                     checks = True
                     for j in i.checks:
                         try:
-                            if not await j(ctx):
+                            try:
+                                await j(ctx)
+                            except commands.CheckFailure:
                                 checks = False
                         except:
-                            if not j(ctx):
+                            try:
+                                j(ctx)
+                            except commands.CheckFailure:
                                 checks = False
                     if checks:
                         cog_info += f'***{i.name}***  -  '
@@ -52,10 +56,14 @@ class utilities(commands.Cog, name="UTILITIES"):
                     checks = True
                     for j in i.checks:
                         try:
-                            if not await j(ctx):
+                            try:
+                                await j(ctx)
+                            except commands.CheckFailure:
                                 checks = False
                         except:
-                            if not j(ctx):
+                            try:
+                                j(ctx)
+                            except commands.CheckFailure:
                                 checks = False
                     if checks:
                         cog_info += f'***{i.name}***  -  '
@@ -93,10 +101,14 @@ class utilities(commands.Cog, name="UTILITIES"):
                         checks = True
                         for j in command.checks:
                             try:
-                                if not await j(ctx):
+                                try:
+                                    await j(ctx)
+                                except commands.CheckFailure:
                                     checks = False
                             except:
-                                if not j(ctx):
+                                try:
+                                    j(ctx)
+                                except commands.CheckFailure:
                                     checks = False
                         if checks:
                             info += f'***{command.name}***  -  '

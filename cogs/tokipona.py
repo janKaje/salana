@@ -525,7 +525,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         step7 = await self.removeduplicates(step6) #Removes repeated letters
         step8 = re.split(r'\s+', step7) #Splits the string and prepares it for analysis
         for dj in step8:
-            if dj not in self.tpwords:
+            if dj not in self.tpwords and dj != '':
                 return False
         return True
 
