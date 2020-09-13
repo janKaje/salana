@@ -691,293 +691,6 @@ class tokipona(commands.Cog, name='TOKI PONA'):
     async def substitute_names(self, text):
         return re.sub(r"\[(?P<name>[AEIJKLMNOPSTUW]*)\]", self.tp_sbstitute, text)
 
-    async def isthepigood(self, wordlist):
-        if wordlist[0] == 'pi' or wordlist[len(wordlist)-1] == 'pi' or len(wordlist) < 4:
-            return False
-        phrase = ' '.join(wordlist)
-        piseparated = re.split(' pi ', phrase)
-        piseparated.pop(0)
-        for i in piseparated:
-            if len(re.split(' ', i)) < 2:
-                return False
-        return True
-
-    async def isproperpropername(self, wordlist):
-        if wordlist[0] not in self.tpwords and wordlist[0] != '':
-            return 0
-        for word in wordlist[1:]:
-            if word not in self.tpwords:
-                if not re.fullmatch('[A-Z][a-z]+', word) and word != '':
-                    return 1
-                elif re.fullmatch('[a-z]+', word):
-                    return word
-        return 2
-
-    async def sentenceparse(self, sentence, index):
-        subjects = []
-        predicates = []
-        objects = []
-        tempsubj = []
-        temppred = []
-        tempobj = []
-        mode = 'subject'
-        sentencetype = ''
-        wordno = 0
-        reason = ''
-        the_sentence_is_good = True
-        ordinal = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
-
-        wordlist = re.split(r'\s+', sentence)
-
-        if wordlist[0] in ['mi', 'sina'] and wordlist[1] == 'li':
-            the_sentence_is_good = False
-            reason += f'Incorrect usage of li after a single mi or sina in the {ordinal(index)} sentence\n'
-
-        #this is mostly to break up the sentence into its parts, although it does pick out a few errors
-        for word in wordlist:
-
-            #o
-            if word == 'o':
-                if sentencetype == 'indicative':
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of o after li in the {ordinal(index)} sentence\n'
-                if wordlist[wordno-1] in {'o', 'li', 'e', 'pi'}:
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of o directly after a particle in the {ordinal(index)} sentence\n'
-                if mode == 'subject' and tempsubj != []:
-                    subjects.append(tempsubj)
-                    tempsubj = []
-                if mode == 'object' and tempobj != []:
-                    objects.append(tempobj)
-                    tempobj = []
-                if mode == 'predicate' and temppred != []:
-                    predicates.append(temppred)
-                    temppred =[]
-                mode = 'predicate'
-                sentencetype = 'imperative'
-                wordno += 1
-                continue
-
-            #li
-            if word == 'li':
-                if sentencetype == 'imperative':
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of li after o in the {ordinal(index)} sentence\n'
-                if wordlist[wordno-1] in self.particles:
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of li directly after a particle in the {ordinal(index)} sentence\n'
-                if mode == 'subject' and tempsubj != []:
-                    subjects.append(tempsubj)
-                    tempsubj = []
-                elif mode == 'subject':
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of li at the beginning of a sentence in the {ordinal(index)} sentence\n'
-                if mode == 'object' and tempobj != []:
-                    objects.append(tempobj)
-                    tempobj = []
-                if mode == 'predicate' and temppred != []:
-                    predicates.append(temppred)
-                    temppred =[]
-                mode = 'predicate'
-                sentencetype = 'indicative'
-                wordno += 1
-                continue
-
-            #e
-            if word == 'e':
-                if wordlist[wordno-1] in self.particles:
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of e after a particle in the {ordinal(index)} sentence\n'
-                if mode == 'subject' and tempsubj != []:
-                    subjects.append(tempsubj)
-                    tempsubj = []
-                if mode == 'subject':
-                    the_sentence_is_good = False
-                    reason += f'Incorrect placement of e directly after subject or at the beginning of the sentence in the {ordinal(index)} sentence\n'
-                if mode == 'predicate' and temppred != []:
-                    predicates.append(temppred)
-                    temppred = []
-                if mode == 'object' and tempobj != []:
-                    objects.append(tempobj)
-                    temppobj = []
-                mode = 'object'
-                wordno += 1
-                continue
-
-            #en
-            if word == 'en':
-                if wordlist[wordno-1] in self.particles:
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of en directly after a particle in the {ordinal(index)} sentence\n'
-                if mode == 'predicate':
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of en in a predicate in the {ordinal(index)} sentence\n'
-                    wordno += 1
-                    continue
-                if mode == 'object':
-                    the_sentence_is_good = False
-                    reason += f'Incorrect usage of en in an object in the {ordinal(index)} sentence\n'
-                    wordno += 1
-                    continue
-                if tempsubj == []:
-                    the_sentence_is_good = False
-                    reason += f'Cannot begin a sentence with en, found in the {ordinal(index)} sentence\n'
-                    wordno += 1
-                    continue
-                subjects.append(tempsubj)
-                tempsubj = []
-
-            #la?
-            if word == 'la':
-                the_sentence_is_good = False
-                reason += f'Incorrect usage of la, either at the beginning of a sentence or after another la, found in the {ordinal(index)} sentence\n'
-                wordno += 1
-                continue
-            
-            #subjects
-            if mode == 'subject':
-                if word in {'mi', 'sina'} and tempsubj == []:
-                    mode = 'predicate'
-                    subjects.append([word])
-                    wordno += 1
-                    continue
-                else:
-                    tempsubj.append(word)
-            #predicates
-            if mode == 'predicate':
-                temppred.append(word)
-            #objects
-            if mode == 'object':
-                tempobj.append(word)
-
-            wordno += 1
-
-        if tempsubj != []:
-            subjects.append(tempsubj)
-        if temppred != []:
-            predicates.append(temppred)
-        if tempobj != []:
-            objects.append(tempobj)
-
-        #debugging code
-        #print(subjects, predicates, objects)
-        #print(sentence)
-
-        #making sure all words are content words, use pi's correctly, and have proper names in the correct form and place
-        #subjects
-        for subject in subjects:
-            if not all(i in self.contentwords for i in subject):
-
-                if not all(i in self.tpwords for i in subject):
-                    proper = await self.isproperpropername(subject)
-                    if proper == 0:
-                        the_sentence_is_good = False
-                        reason += f'Unknown word acting as a head in a subject of the {ordinal(index)} sentence\n'
-                    elif proper == 1:
-                        the_sentence_is_good = False
-                        reason += f'Incorrect proper name form in a subject of the {ordinal(index)} sentence\n'
-                    elif isinstance(proper, str):
-                        the_sentence_is_good = False
-                        reason += f'Non-toki pona word {proper} used as a toki pona word in a subject of the {ordinal(index)} sentence\n'
-
-                if 'pi' in subject:
-                    if not await self.isthepigood(subject):
-                        the_sentence_is_good = False
-                        reason += f'Incorrect usage of pi in a subject of the {ordinal(index)} sentence\n'
-                    
-        #predicates
-        for pred in predicates:
-            if not all(i in self.contentwords for i in pred):
-
-                if not all(i in self.tpwords for i in pred):
-                    proper = await self.isproperpropername(pred)
-                    if proper == 0:
-                        the_sentence_is_good = False
-                        reason += f'Unknown word acting as a head in a predicate of the {ordinal(index)} sentence\n'
-                    elif proper == 1:
-                        the_sentence_is_good = False
-                        reason += f'Incorrect proper name form in a predicate of the {ordinal(index)} sentence\n'
-                    elif isinstance(proper, str):
-                        the_sentence_is_good = False
-                        reason += f'Non-toki pona word {proper} used as a toki pona word in a predicate of the {ordinal(index)} sentence\n'
-
-                if 'pi' in pred:
-                    if not await self.isthepigood(pred):
-                        the_sentence_is_good = False
-                        reason += f'Incorrect usage of pi in a predicate of the {ordinal(index)} sentence\n'
-
-        #objects
-        for obj in objects:
-            if not all(i in self.contentwords for i in obj):
-
-                if not all(i in self.tpwords for i in obj):
-                    proper = await self.isproperpropername(obj)
-                    if proper == 0:
-                        the_sentence_is_good = False
-                        reason += f'Unknown word acting as a head in an object of the {ordinal(index)} sentence\n'
-                    elif proper == 1:
-                        the_sentence_is_good = False
-                        reason += f'Incorrect proper name form in an object of the {ordinal(index)} sentence\n'
-                    elif isinstance(proper, str):
-                        the_sentence_is_good = False
-                        reason += f'Non-toki pona word {proper} used as a toki pona word in an object of the {ordinal(index)} sentence\n'
-
-                if 'pi' in obj:
-                    if not await self.isthepigood(obj):
-                        the_sentence_is_good = False
-                        reason += f'Incorrect usage of pi in an object of the {ordinal(index)} sentence\n'
-        
-        return the_sentence_is_good, reason
-
-    async def parsetext(self, text):
-        sentences = re.split(r'[\.|\?|!|,|:] ?', re.sub('["\']', '', text))
-        the_sentence_is_good = True
-        reason = ''
-        ordinal = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
-        for sentence in sentences:
-            index = sentences.index(sentence)+1
-
-            #if the string is empty, carry on
-            if sentence == '':
-                continue
-
-            #DON'T CAPITALIZE SENTENCES
-            if sentence[0] in 'AEIOUMNPTKSLWJ':
-                the_sentence_is_good = False
-                reason += f'The {ordinal(index)} sentence is incorrectly capitalized\n'
-
-            #when there's a la
-            if ' la ' in sentence:
-                laphrases = re.split(' la ', sentence)
-                sentencewithoutla = laphrases.pop(len(laphrases)-1)
-                for phrase in laphrases:
-                    words = re.findall(r'\w+', phrase)
-                    if (any(i in words for i in ['li', 'e']) or words[0] in ['mi', 'sina']) and len(words) > 1:
-                        s, r = await self.sentenceparse(phrase, index)
-                        if not s:
-                            the_sentence_is_good = False
-                            reason += r
-                    elif 'o' in words:
-                        the_sentence_is_good = False
-                        reason += f'Invalid o in la phrase in the {ordinal(index)} sentence\n'
-                    elif 'la' in words:
-                        the_sentence_is_good = False
-                        reason += f'Incorrect placement of la in the {ordinal(index)} sentence\n'
-                    elif 'pi' in words and not await self.isthepigood(words):
-                        the_sentence_is_good = False
-                        reason += f'Incorrect usage of pi in the {ordinal(index)} sentence\n'
-                s, r = await self.sentenceparse(sentencewithoutla, index)
-                if not s:
-                    the_sentence_is_good = False
-                    reason += r
-
-            else:
-                s, r = await self.sentenceparse(sentence, index)
-                if not s:
-                    the_sentence_is_good = False
-                    reason += r
-        return the_sentence_is_good, reason
-
     @commands.command(aliases=['k', 'kpnn'])
     async def kon_pi_nimi_ni(self, ctx, *words):
         "sina toki e ni la mi toki e kon pi nimi pi toki sina. jan Kaje li kama e toki ni tan *lipu nimi pi toki pona taso.* ona li ante lili e toki ona.\nni li jo ala e nimi ale pona. sina wile e kon pi nimi pi pu ala la sina o pali e ona o pana e ona tawa jan Kaje lon lipu GitHub."
@@ -1009,14 +722,188 @@ class tokipona(commands.Cog, name='TOKI PONA'):
 
     @commands.command(aliases=['g'])
     async def grammarcheck(self, ctx, *, text):
-        """Runs the given text through a toki pona grammar checker. It only looks for grammatical errors, not whether or not something makes sense or is likely to be said. Right now, it's very buggy and doesn't always catch errors. I'm working on a new method of grammar checking."""
+        """Runs the given text through a toki pona grammar checker. It only looks for grammatical errors, not whether or not something makes sense or is likely to be said."""
         if not await self.iftokipona(ctx):
             return
-        s, r = await self.parsetext(text)
-        if s:
+        reasons = []
+        sentenceindex = 0
+
+        sentences = re.split(r'[\.!\?:\n] ?|(?<! la)(?<! taso), (?!la)', text)
+        for sentence in sentences:
+            wordlist = re.split(r'\s+', sentence)
+            wordindex = 0
+            wordno = 1
+            underpi = False
+            pos = 'subj'
+            ismodifier = False
+            mood = None
+            requirescontentword = False
+            beginningofsent = True
+            for word in wordlist:
+
+                word = re.sub(r'\A\W|\W\Z', '', word)
+
+                if word == '':
+                    wordindex += 1
+                    continue
+
+                #Non-native tp word check
+                if word not in self.tpwords:
+                    if re.fullmatch('[A-Z][a-z]+', word) and ismodifier:
+                        wordindex += 1
+                        wordno += 1
+                        requirescontentword = False
+                        continue
+                    elif word.lower() in self.tpwords:
+                        reasons.append({'reason': f'Found incorrectly capitalized toki pona word "{word}"', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    elif re.fullmatch('[A-Z][a-z]+', word):
+                        reasons.append({'reason': f'Found proper name "{word}" acting as a head', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    else:
+                        reasons.append({'reason': f'Found unknown word "{word}"', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                
+                #taso
+                elif word == 'taso' and beginningofsent and wordlist[wordindex+1] not in {'la', 'la,'}:
+                    wordindex += 1
+                    wordno += 1
+                    beginningofsent = False
+                    continue
+
+                #Content words
+                elif word in {'kule', 'nun', 'pake', 'sona', 'take', 'suli', 'weka', 'seme', 'wi', 'likujo', 'sin', 'tonsi', 'ten', 'walo', 'pini', 'peto', 'tuli', 'nuwa', 'loje', 'kapa', 'kalama', 'open', 'ike', 'pakala', 'jaki', 'okepuma', 'kili', 'itomi', 'wile', 'soweli', 'lete', 'monsuta', 'pata', 'kala', 'ante', 'toki', 'kepeken', 'san', 'polinpin', 'suno', 'alasa', 'soko', 'anu', 'unpa', 'kijetesantakalu', 'jans', 'mi', 'pa', 'kajo', 'pona', 'wawa', 'a', 'melome', 'pimeja', 'nimi', 'neja', 'loku', 'samu', 'epiku', 'laso', 'supa', 'sama', 'nasa', 'ken', 'nena', 'pomotolo', 'iki', 'poki', 'mijomi', 'sike', 'kulupu', 'majuna', 'moku', 'palisa', 'poka', 'wan', 'kiwen', 'soto', 'kute', 'kin', 'po', 'akesi', 'sina', 'tenpo', 'wekama', 'lipu', 'jan', 'pali', 'jatu', 'seli', 'luka', 'noka', 'nu', 'jasima', 'nanpa', 'waleja', 'lanpan', 'teje', 'ini', 'isipin', 'ilo', 'esun', 'te', 'ipi', 'powe', 'to', 'ete', 'lenke', 'lon', 'insa', 'kipisi', 'awen', 'selo', 'apeja', 'mun', 'linja', 'omekapo', 'sitelen', 'ala', 'moli', 'wawajete', 'lupa', 'slape', 'se', 'pana', 'ijo', 'jo', 'mani', 'monsi', 'kuntu', 'ni', 'n', 'uta', 'tu', 'je', 'we', 'ki', 'kan', 'jaku', 'musi', 'lukin', 'su', 'mulapisu', 'jami', 'tawa', 'telo', 'nasin', 'pasila', 'lili', 'mama', 'ke', 'omen', 'waso', 'ale', 'ko', 'wuwojiti', 'tomo', 'wa', 'sewi', 'peta', 'len', 'jelo', 'pipo', 'yupekosi', 'sijelo', 'kama', 'leko', 'namako', 'alu', 'sikomo', 'linluwi', 'kulu', 'kasi', 'ona', 'ma', 'mu', 'lokon', 'jalan', 'pilin', 'olin', 'pan', 'kapesi', 'pipi', 'kamalawala', 'oke', 'lawa', 'kon', 'meli', 'mije', 'misikeke', 'ewe', 'anpa', 'sinpin', 'tan', 'suwi', 'oko', 'utala', 'lape', 'patu', 'ali', 'taso', 'pu', 'mute'}:
+                    if word in {'mi', 'sina'} and beginningofsent and wordlist[wordindex+1] != 'pi':
+                        if wordlist[wordindex+1] == 'li':
+                            reasons.append({'reason': f'Cannot use li after a single mi or sina that acts as the subject', 'word': 'li', 'wordindex': wordindex+1, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                        pos = 'pred'
+                    elif underpi and not ismodifier and wordlist[wordindex-1] != 'en':
+                        ismodifier = True
+                        requirescontentword = True
+                    else:
+                        ismodifier = True
+                        requirescontentword = False
+
+                #o
+                elif word == 'o':
+                    if mood == 'ind':
+                        reasons.append({'reason': f'Cannot use o when the mood is already indicative', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    elif mood == None:
+                        mood = 'imp'
+                    if wordindex > 0:
+                        if wordlist[wordindex-1] in {'li', 'e', 'o', 'pi'}:
+                            reasons.append({'reason': f'Cannot use o directly after {wordlist[wordindex-1]}', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    pos = 'pred'
+                    ismodifier = False
+                    underpi = False
+
+                #li
+                elif word == 'li':
+                    if mood == 'imp':
+                        reasons.append({'reason': f'Cannot use li when the mood is already imperative', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    elif mood == None:
+                        mood = 'ind'
+                    if pos == 'subj':
+                        pos = 'pred'
+                    if wordindex > 0:
+                        if wordlist[wordindex-1] in {'li', 'e', 'o', 'pi', 'la'}:
+                            reasons.append({'reason': f'Cannot use li directly after {wordlist[wordindex-1]}', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                        elif not ismodifier and wordlist[wordindex-1] not in {'mi', 'sina'}:
+                            reasons.append({'reason': f'There is no subject before a li', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    pos = 'pred'
+                    ismodifier = False
+                    underpi = False
+
+                #e
+                elif word == 'e':
+                    if pos == 'subj':
+                        reasons.append({'reason': f'No predicate found before an e', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    if wordindex > 0:
+                        if wordlist[wordindex-1] in {'li', 'e', 'o', 'pi', 'la'}:
+                            reasons.append({'reason': f'Cannot use e directly after {wordlist[wordindex-1]}', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    pos = 'obj'
+                    ismodifier = False
+                    underpi = False
+
+                #la
+                elif word == 'la':
+                    if wordindex > 0:
+                        if wordlist[wordindex-1] in {'li', 'e', 'o', 'pi', 'la'}:
+                            reasons.append({'reason': f'Cannot use la directly after {wordlist[wordindex-1]}', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    else:
+                        reasons.append({'reason': f'Cannot use la at the beginning of a sentence', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    pos = 'subj'
+                    ismodifier = False
+                    underpi = False
+                    beginningofsent = True
+
+                #pi
+                elif word == 'pi':
+                    if not ismodifier:
+                        if wordindex == 0:
+                            reasons.append({'reason': f'Cannot use pi to begin a sentence', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                        else:
+                            reasons.append({'reason': f'Cannot use pi directly after {wordlist[wordindex-1]}', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    requirescontentword = False
+                    underpi = True
+                    ismodifier = False
+
+                #en
+                elif word == 'en':
+                    if not ismodifier:
+                        if wordindex == 0:
+                            reasons.append({'reason': f'Cannot use en to begin a sentence', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                        else:
+                            reasons.append({'reason': f'Cannot use en directly after {wordlist[wordindex-1]}', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    elif pos != 'subj' and not underpi:
+                        reasons.append({'reason': f'Cannot use en anywhere besides in a subject or under a pi phrase', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                    elif underpi:
+                        requirescontentword = True
+                    ismodifier = False
+                
+                if word != 'la':
+                    beginningofsent = False
+
+                if word in {'li', 'e', 'o', 'la'} and requirescontentword:
+                    reasons.append({'reason': f'pi requires at least two content words after it, unless nesting', 'word': word, 'wordindex': wordindex, 'sentence': sentence, 'sentenceindex': sentenceindex})
+
+                wordindex += 1
+                wordno += 1
+
+            if requirescontentword:
+                reasons.append({'reason': f'pi requires at least two content words after it, unless nesting', 'word': word, 'wordindex': wordindex-1, 'sentence': sentence, 'sentenceindex': sentenceindex})
+            if beginningofsent and sentence != '':
+                reasons.append({'reason': f'la cannot end a sentence', 'word': word, 'wordindex': wordindex-1, 'sentence': sentence, 'sentenceindex': sentenceindex})
+            if not ismodifier:
+                if wordlist[wordindex-1] == 'pi':
+                    reasons.append({'reason': f'pi cannot end a sentence', 'word': word, 'wordindex': wordindex-1, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                elif wordlist[wordindex-1] == 'li':
+                    reasons.append({'reason': f'li cannot end a sentence', 'word': word, 'wordindex': wordindex-1, 'sentence': sentence, 'sentenceindex': sentenceindex})
+                elif wordlist[wordindex-1] == 'e':
+                    reasons.append({'reason': f'e cannot end a sentence', 'word': word, 'wordindex': wordindex-1, 'sentence': sentence, 'sentenceindex': sentenceindex})
+            sentenceindex += 1
+
+        reasonstr = ''
+        for i in reasons:
+            reasonstr += i['reason']
+            reasonstr += f' (in sentence number {i["sentenceindex"]+1})'
+            reasonstr += '\n\n```'
+            reasonstr += i['sentence']
+            reasonstr += '\n'
+            wordlist = re.split(r'\s+', i['sentence'])
+            if 0 < i['wordindex'] < (len(wordlist)-1):
+                wordmatch = re.search(f'{wordlist[i["wordindex"]-1]}\\s({i["word"]}),?\\s{wordlist[i["wordindex"]+1]}', i['sentence'])
+            elif 0 < i['wordindex']:
+                wordmatch = re.search(f'{wordlist[i["wordindex"]-1]}\\s({i["word"]})', i['sentence'])
+            elif i['wordindex'] < (len(wordlist)-1):
+                wordmatch = re.search(f'({i["word"]}),?\\s{wordlist[i["wordindex"]+1]}', i['sentence'])
+            else:
+                wordmatch = re.search(f'({i["word"]})', i['sentence'])
+            reasonstr += ' ' * wordmatch.start(1)
+            reasonstr += '^' * len(i['word'])
+            reasonstr += '```\n'
+
+        if reasonstr == '':
             await self.safesend(ctx, 'I found no errors in this text.', 'sona mi la toki ni li pona :+1:')
         else:
-            await self.safesend(ctx, f'I found it to be incorrect. Here are the errors that I found:\n{r}', f'sona mi la toki ni li ike. ni li ike toki (pi toki Inli):\n||{r}||')
+            await self.safesend(ctx, f'I found it to be incorrect. Here are the errors that I found:\n{reasonstr}', f'sona mi la toki ni li ike. ni li ike toki (pi toki Inli):\n||{reasonstr}||')
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):
