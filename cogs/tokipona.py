@@ -903,7 +903,7 @@ class tokipona(commands.Cog, name='TOKI PONA'):
         if reasonstr == '':
             await self.safesend(ctx, 'I found no errors in this text.', 'sona mi la toki ni li pona :+1:')
         else:
-            await self.safesend(ctx, f'I found it to be incorrect. Here are the errors that I found:\n{reasonstr}', f'sona mi la toki ni li ike. ni li ike toki (pi toki Inli):\n||{reasonstr}||')
+            await self.safesend(ctx, reasonstr, f'sona mi la toki ni li ike. ni li ike toki (pi toki Inli):\n||{reasonstr}||')
 
     @commands.command(aliases=['s', 'sp', 'sitelenpona', 'sitelen_pona'])
     async def sitelen(self, ctx, *, text):

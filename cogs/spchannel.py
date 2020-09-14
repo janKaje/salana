@@ -42,7 +42,10 @@ class spchannel(commands.Cog, name='SITELEN PONA CHANNEL'):
                 r = await i.to_file()
                 files.append(r)
             if len(files) > 9:
-                await msg.author.send('You added too many files to your message. Please try again.')
+                try:
+                    await msg.author.send('You added too many files to your message. Please try again.')
+                except discord.HTTPException:
+                    await msg.channel.send(f'{msg.author.mention} o, sina pana e ijo ante pi mute ike lon toki sina. o lili e ona. (mi alasa toki e ni tawa sina taso, taso mi ken ala.)', delete_after=5)
                 return
             try:
                 await msg.delete()
@@ -58,21 +61,27 @@ class spchannel(commands.Cog, name='SITELEN PONA CHANNEL'):
                 #loads font
                 font = ImageFont.truetype(font=str(os.path.dirname(os.path.abspath(__file__)))[:-4]+'linja_pona_modified.otf', size=fontsize)
                 if re.search(r'[a-zA-Z]', text):
-                    await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again. Here is the message, in case it was long:')
-                    await msg.author.send(msg.content)
+                    try:
+                        await msg.author.send('The message you sent could not be converted into sitelen pona. Please try again. Here is the message, in case it was long:')
+                        await msg.author.send(msg.content)
+                    except discord.HTTPException:
+                        await msg.channel.send(f'{msg.author.mention} o, mi ken ala sitelen pona e toki sina. o toki pona taso. (mi alasa toki e ni tawa sina taso, taso mi ken ala.)', delete_after=5)
                     return
                 if text != '':
                     size = font.getsize_multiline(text) #calculates size
                     finalsize = (size[0]+2*border, int((size[1]+2*border)*1.1)) #adds border to size
                     if finalsize[0]*finalsize[1] > 1000000:
-                        await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
-                        await msg.author.send(msg.content)
+                        try:
+                            await msg.author.send('The message you sent was too big. Please try again. Here is the message, in case it was long:')
+                            await msg.author.send(msg.content)
+                        except discord.HTTPException:
+                            await msg.channel.send(f'{msg.author.mention} o, toki sina li suli ike. o toki lili. (mi alasa toki e ni tawa sina taso, taso mi ken ala.)', delete_after=5)
                         return
                     img = Image.new('RGB', finalsize, color=bg) #new image
                     draw = ImageDraw.Draw(img)
                     draw.text((border, border), text, fill=fg, font=font) #draws text
                     img.save(str(msg.author.id)+'.png') #saves image
-                    files.append(discord.File(open(str(msg.author.id)+'.png', 'rb')))
+                    files.insert(0, discord.File(open(str(msg.author.id)+'.png', 'rb')))
                 avatar = msg.author.avatar_url
                 webhook = discord.Webhook.partial(str(config[str(msg.guild.id)]['tp']['spchannel']['webhook_id']), config[str(msg.guild.id)]['tp']['spchannel']['webhook_token'], adapter=discord.RequestsWebhookAdapter())
                 webhook.send(files=files, avatar_url=avatar, username=username)

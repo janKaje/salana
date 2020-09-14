@@ -47,12 +47,15 @@ class hardcore(commands.Cog, name='HARDCORE'):
             if msg.guild.get_role(config[str(msg.guild.id)]['hardcore']['role']) in msg.author.roles:
                 if config[str(msg.guild.id)]['tp'] is not None:
                     tokipona = self.client.get_cog('TOKI PONA')
-                    delete = msg.content.startswith('*') or await tokipona.tp_check(msg.content)
+                    delete = any(msg.content.startswith(i) for i in ['*', ',', 't!', 'x/', '=', ';;', 'pk;', '.', '-']) or await tokipona.tp_check(msg.content)
                 else:
                     pamu = self.client.get_cog('PA MU')
-                    delete = msg.content.startswith('*') or await pamu.pamu_check(msg.content)
+                    delete = any(msg.content.startswith(i) for i in ['*', ',', 't!', 'x/', '=', ';;', 'pk;', '.', '-']) or await pamu.pamu_check(msg.content)
                 if not delete:
                     if len(msg.content) > 15:
-                        await msg.author.send('I may have deleted a message of yours that was long:')
-                        await msg.author.send(msg.content)
+                        try:
+                            await msg.author.send('I may have deleted a message of yours that was long:')
+                            await msg.author.send(msg.content)
+                        except discord.HTTPException:
+                            pass
                     await msg.delete()
