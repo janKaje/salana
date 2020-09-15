@@ -21,7 +21,6 @@ class utilities(commands.Cog, name="UTILITIES"):
 
     def __init__(self, client):
         self.client = client
-        self.questions = []
 
     #Custom Help command
     @commands.command(aliases=['h'])
